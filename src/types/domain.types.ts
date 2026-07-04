@@ -317,9 +317,126 @@ export interface Contact {
   company: string;
   email: string;
   phone: string;
-  status: "new-lead" | "qualified" | "customer" | "renewal-due" | "inactive";
+  status: "new-lead" | "qualified" | "customer" | "renewal-due" | "inactive" | "blacklisted" | "archived";
   leadScore: number;
   assignedEmployeeId: string;
+  assignedEmployeeName?: string;
+  currentCampaign?: string;
+  recentActivity?: string;
+  tags?: string[];
+  policyType?: string;
+  industry?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  lastContact?: string;
+  policyNumber?: string;
+}
+
+export type LeadScoreCategory = "Cold" | "Warm" | "Hot" | "Qualified";
+export type LeadScoreTrend = "up" | "down" | "stable";
+
+export interface LeadScoreSummary {
+  contactId: string;
+  score: number;
+  category: LeadScoreCategory;
+  trend: LeadScoreTrend;
+  reason: string;
+}
+
+export interface ContactDashboard {
+  totalContacts: number;
+  qualifiedLeads: number;
+  activeCustomers: number;
+  renewalsDue: number;
+  pendingFollowUps: number;
+  appointmentsToday: number;
+  recentlyAdded: number;
+  campaignCoverage: number;
+  activeConversations: number;
+  appointmentsScheduled: number;
+  recommendations: ContactRecommendation[];
+  insights: ContactInsight[];
+  recentActivity: ContactTimelineItem[];
+}
+
+export interface ContactSegment {
+  id: string;
+  name: string;
+  description: string;
+  contacts: number;
+  policyType: string;
+  ownerEmployeeId: string;
+  conversionRate: number;
+  health: number;
+  lastUpdated: string;
+  filters: string[];
+}
+
+export interface ContactRecommendation {
+  id: string;
+  priority: Priority;
+  title: string;
+  reason: string;
+  impact: string;
+  action: string;
+  href: string;
+}
+
+export interface ContactInsight {
+  id: string;
+  label: string;
+  value: string;
+  trend: string;
+  description: string;
+}
+
+export interface ContactTimelineItem {
+  id: string;
+  type: "created" | "imported" | "assigned" | "campaign" | "conversation" | "appointment" | "policy" | "renewal" | "email" | "feedback";
+  title: string;
+  description: string;
+  date: string;
+  href?: string;
+}
+
+export interface ContactAppointment {
+  id: string;
+  title: string;
+  date: string;
+  ownerEmployeeId: string;
+  outcome: string;
+}
+
+export interface ContactPolicy {
+  id: string;
+  type: string;
+  policyNumber: string;
+  premium: string;
+  renewalDate: string;
+  status: "active" | "renewal-due" | "expired";
+}
+
+export interface ContactDetail extends Contact {
+  firstName: string;
+  lastName: string;
+  language: string;
+  leadSource: string;
+  notes: string;
+  leadScoring: LeadScoreSummary;
+  communicationHistory: ContactTimelineItem[];
+  campaignHistory: ContactTimelineItem[];
+  timeline: ContactTimelineItem[];
+  appointments: ContactAppointment[];
+  policiesPurchased: ContactPolicy[];
+}
+
+export interface ContactImportResult {
+  imported: number;
+  duplicates: number;
+  validationErrors: number;
+  source: string;
+  completedAt: string;
 }
 
 export interface Conversation {

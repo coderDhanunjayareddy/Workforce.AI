@@ -1,6 +1,18 @@
 export { useAnalytics, useInsights } from "./useAnalytics";
 export { useCampaign, useCampaigns } from "./useCampaigns";
-export { useContacts } from "./useContacts";
+export {
+  useAssignContactEmployee,
+  useContact,
+  useContactDashboard,
+  useContacts,
+  useCreateContact,
+  useCreateSegment,
+  useDeleteContact,
+  useImportContacts,
+  useLeadScoring,
+  useSegments,
+  useUpdateContact
+} from "./useContacts";
 export { useLiveCalls } from "./useConversations";
 export {
   useAssignKnowledge,

@@ -10,6 +10,7 @@ import {
   ResetPasswordPage,
   VerifyEmailPage
 } from "@/modules/auth/pages";
+import { ContactImportPage, ContactListsPage, ContactProfilePage, ContactSegmentsPage, ContactsPage } from "@/modules/contacts/pages";
 import { EmployeeDirectoryPage, EmployeeWorkspacePage, HireEmployeePage } from "@/modules/employees/pages";
 import {
   KnowledgeCenterPage,
@@ -171,12 +172,37 @@ const knowledgeDetailRoute = createRoute({
   component: KnowledgeDetailPage
 });
 
+const contactsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/contacts",
+  component: ContactsPage
+});
+
+const contactsImportRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/contacts/import",
+  component: ContactImportPage
+});
+
+const contactsSegmentsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/contacts/segments",
+  component: ContactSegmentsPage
+});
+
+const contactsListsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/contacts/lists",
+  component: ContactListsPage
+});
+
+const contactProfileRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/contacts/$contactId",
+  component: ContactProfilePage
+});
+
 const moduleRoutes = [
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/contacts",
-    component: () => <FoundationModulePage title="Contacts" description="Manage customer intelligence that powers campaigns and conversations." />
-  }),
   createRoute({
     getParentRoute: () => appRoute,
     path: "/campaigns",
@@ -241,6 +267,11 @@ const routeTree = rootRoute.addChildren([
     knowledgeCategoriesRoute,
     knowledgeVersionsRoute,
     knowledgeDetailRoute,
+    contactsRoute,
+    contactsImportRoute,
+    contactsSegmentsRoute,
+    contactsListsRoute,
+    contactProfileRoute,
     ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === appRoute)
   ]),
   ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === rootRoute)
