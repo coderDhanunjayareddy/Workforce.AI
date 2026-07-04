@@ -1,4 +1,4 @@
-import { createRootRoute, createRoute, createRouter, Outlet, redirect } from "@tanstack/react-router";
+import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router";
 
 import { AppShell } from "@/components/layout";
 import {
@@ -20,6 +20,7 @@ import {
   KnowledgeUploadPage,
   KnowledgeVersionsPage
 } from "@/modules/knowledge/pages";
+import { ConversationDetailPage, ConversationsPage, LiveOperationsPage } from "@/modules/live/pages";
 import { MarketingSubPage } from "@/modules/marketing/pages";
 import { WorkforceDashboardPage } from "@/modules/workforce/pages";
 import { FoundationModulePage } from "@/routes/pages/FoundationModulePage";
@@ -233,12 +234,31 @@ const campaignDetailRoute = createRoute({
   component: CampaignDetailPage
 });
 
+const liveRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/live",
+  component: LiveOperationsPage
+});
+
+const liveDetailRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/live/$conversationId",
+  component: ConversationDetailPage
+});
+
+const conversationsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/conversations",
+  component: ConversationsPage
+});
+
+const conversationDetailRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/conversations/$conversationId",
+  component: ConversationDetailPage
+});
+
 const moduleRoutes = [
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/conversations",
-    component: () => <FoundationModulePage title="Conversations" description="Monitor live and historical customer conversations." />
-  }),
   createRoute({
     getParentRoute: () => appRoute,
     path: "/analytics",
@@ -259,13 +279,6 @@ const moduleRoutes = [
     path: "/support",
     component: () => <FoundationModulePage title="Support" description="Access implementation guidance, documentation, and workspace support." />
   }),
-  createRoute({
-    getParentRoute: () => rootRoute,
-    path: "/app/live",
-    beforeLoad: () => {
-      throw redirect({ to: "/app/conversations" });
-    }
-  })
 ];
 
 const routeTree = rootRoute.addChildren([
@@ -303,9 +316,12 @@ const routeTree = rootRoute.addChildren([
     campaignTemplatesRoute,
     campaignHistoryRoute,
     campaignDetailRoute,
+    liveRoute,
+    liveDetailRoute,
+    conversationsRoute,
+    conversationDetailRoute,
     ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === appRoute)
-  ]),
-  ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === rootRoute)
+  ])
 ]);
 
 export const router = createRouter({ routeTree });

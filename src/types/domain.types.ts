@@ -581,11 +581,161 @@ export interface ContactImportResult {
 export interface Conversation {
   id: string;
   employeeId: string;
+  employeeName?: string;
+  department?: string;
+  campaignId?: string;
+  campaignName?: string;
+  contactId?: string;
   customerName: string;
+  customerPhone?: string;
   goal: string;
   duration: string;
   sentiment: "positive" | "neutral" | "satisfied" | "negative";
-  status: "live" | "completed" | "queued";
+  status: "live" | "completed" | "queued" | "on-hold" | "escalated";
+  outcome?: string;
+  health?: number;
+  currentStage?: string;
+  buyingIntent?: "Low" | "Medium" | "High";
+  riskLevel?: "Low" | "Medium" | "High";
+  confidence?: number;
+}
+
+export interface LiveOperationsDashboard {
+  activeCalls: number;
+  waitingQueue: number;
+  completedToday: number;
+  averageDuration: string;
+  currentCsat: number;
+  appointmentsToday: number;
+  utilization: WorkforceUtilization;
+  notifications: LiveNotification[];
+  recommendations: LiveRecommendation[];
+}
+
+export interface LiveEmployeeStatus {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  department: string;
+  campaign: string;
+  status: "Talking" | "On Hold" | "Idle" | "Ready";
+  currentCustomer: string;
+  duration: string;
+  health: number;
+  conversationId?: string;
+}
+
+export interface TranscriptLine {
+  id: string;
+  speaker: string;
+  role: "employee" | "customer";
+  text: string;
+  timestamp: string;
+}
+
+export interface SentimentPoint {
+  name: string;
+  positive: number;
+  neutral: number;
+  negative: number;
+}
+
+export interface ConversationInsight {
+  customerSentiment: Conversation["sentiment"];
+  confidence: number;
+  buyingIntent: "Low" | "Medium" | "High";
+  riskLevel: "Low" | "Medium" | "High";
+  knowledgeUsed: string[];
+  currentObjective: string;
+  recommendedAction: string;
+}
+
+export interface AIDecision {
+  whyAsked: string;
+  knowledgeReferenced: string;
+  customerIntent: string;
+  confidence: number;
+  nextRecommendedAction: string;
+}
+
+export interface CustomerConversationProfile {
+  contactId: string;
+  customerName: string;
+  company: string;
+  existingPolicies: string[];
+  leadScore: number;
+  previousCalls: number;
+  assignedCampaign: string;
+  lastConversation: string;
+  lifetimeValue: string;
+}
+
+export interface ConversationSummary {
+  topicsDiscussed: string[];
+  products: string[];
+  objections: string[];
+  questions: string[];
+  commitments: string[];
+  appointmentStatus: string;
+}
+
+export interface PostCallSummary {
+  customerIntent: string;
+  summary: string;
+  productsDiscussed: string[];
+  outcome: string;
+  appointment: string;
+  followUpNeeded: string;
+  suggestedNextSteps: string[];
+  knowledgeUsed: string[];
+  employeePerformance: string;
+}
+
+export interface ConversationQueueItem {
+  id: string;
+  customerName: string;
+  priority: Priority;
+  estimatedWait: string;
+  assignedEmployeeId: string;
+  assignedEmployeeName: string;
+  campaignName: string;
+}
+
+export interface WorkforceUtilization {
+  employeesBusy: number;
+  employeesIdle: number;
+  averageWait: string;
+  queueLength: number;
+  callsPerHour: { name: string; calls: number }[];
+}
+
+export interface LiveNotification {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  href: string;
+}
+
+export interface LiveRecommendation {
+  id: string;
+  priority: Priority;
+  title: string;
+  action: string;
+  reason: string;
+  href: string;
+}
+
+export interface ConversationDetail extends Conversation {
+  overview: string;
+  transcript: TranscriptLine[];
+  timeline: CampaignTimelineItem[];
+  insights: ConversationInsight;
+  decision: AIDecision;
+  customerProfile: CustomerConversationProfile;
+  summary: ConversationSummary;
+  postCallSummary: PostCallSummary;
+  sentimentTimeline: SentimentPoint[];
 }
 
 export interface AnalyticsSummary {

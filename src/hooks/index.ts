@@ -27,7 +27,16 @@ export {
   useSegments,
   useUpdateContact
 } from "./useContacts";
-export { useLiveCalls } from "./useConversations";
+export {
+  useConversation,
+  useConversationSummary,
+  useLiveCalls,
+  useLiveDashboard,
+  useLiveEmployees,
+  useQueue,
+  useSentiment,
+  useTranscript
+} from "./useConversations";
 export {
   useAssignKnowledge,
   useDeleteKnowledge,
