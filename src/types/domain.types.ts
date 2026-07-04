@@ -900,3 +900,211 @@ export interface Settings {
   currency: string;
   notificationsEnabled: boolean;
 }
+
+export type TeamMemberStatus = "active" | "invited" | "deactivated";
+export type IntegrationStatus = "connected" | "available" | "error";
+export type AuditStatus = "success" | "warning" | "blocked";
+
+export interface OrganizationProfile {
+  name: string;
+  logoInitials: string;
+  website: string;
+  industry: string;
+  phone: string;
+  email: string;
+  country: string;
+  timezone: string;
+  businessHours: string;
+  currency: string;
+  dateFormat: string;
+  language: string;
+  workspaceUrl: string;
+}
+
+export interface OrganizationAdminKpis {
+  humanUsers: number;
+  aiEmployees: number;
+  departments: number;
+  storageUsedGb: number;
+  storageLimitGb: number;
+  apiRequestsToday: number;
+  subscription: string;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  department: string;
+  role: string;
+  status: TeamMemberStatus;
+  lastLogin: string;
+  avatar: string;
+}
+
+export interface RolePermission {
+  area: string;
+  permissions: string[];
+}
+
+export interface OrganizationRole {
+  id: string;
+  name: string;
+  description: string;
+  users: number;
+  permissions: RolePermission[];
+}
+
+export interface SecuritySettings {
+  passwordPolicy: string;
+  sessionTimeout: string;
+  twoFactorEnabled: boolean;
+  ipWhitelistEnabled: boolean;
+  deviceManagement: boolean;
+  activeSessions: ActiveSession[];
+}
+
+export interface ActiveSession {
+  id: string;
+  device: string;
+  browser: string;
+  location: string;
+  ipAddress: string;
+  lastActive: string;
+}
+
+export interface WorkforceDefaults {
+  defaultVoice: string;
+  language: string;
+  accent: string;
+  workingHours: string;
+  knowledgeCollection: string;
+  conversationStyle: string;
+  escalationRules: string;
+  complianceRules: string;
+}
+
+export interface NotificationSettings {
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  campaignAlerts: boolean;
+  conversationAlerts: boolean;
+  securityAlerts: boolean;
+  knowledgeUpdates: boolean;
+  employeeHealthAlerts: boolean;
+}
+
+export interface Integration {
+  id: string;
+  name: string;
+  category: string;
+  status: IntegrationStatus;
+  lastSync: string;
+  description: string;
+}
+
+export interface BillingOverview {
+  subscription: string;
+  renewalDate: string;
+  seatsUsed: number;
+  seatsLimit: number;
+  aiEmployeesUsed: number;
+  aiEmployeesLimit: number;
+  storageUsedGb: number;
+  storageLimitGb: number;
+  apiUsage: number;
+  paymentMethod: string;
+  invoices: Invoice[];
+}
+
+export interface Invoice {
+  id: string;
+  date: string;
+  amount: string;
+  status: "paid" | "upcoming" | "failed";
+}
+
+export interface ApiKey {
+  id: string;
+  name: string;
+  keyPreview: string;
+  created: string;
+  lastUsed: string;
+  status: "active" | "rotated" | "revoked";
+}
+
+export interface WebhookEndpoint {
+  id: string;
+  url: string;
+  events: string[];
+  status: "active" | "paused";
+}
+
+export interface ApiManagement {
+  keys: ApiKey[];
+  webhooks: WebhookEndpoint[];
+  requestsToday: number;
+  errorRate: number;
+  documentationUrl: string;
+}
+
+export interface AuditLog {
+  id: string;
+  timestamp: string;
+  user: string;
+  action: string;
+  resource: string;
+  ipAddress: string;
+  status: AuditStatus;
+}
+
+export interface WorkspaceCustomization {
+  logo: string;
+  primaryColor: string;
+  companyName: string;
+  emailFooter: string;
+  defaultSignature: string;
+  dashboardLayout: string;
+}
+
+export interface SystemHealthItem {
+  id: string;
+  service: string;
+  status: "operational" | "degraded" | "review";
+  value: string;
+  description: string;
+}
+
+export interface DataManagementAction {
+  id: string;
+  title: string;
+  description: string;
+  action: string;
+  tone: "primary" | "danger" | "secondary";
+}
+
+export interface SupportResource {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+}
+
+export interface OrganizationAdminDashboard {
+  profile: OrganizationProfile;
+  kpis: OrganizationAdminKpis;
+  team: TeamMember[];
+  roles: OrganizationRole[];
+  security: SecuritySettings;
+  workforceDefaults: WorkforceDefaults;
+  notifications: NotificationSettings;
+  integrations: Integration[];
+  billing: BillingOverview;
+  api: ApiManagement;
+  auditLogs: AuditLog[];
+  customization: WorkspaceCustomization;
+  systemHealth: SystemHealthItem[];
+  dataManagement: DataManagementAction[];
+  support: SupportResource[];
+  recentActivity: AuditLog[];
+}

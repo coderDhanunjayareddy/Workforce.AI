@@ -23,6 +23,7 @@ import {
 } from "@/modules/knowledge/pages";
 import { ConversationDetailPage, ConversationsPage, LiveOperationsPage } from "@/modules/live/pages";
 import { MarketingSubPage } from "@/modules/marketing/pages";
+import { OrganizationPage } from "@/modules/organization/pages";
 import { WorkforceDashboardPage } from "@/modules/workforce/pages";
 import { FoundationModulePage } from "@/routes/pages/FoundationModulePage";
 import { LandingPage } from "@/routes/pages/LandingPage";
@@ -301,17 +302,73 @@ const analyticsReportsRoute = createRoute({
   component: () => <AnalyticsPage section="reports" />
 });
 
+const organizationRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/organization",
+  component: () => <OrganizationPage section="organization" />
+});
+
+const organizationProfileRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/organization/profile",
+  component: () => <OrganizationPage section="profile" />
+});
+
+const organizationTeamRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/organization/team",
+  component: () => <OrganizationPage section="team" />
+});
+
+const organizationRolesRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/organization/roles",
+  component: () => <OrganizationPage section="roles" />
+});
+
+const settingsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings",
+  component: () => <OrganizationPage section="settings" />
+});
+
+const settingsSecurityRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings/security",
+  component: () => <OrganizationPage section="security" />
+});
+
+const settingsIntegrationsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings/integrations",
+  component: () => <OrganizationPage section="integrations" />
+});
+
+const settingsBillingRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings/billing",
+  component: () => <OrganizationPage section="billing" />
+});
+
+const settingsApiRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings/api",
+  component: () => <OrganizationPage section="api" />
+});
+
+const settingsNotificationsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings/notifications",
+  component: () => <OrganizationPage section="notifications" />
+});
+
+const settingsAuditRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/settings/audit",
+  component: () => <OrganizationPage section="audit" />
+});
+
 const moduleRoutes = [
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/settings",
-    component: () => <FoundationModulePage title="Settings" description="Configure security, notifications, integrations, billing, and workspace preferences." />
-  }),
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/organization",
-    component: () => <FoundationModulePage title="Organization Settings" description="Manage Nova Insurance users, departments, permissions, and enterprise controls." />
-  }),
   createRoute({
     getParentRoute: () => appRoute,
     path: "/support",
@@ -365,6 +422,17 @@ const routeTree = rootRoute.addChildren([
     analyticsConversationsRoute,
     analyticsCustomersRoute,
     analyticsReportsRoute,
+    organizationRoute,
+    organizationProfileRoute,
+    organizationTeamRoute,
+    organizationRolesRoute,
+    settingsRoute,
+    settingsSecurityRoute,
+    settingsIntegrationsRoute,
+    settingsBillingRoute,
+    settingsApiRoute,
+    settingsNotificationsRoute,
+    settingsAuditRoute,
     ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === appRoute)
   ])
 ]);

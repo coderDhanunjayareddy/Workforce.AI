@@ -80,4 +80,18 @@ export {
   useUpdateEmployee
 } from "./useEmployees";
 export { useNotificationsQuery } from "./useNotificationsQuery";
-export { useOrganizationQuery } from "./useOrganizationQuery";
+export {
+  useAuditLogs,
+  useBilling,
+  useGenerateApiKey,
+  useIntegrations,
+  useInviteTeamMember,
+  useOrganizationAdmin,
+  useOrganizationNotifications,
+  useOrganizationQuery,
+  useRoles,
+  useSecurity,
+  useTeam,
+  useUpdateOrganizationNotifications,
+  useUpdateOrganizationProfile
+} from "./useOrganizationQuery";
