@@ -18,5 +18,6 @@ export const employeeService = {
   resumeEmployee: (id: string) =>
     mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, status: "active" })),
   archiveEmployee: (id: string) =>
-    mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, status: "archived" }))
+    mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, status: "archived" })),
+  deleteEmployee: (id: string) => mockApi(() => ({ id, deleted: true }))
 };

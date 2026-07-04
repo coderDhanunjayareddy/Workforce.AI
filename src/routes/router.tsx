@@ -10,6 +10,7 @@ import {
   ResetPasswordPage,
   VerifyEmailPage
 } from "@/modules/auth/pages";
+import { EmployeeDirectoryPage, EmployeeWorkspacePage, HireEmployeePage } from "@/modules/employees/pages";
 import { MarketingSubPage } from "@/modules/marketing/pages";
 import { WorkforceDashboardPage } from "@/modules/workforce/pages";
 import { FoundationModulePage } from "@/routes/pages/FoundationModulePage";
@@ -118,19 +119,19 @@ const workforceRoute = createRoute({
 const employeesRoute = createRoute({
   getParentRoute: () => appRoute,
   path: "/employees",
-  component: () => <FoundationModulePage title="AI Employees" description="Hire, monitor, and manage every AI Employee in your organization." />
+  component: EmployeeDirectoryPage
 });
 
 const hireEmployeeRoute = createRoute({
   getParentRoute: () => appRoute,
   path: "/employees/hire",
-  component: () => <FoundationModulePage title="Hire AI Employee" description="A production wizard foundation for hiring a new digital employee." />
+  component: HireEmployeePage
 });
 
 const employeeDetailRoute = createRoute({
   getParentRoute: () => appRoute,
   path: "/employees/$employeeId",
-  component: () => <FoundationModulePage title="Employee Workspace" description="The future workspace for performance, knowledge, goals, skills, voice, policies, tools, analytics, training, health, and versions." />
+  component: EmployeeWorkspacePage
 });
 
 const moduleRoutes = [
