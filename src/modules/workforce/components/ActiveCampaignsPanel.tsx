@@ -10,7 +10,8 @@ const statusTone = {
   running: "green",
   paused: "amber",
   completed: "teal",
-  cancelled: "red"
+  cancelled: "red",
+  archived: "slate"
 } as const;
 
 export function ActiveCampaignsPanel({ campaigns, employees }: { campaigns: Campaign[]; employees: Employee[] }) {

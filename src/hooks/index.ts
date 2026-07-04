@@ -1,5 +1,19 @@
 export { useAnalytics, useInsights } from "./useAnalytics";
-export { useCampaign, useCampaigns } from "./useCampaigns";
+export {
+  useCampaign,
+  useCampaignAnalytics,
+  useCampaignDashboard,
+  useCampaignHealth,
+  useCampaignHistory,
+  useCampaignTemplates,
+  useCampaigns,
+  useCreateCampaign,
+  useDeleteCampaign,
+  useDuplicateCampaign,
+  usePauseCampaign,
+  useResumeCampaign,
+  useUpdateCampaign
+} from "./useCampaigns";
 export {
   useAssignContactEmployee,
   useContact,

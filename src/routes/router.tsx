@@ -10,6 +10,7 @@ import {
   ResetPasswordPage,
   VerifyEmailPage
 } from "@/modules/auth/pages";
+import { CampaignDetailPage, CampaignHistoryPage, CampaignTemplatesPage, CampaignsPage, CreateCampaignPage } from "@/modules/campaigns/pages";
 import { ContactImportPage, ContactListsPage, ContactProfilePage, ContactSegmentsPage, ContactsPage } from "@/modules/contacts/pages";
 import { EmployeeDirectoryPage, EmployeeWorkspacePage, HireEmployeePage } from "@/modules/employees/pages";
 import {
@@ -202,12 +203,37 @@ const contactProfileRoute = createRoute({
   component: ContactProfilePage
 });
 
+const campaignsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/campaigns",
+  component: CampaignsPage
+});
+
+const createCampaignRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/campaigns/create",
+  component: CreateCampaignPage
+});
+
+const campaignTemplatesRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/campaigns/templates",
+  component: CampaignTemplatesPage
+});
+
+const campaignHistoryRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/campaigns/history",
+  component: CampaignHistoryPage
+});
+
+const campaignDetailRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/campaigns/$campaignId",
+  component: CampaignDetailPage
+});
+
 const moduleRoutes = [
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/campaigns",
-    component: () => <FoundationModulePage title="Campaigns" description="Assign business objectives to AI Employees and measure outcomes." />
-  }),
   createRoute({
     getParentRoute: () => appRoute,
     path: "/conversations",
@@ -272,6 +298,11 @@ const routeTree = rootRoute.addChildren([
     contactsSegmentsRoute,
     contactsListsRoute,
     contactProfileRoute,
+    campaignsRoute,
+    createCampaignRoute,
+    campaignTemplatesRoute,
+    campaignHistoryRoute,
+    campaignDetailRoute,
     ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === appRoute)
   ]),
   ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === rootRoute)

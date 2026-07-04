@@ -188,12 +188,151 @@ export interface EmployeeWorkspaceData {
 export interface Campaign {
   id: string;
   name: string;
-  status: "draft" | "scheduled" | "running" | "paused" | "completed" | "cancelled";
+  status: "draft" | "scheduled" | "running" | "paused" | "completed" | "cancelled" | "archived";
   assignedEmployeeId: string;
+  assignedEmployeeName?: string;
   contacts: number;
   progress: number;
   appointments: number;
   revenueInfluenced: number;
+  businessGoal?: string;
+  department?: string;
+  type?: CampaignType;
+  priority?: Priority;
+  conversionRate?: number;
+  health?: number;
+  launchDate?: string;
+  knowledgeIds?: string[];
+}
+
+export type CampaignType =
+  | "Sales"
+  | "Lead Qualification"
+  | "Renewals"
+  | "Customer Support"
+  | "Claims"
+  | "Collections"
+  | "Recruitment"
+  | "Surveys"
+  | "Feedback"
+  | "Custom Campaign";
+
+export interface CampaignDashboard {
+  totalCampaigns: number;
+  runningCampaigns: number;
+  scheduledCampaigns: number;
+  completedCampaigns: number;
+  pausedCampaigns: number;
+  appointmentsGenerated: number;
+  revenueInfluenced: string;
+  campaignSuccessRate: number;
+  recommendations: CampaignRecommendation[];
+  activity: CampaignTimelineItem[];
+}
+
+export interface CampaignRecommendation {
+  id: string;
+  priority: Priority;
+  title: string;
+  reason: string;
+  impact: string;
+  action: string;
+  href: string;
+}
+
+export interface CampaignHealth {
+  overallScore: number;
+  knowledgeQuality: number;
+  employeeHealth: number;
+  contactQuality: number;
+  conversionRate: number;
+  completionProgress: number;
+}
+
+export interface CampaignAnalytics {
+  callsOverTime: { name: string; calls: number; appointments: number; revenue: number }[];
+  funnel: { name: string; value: number }[];
+  sentiment: { name: string; value: number }[];
+  liveMetrics: {
+    callsToday: number;
+    callsCompleted: number;
+    appointments: number;
+    interestedCustomers: number;
+    notInterested: number;
+    followUpRequired: number;
+    voicemail: number;
+    failedCalls: number;
+  };
+  performance: {
+    averageDuration: string;
+    pendingCalls: number;
+    completedCalls: number;
+    callsInProgress: number;
+    failedCalls: number;
+    currentQueue: number;
+    customerSatisfaction: number;
+  };
+}
+
+export interface CampaignContact {
+  id: string;
+  contactId: string;
+  fullName: string;
+  company: string;
+  status: Contact["status"];
+  lastContact: string;
+  outcome: string;
+  nextAction: string;
+}
+
+export interface CampaignKnowledgeItem {
+  id: string;
+  knowledgeId: string;
+  title: string;
+  type: Knowledge["type"];
+  usage: number;
+  performance: number;
+  freshness: number;
+  recommendation: string;
+}
+
+export interface CampaignTimelineItem {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  href?: string;
+}
+
+export interface CampaignTemplate {
+  id: string;
+  name: string;
+  type: CampaignType;
+  description: string;
+  recommendedEmployeeRole: string;
+  estimatedDuration: string;
+  expectedOutcome: string;
+}
+
+export interface CampaignDetail extends Campaign {
+  description: string;
+  objective: string;
+  targetAudience: string;
+  timeline: CampaignTimelineItem[];
+  contactsAssigned: CampaignContact[];
+  knowledgeAssigned: CampaignKnowledgeItem[];
+  callingStrategy: {
+    businessHours: string;
+    retryRules: string;
+    callAttempts: number;
+    escalationRules: string;
+    followUpDelay: string;
+  };
+  schedule: {
+    mode: "Launch Now" | "Future Date" | "Recurring";
+    businessCalendar: string;
+    endDate: string;
+  };
 }
 
 export interface Knowledge {
