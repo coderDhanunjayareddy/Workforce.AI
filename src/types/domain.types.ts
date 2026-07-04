@@ -51,6 +51,140 @@ export interface Employee {
   lastActive: string;
 }
 
+export interface EmployeeHealth {
+  overall: number;
+  knowledge: number;
+  voice: number;
+  performance: number;
+  compliance: number;
+  tools: number;
+  conversationQuality: number;
+  trainingStatus: string;
+  trend: string;
+  history: { name: string; value: number }[];
+}
+
+export interface EmployeePerformance {
+  businessContribution: {
+    revenueInfluenced: string;
+    appointmentsBooked: number;
+    callsCompleted: number;
+    qualifiedLeads: number;
+    customerSatisfaction: number;
+    hoursSaved: number;
+    conversionRate: number;
+  };
+  monthlyTrends: { name: string; calls: number; appointments: number; revenue: number }[];
+  leaderboardPosition: number;
+}
+
+export interface EmployeeTimelineItem {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+}
+
+export interface EmployeeKnowledgeItem {
+  id: string;
+  title: string;
+  type: string;
+  status: string;
+  freshness: number;
+  version: string;
+  lastUpdated: string;
+}
+
+export interface EmployeeTrainingItem {
+  id: string;
+  title: string;
+  status: string;
+  date: string;
+  outcome: string;
+}
+
+export interface EmployeeVersionItem {
+  id: string;
+  version: string;
+  published: string;
+  changes: string;
+  knowledgeUpdated: string;
+  performanceDifference: string;
+}
+
+export interface EmployeeConversationItem extends Conversation {
+  campaign: string;
+  outcome: string;
+  knowledgeUsed: string;
+  date: string;
+}
+
+export interface EmployeeGoal {
+  id: string;
+  title: string;
+  target: string;
+  progress: number;
+  achievement: string;
+}
+
+export interface EmployeeSkill {
+  id: string;
+  title: string;
+  level: number;
+  trend: string;
+  lastTraining: string;
+}
+
+export interface EmployeeToolConnection {
+  id: string;
+  name: string;
+  status: "connected" | "attention";
+  lastSync: string;
+}
+
+export interface EmployeePolicy {
+  id: string;
+  title: string;
+  value: string;
+}
+
+export interface EmployeeRecommendation {
+  id: string;
+  priority: Priority;
+  title: string;
+  impact: string;
+  action: string;
+  href: string;
+}
+
+export interface EmployeeWorkspaceData {
+  manager: string;
+  currentVersion: string;
+  createdDate: string;
+  assignment: {
+    campaign: string;
+    department: string;
+    businessGoal: string;
+    priority: Priority;
+    workingHours: string;
+  };
+  voiceProfile: {
+    accent: string;
+    tone: string;
+    speakingSpeed: string;
+    pitch: string;
+    emotion: string;
+    quality: number;
+  };
+  policies: EmployeePolicy[];
+  goals: EmployeeGoal[];
+  skills: EmployeeSkill[];
+  tools: EmployeeToolConnection[];
+  notifications: string[];
+  pinnedNotes: string[];
+  recommendations: EmployeeRecommendation[];
+}
+
 export interface Campaign {
   id: string;
   name: string;
