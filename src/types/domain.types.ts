@@ -206,6 +206,111 @@ export interface Knowledge {
   version: string;
 }
 
+export interface KnowledgeCollection {
+  id: string;
+  name: string;
+  department: string;
+  documents: number;
+  freshness: number;
+  employeesAssigned: number;
+}
+
+export interface KnowledgeQueueItem {
+  id: string;
+  title: string;
+  stage: string;
+  progress: number;
+  eta: string;
+  status: "processing" | "scanning" | "indexing" | "failed";
+}
+
+export interface KnowledgeActivityItem {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  href: string;
+}
+
+export interface KnowledgeRecommendation {
+  id: string;
+  priority: Priority;
+  title: string;
+  impact: string;
+  action: string;
+  href: string;
+}
+
+export interface KnowledgeDashboard {
+  stats: {
+    totalSources: number;
+    indexed: number;
+    processing: number;
+    requiresReview: number;
+    freshness: number;
+    storageUsed: string;
+  };
+  collections: KnowledgeCollection[];
+  processingQueue: KnowledgeQueueItem[];
+  activity: KnowledgeActivityItem[];
+  recommendations: KnowledgeRecommendation[];
+  recentlyUpdated: string[];
+  mostUsed: string[];
+}
+
+export interface KnowledgeVersion {
+  id: string;
+  version: string;
+  published: string;
+  changes: string;
+  author: string;
+  status: "current" | "published" | "restored";
+}
+
+export interface KnowledgeUsage {
+  employeesUsing: number;
+  campaignsUsing: number;
+  conversationsReferenced: number;
+  customerQuestionsAnswered: number;
+  appointmentsGenerated: number;
+  revenueInfluenced: string;
+}
+
+export interface KnowledgeQuality {
+  coverage: number;
+  freshness: number;
+  completeness: number;
+  accuracy: number;
+  readability: number;
+  usage: number;
+  confidence: number;
+  overall: number;
+}
+
+export interface KnowledgeSummary {
+  purpose: string;
+  keyTopics: string[];
+  businessValue: string;
+  recommendedDepartments: string[];
+  employeesUsingIt: string[];
+}
+
+export interface KnowledgeDetail extends Knowledge {
+  category: string;
+  owner: string;
+  description: string;
+  tags: string[];
+  language: string;
+  indexedDate: string;
+  assignedEmployees: string[];
+  quality: KnowledgeQuality;
+  usage: KnowledgeUsage;
+  summary: KnowledgeSummary;
+  versions: KnowledgeVersion[];
+  processingLog: KnowledgeQueueItem[];
+  relatedDocuments: string[];
+}
+
 export interface Contact {
   id: string;
   fullName: string;

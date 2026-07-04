@@ -2,7 +2,18 @@ export { useAnalytics, useInsights } from "./useAnalytics";
 export { useCampaign, useCampaigns } from "./useCampaigns";
 export { useContacts } from "./useContacts";
 export { useLiveCalls } from "./useConversations";
-export { useDocument, useKnowledge } from "./useKnowledge";
+export {
+  useAssignKnowledge,
+  useDeleteKnowledge,
+  useDocument,
+  useKnowledge,
+  useKnowledgeCollections,
+  useKnowledgeDashboard,
+  useKnowledgeSearch,
+  useKnowledgeVersions,
+  useUpdateKnowledgeMetadata,
+  useUploadKnowledge
+} from "./useKnowledge";
 export {
   useArchiveEmployee,
   useDeleteEmployee,

@@ -11,6 +11,13 @@ import {
   VerifyEmailPage
 } from "@/modules/auth/pages";
 import { EmployeeDirectoryPage, EmployeeWorkspacePage, HireEmployeePage } from "@/modules/employees/pages";
+import {
+  KnowledgeCenterPage,
+  KnowledgeCollectionsPage,
+  KnowledgeDetailPage,
+  KnowledgeUploadPage,
+  KnowledgeVersionsPage
+} from "@/modules/knowledge/pages";
 import { MarketingSubPage } from "@/modules/marketing/pages";
 import { WorkforceDashboardPage } from "@/modules/workforce/pages";
 import { FoundationModulePage } from "@/routes/pages/FoundationModulePage";
@@ -134,12 +141,37 @@ const employeeDetailRoute = createRoute({
   component: EmployeeWorkspacePage
 });
 
+const knowledgeRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/knowledge",
+  component: KnowledgeCenterPage
+});
+
+const knowledgeUploadRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/knowledge/upload",
+  component: KnowledgeUploadPage
+});
+
+const knowledgeCategoriesRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/knowledge/categories",
+  component: KnowledgeCollectionsPage
+});
+
+const knowledgeVersionsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/knowledge/versions",
+  component: KnowledgeVersionsPage
+});
+
+const knowledgeDetailRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/knowledge/$knowledgeId",
+  component: KnowledgeDetailPage
+});
+
 const moduleRoutes = [
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/knowledge",
-    component: () => <FoundationModulePage title="Knowledge Center" description="Centralize and improve the knowledge powering the AI Workforce." />
-  }),
   createRoute({
     getParentRoute: () => appRoute,
     path: "/contacts",
@@ -204,6 +236,11 @@ const routeTree = rootRoute.addChildren([
     employeesRoute,
     hireEmployeeRoute,
     employeeDetailRoute,
+    knowledgeRoute,
+    knowledgeUploadRoute,
+    knowledgeCategoriesRoute,
+    knowledgeVersionsRoute,
+    knowledgeDetailRoute,
     ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === appRoute)
   ]),
   ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === rootRoute)
