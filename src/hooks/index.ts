@@ -1,4 +1,16 @@
-export { useAnalytics, useInsights } from "./useAnalytics";
+export {
+  useAnalytics,
+  useConversationAnalytics,
+  useEmployeeAnalytics,
+  useExecutiveCampaignAnalytics,
+  useExecutiveInsights,
+  useForecast,
+  useGenerateReport,
+  useInsights,
+  useKnowledgeAnalytics,
+  useReports,
+  useRevenue
+} from "./useAnalytics";
 export {
   useCampaign,
   useCampaignAnalytics,

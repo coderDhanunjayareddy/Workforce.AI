@@ -1,6 +1,7 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router";
 
 import { AppShell } from "@/components/layout";
+import { AnalyticsPage } from "@/modules/analytics/pages";
 import {
   ForgotPasswordPage,
   InvitationPage,
@@ -258,12 +259,49 @@ const conversationDetailRoute = createRoute({
   component: ConversationDetailPage
 });
 
+const analyticsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics",
+  component: () => <AnalyticsPage section="overview" />
+});
+
+const analyticsWorkforceRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics/workforce",
+  component: () => <AnalyticsPage section="workforce" />
+});
+
+const analyticsEmployeesRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics/employees",
+  component: () => <AnalyticsPage section="employees" />
+});
+
+const analyticsCampaignsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics/campaigns",
+  component: () => <AnalyticsPage section="campaigns" />
+});
+
+const analyticsConversationsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics/conversations",
+  component: () => <AnalyticsPage section="conversations" />
+});
+
+const analyticsCustomersRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics/customers",
+  component: () => <AnalyticsPage section="customers" />
+});
+
+const analyticsReportsRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "/analytics/reports",
+  component: () => <AnalyticsPage section="reports" />
+});
+
 const moduleRoutes = [
-  createRoute({
-    getParentRoute: () => appRoute,
-    path: "/analytics",
-    component: () => <FoundationModulePage title="Analytics & Business Intelligence" description="Transform AI Workforce activity into measurable business outcomes." />
-  }),
   createRoute({
     getParentRoute: () => appRoute,
     path: "/settings",
@@ -320,6 +358,13 @@ const routeTree = rootRoute.addChildren([
     liveDetailRoute,
     conversationsRoute,
     conversationDetailRoute,
+    analyticsRoute,
+    analyticsWorkforceRoute,
+    analyticsEmployeesRoute,
+    analyticsCampaignsRoute,
+    analyticsConversationsRoute,
+    analyticsCustomersRoute,
+    analyticsReportsRoute,
     ...moduleRoutes.filter((route) => route.options.getParentRoute?.() === appRoute)
   ])
 ]);

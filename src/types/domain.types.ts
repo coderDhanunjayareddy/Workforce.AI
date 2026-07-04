@@ -748,6 +748,132 @@ export interface AnalyticsSummary {
   callsAutomated: number;
 }
 
+export interface AnalyticsKpis extends AnalyticsSummary {
+  conversionRate: number;
+  roi: number;
+}
+
+export interface AnalyticsChartPoint {
+  name: string;
+  revenue?: number;
+  appointments?: number;
+  calls?: number;
+  leads?: number;
+  value?: number;
+  satisfaction?: number;
+}
+
+export interface EmployeeAnalyticsRow {
+  rank: number;
+  employeeId: string;
+  employee: string;
+  department: string;
+  calls: number;
+  appointments: number;
+  revenue: string;
+  csat: number;
+  health: number;
+  trend: string;
+}
+
+export interface AnalyticsInsight {
+  id: string;
+  priority: Priority;
+  title: string;
+  businessImpact: string;
+  recommendedAction: string;
+  href: string;
+}
+
+export interface AnalyticsForecast {
+  id: string;
+  label: string;
+  value: string;
+  trend: string;
+  description: string;
+}
+
+export interface ReportDefinition {
+  id: string;
+  title: string;
+  format: "PDF" | "Excel" | "CSV";
+  status: "ready" | "building" | "failed";
+  date: string;
+  preparedBy: string;
+}
+
+export interface AnalyticsDashboard extends AnalyticsSummary {
+  kpis: AnalyticsKpis;
+  businessImpact: {
+    revenueTrend: AnalyticsChartPoint[];
+    appointments: AnalyticsChartPoint[];
+    businessGrowth: AnalyticsChartPoint[];
+    policiesSold: AnalyticsChartPoint[];
+    qualifiedLeads: AnalyticsChartPoint[];
+    hoursSaved: AnalyticsChartPoint[];
+    summary: string;
+  };
+  workforcePerformance: {
+    totalEmployees: number;
+    activeEmployees: number;
+    averageHealth: number;
+    averageCsat: number;
+    averageCallDuration: string;
+    successRate: number;
+    utilization: number;
+  };
+  employeeLeaderboard: EmployeeAnalyticsRow[];
+  campaignAnalytics: {
+    campaignSuccess: number;
+    appointments: number;
+    revenue: string;
+    conversion: number;
+    customerResponse: number;
+    completion: number;
+    comparison: AnalyticsChartPoint[];
+    funnel: AnalyticsChartPoint[];
+    revenueDistribution: AnalyticsChartPoint[];
+  };
+  customerAnalytics: {
+    leadSources: AnalyticsChartPoint[];
+    customerSegments: AnalyticsChartPoint[];
+    policyDistribution: AnalyticsChartPoint[];
+    retention: number;
+    renewals: number;
+    responseRate: number;
+    satisfaction: number;
+  };
+  conversationAnalytics: {
+    callsPerHour: AnalyticsChartPoint[];
+    averageDuration: string;
+    firstCallResolution: number;
+    escalationRate: number;
+    sentimentDistribution: AnalyticsChartPoint[];
+    knowledgeUsage: AnalyticsChartPoint[];
+    outcomes: AnalyticsChartPoint[];
+  };
+  knowledgeAnalytics: {
+    mostUsedDocuments: AnalyticsChartPoint[];
+    coverage: number;
+    freshness: number;
+    confidence: number;
+    documentUsage: AnalyticsChartPoint[];
+    trainingImpact: AnalyticsChartPoint[];
+  };
+  workforceHealth: {
+    overallHealth: number;
+    departmentHealth: AnalyticsChartPoint[];
+    employeeHealth: AnalyticsChartPoint[];
+    trainingHealth: number;
+    knowledgeHealth: number;
+    compliance: number;
+  };
+  insights: AnalyticsInsight[];
+  forecasts: AnalyticsForecast[];
+  reports: ReportDefinition[];
+  executiveSummary: string;
+}
+
 export interface AppNotification {
   id: string;
   title: string;
