@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Sora", sans-serif;
+  --font-sans: "Manrope", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-card: 20px;
+  --radius-dialog: 24px;
+  --shadow-xs: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-sm: 0 8px 18px rgb(15 23 42 / 0.08);
+  --shadow-md: 0 16px 32px rgb(15 23 42 / 0.10);
+  --shadow-lg: 0 24px 48px rgb(15 23 42 / 0.14);
+  --shadow-xl: 0 32px 80px rgb(15 23 42 / 0.18);
+}
+
+:root {
+  color-scheme: light;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-elevated: #fcfcfd;
+  --sidebar: #0f1b3d;
+  --primary: #0f1b3d;
+  --primary-hover: #152754;
+  --ai-accent: #0d9488;
+  --ai-hover: #0f766e;
+  --secondary: #3b82f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --border: #e2e8f0;
+  --muted-border: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #020617;
+  --surface: #0f172a;
+  --surface-elevated: #1e293b;
+  --sidebar: #0f172a;
+  --primary: #60a5fa;
+  --primary-hover: #93c5fd;
+  --ai-accent: #2dd4bf;
+  --ai-hover: #5eead4;
+  --secondary: #60a5fa;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #60a5fa;
+  --border: #334155;
+  --muted-border: #475569;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ai-accent) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.text-primary-token {
+  color: var(--text-primary);
+}
+
+.text-secondary-token {
+  color: var(--text-secondary);
+}
+
+.text-muted-token {
+  color: var(--text-muted);
+}
+
+.surface-token {
+  background: var(--surface);
+}
+
+.border-token {
+  border-color: var(--border);
+}

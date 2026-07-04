@@ -1,0 +1,1 @@
+export { WorkforceDashboardPage } from "./WorkforceDashboardPage";
