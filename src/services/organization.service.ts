@@ -180,8 +180,8 @@ const dashboard: OrganizationAdminDashboard = {
     documentationUrl: "/app/support"
   },
   auditLogs: [
-    { id: "audit_1", timestamp: "Jul 4, 2026 22:16", user: "Priya Reddy", action: "Knowledge Upload", resource: "Pricing Guide v3", ipAddress: "103.44.18.24", status: "success" },
-    { id: "audit_2", timestamp: "Jul 4, 2026 21:42", user: "Arjun Menon", action: "Campaign Launch", resource: "Motor Insurance Q3", ipAddress: "49.207.91.18", status: "success" },
+    { id: "audit_1", timestamp: "Jul 4, 2026 22:16", user: "Priya Reddy", action: "Knowledge Upload", resource: "Premium Pricing Guide", ipAddress: "103.44.18.24", status: "success" },
+    { id: "audit_2", timestamp: "Jul 4, 2026 21:42", user: "Arjun Menon", action: "Campaign Launch", resource: "Motor Insurance Renewal Q3", ipAddress: "49.207.91.18", status: "success" },
     { id: "audit_3", timestamp: "Jul 4, 2026 20:58", user: "Rahul Sharma", action: "Role Change", resource: "Operations Manager", ipAddress: "103.44.18.24", status: "warning" },
     { id: "audit_4", timestamp: "Jul 4, 2026 19:24", user: "Security System", action: "IP Restriction", resource: "Unknown login", ipAddress: "185.19.84.10", status: "blocked" }
   ],

@@ -7,7 +7,7 @@ export const workforceDashboardData: WorkforceDashboardData = {
       label: "Total AI Employees",
       value: "18",
       trend: "+2 this month",
-      comparison: "14 active, 2 training, 2 ready",
+      comparison: "14 active, 2 training, 1 paused, 1 draft",
       icon: "users",
       sparkline: [12, 13, 13, 15, 16, 16, 18]
     },
@@ -34,7 +34,7 @@ export const workforceDashboardData: WorkforceDashboardData = {
       label: "Appointments Booked",
       value: "216",
       trend: "+9%",
-      comparison: "Motor and renewal campaigns lead",
+      comparison: "Motor renewal and policy expiry campaigns lead",
       icon: "calendar",
       sparkline: [84, 102, 126, 144, 171, 196, 216]
     },
@@ -141,32 +141,32 @@ export const workforceDashboardData: WorkforceDashboardData = {
       id: "activity-2",
       time: "09:18",
       title: "Emma renewed policy",
-      description: "Renewal Drive recorded a high-value customer renewal.",
-      href: "/app/campaigns",
+      description: "Policy Expiry Renewal Drive recorded a high-value customer renewal.",
+      href: "/app/campaigns/camp_policy_expiry",
       tone: "success"
     },
     {
       id: "activity-3",
       time: "09:31",
       title: "Campaign launched",
-      description: "Travel Insurance Outreach started with 250 contacts.",
-      href: "/app/campaigns",
+      description: "Travel Insurance Leads started with 360 contacts.",
+      href: "/app/campaigns/camp_travel_leads",
       tone: "info"
     },
     {
       id: "activity-4",
       time: "09:42",
       title: "Knowledge updated",
-      description: "Pricing Guide v3 was published for the sales workforce.",
-      href: "/app/knowledge",
+      description: "Premium Pricing Guide was published for the sales workforce.",
+      href: "/app/knowledge/kn_premium_pricing",
       tone: "info"
     },
     {
       id: "activity-5",
       time: "09:56",
       title: "David resolved claim",
-      description: "Claim Support July closed a customer query without escalation.",
-      href: "/app/employees/emp_david",
+      description: "Claims Follow-up closed a customer query without escalation.",
+      href: "/app/conversations/conv_3",
       tone: "success"
     }
   ],
@@ -180,17 +180,18 @@ export const workforceDashboardData: WorkforceDashboardData = {
     { id: "directory", title: "Open Employee Directory", description: "Manage roles, health and performance.", href: "/app/employees", icon: "briefcase" }
   ],
   departments: [
-    { id: "sales", department: "Sales", employees: 6, health: 98, performance: 96 },
-    { id: "support", department: "Support", employees: 4, health: 97, performance: 94 },
-    { id: "finance", department: "Finance", employees: 2, health: 95, performance: 91 },
-    { id: "hr", department: "HR", employees: 2, health: 93, performance: 89 },
-    { id: "claims", department: "Claims", employees: 4, health: 96, performance: 92 }
+    { id: "sales", department: "Sales", employees: 8, health: 97, performance: 96 },
+    { id: "support", department: "Customer Support", employees: 4, health: 96, performance: 95 },
+    { id: "claims", department: "Claims", employees: 2, health: 96, performance: 95 },
+    { id: "operations", department: "Operations", employees: 2, health: 94, performance: 93 },
+    { id: "finance", department: "Finance", employees: 1, health: 97, performance: 95 },
+    { id: "compliance", department: "Compliance", employees: 1, health: 97, performance: 96 }
   ],
   priorities: [
     {
       id: "pricing-guide",
       priority: "critical",
-      title: "Review Pricing Guide",
+      title: "Review Premium Pricing Guide",
       description: "Sales conversations are using material that needs review.",
       cta: "Update Knowledge",
       href: "/app/knowledge"
@@ -198,7 +199,7 @@ export const workforceDashboardData: WorkforceDashboardData = {
     {
       id: "renewal-campaign",
       priority: "high",
-      title: "Launch Renewal Campaign",
+      title: "Scale Policy Expiry Renewal Drive",
       description: "310 renewals are due this week across Nova Insurance.",
       cta: "Open Campaigns",
       href: "/app/campaigns"
@@ -215,7 +216,7 @@ export const workforceDashboardData: WorkforceDashboardData = {
       id: "travel-leads",
       priority: "medium",
       title: "Import 250 Travel Leads",
-      description: "Travel Insurance Outreach will exhaust contacts tomorrow.",
+      description: "Travel Insurance Leads will exhaust its high-intent segment tomorrow.",
       cta: "Import Contacts",
       href: "/app/contacts"
     }

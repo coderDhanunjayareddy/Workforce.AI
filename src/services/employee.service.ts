@@ -1,5 +1,5 @@
 import { mockApi } from "@/mocks/mockApi";
-import { campaigns, conversations, employees, knowledge } from "@/mocks/mockData";
+import { campaigns, conversationRecords, conversations, employeeProfiles, employees, knowledge } from "@/mocks/mockData";
 import type {
   Employee,
   EmployeeConversationItem,
@@ -18,24 +18,28 @@ const getEmployeeOrThrow = (id: string) => {
   return employee;
 };
 
-const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => ({
-  manager: "Priya Reddy",
+const getEmployeeProfile = (id: string) => employeeProfiles.find((profile) => profile.id === id);
+
+const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => {
+  const profile = getEmployeeProfile(employee.id);
+  return {
+  manager: profile?.manager ?? "Priya Reddy",
   currentVersion: "v2.1",
-  createdDate: "2026-01-12",
+  createdDate: profile?.aiExperienceYears && profile.aiExperienceYears >= 4 ? "2025-11-18" : "2026-01-12",
   assignment: {
     campaign: employee.currentCampaign ?? "Available for assignment",
     department: employee.department,
-    businessGoal: employee.department === "Claims" ? "Resolve claims faster" : "Increase qualified customer outcomes",
+    businessGoal: employee.department === "Claims" ? "Resolve claims faster" : profile?.goals[0] ?? "Increase qualified customer outcomes",
     priority: employee.health >= 97 ? "high" : "medium",
-    workingHours: "09:00 - 18:00 IST"
+    workingHours: profile?.workingHours ?? "09:00 - 18:00 IST"
   },
   voiceProfile: {
     accent: "Indian English",
-    tone: employee.department === "Claims" ? "Empathetic" : "Consultative",
+    tone: profile?.personality.split(",")[0] ?? (employee.department === "Claims" ? "Empathetic" : "Consultative"),
     speakingSpeed: "Balanced",
     pitch: "Medium",
-    emotion: "Confident",
-    quality: Math.min(100, employee.health + 1)
+    emotion: profile?.personality.split(" and ").at(-1) ?? "Confident",
+    quality: Math.min(100, profile?.conversationQuality ?? employee.health + 1)
   },
   policies: [
     { id: "hours", title: "Working Hours", value: "09:00 - 18:00 IST, Monday to Saturday" },
@@ -46,9 +50,9 @@ const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => ({
     { id: "approval", title: "Approval Rules", value: "Pricing exceptions require manager approval before commitment." }
   ],
   goals: [
-    { id: "daily", title: "Daily Target", target: "90 conversations", progress: Math.min(100, employee.callsToday), achievement: "On track" },
-    { id: "weekly", title: "Weekly Target", target: "42 appointments", progress: Math.min(100, employee.appointmentsToday * 12), achievement: "+8% above baseline" },
-    { id: "monthly", title: "Monthly Target", target: "Rs. 18L influenced", progress: employee.performance, achievement: "Strong" }
+    { id: "daily", title: "Daily Target", target: `${Math.max(60, employee.callsToday)} conversations`, progress: Math.min(100, employee.callsToday), achievement: profile?.goals[0] ?? "On track" },
+    { id: "weekly", title: "Weekly Target", target: `${Math.max(24, employee.appointmentsToday * 3)} appointments`, progress: Math.min(100, employee.appointmentsToday * 12), achievement: profile?.goals[1] ?? "+8% above baseline" },
+    { id: "monthly", title: "Monthly Target", target: `Rs. ${(((profile?.revenueInfluenced ?? 1800000) / 100000)).toFixed(1)}L influenced`, progress: employee.performance, achievement: "Strong" }
   ],
   skills: [
     { id: "lead", title: "Lead Qualification", level: employee.performance, trend: "+6%", lastTraining: "2 days ago" },
@@ -67,24 +71,27 @@ const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => ({
     { id: "webhook", name: "Webhook", status: employee.status === "paused" ? "attention" : "connected", lastSync: "21 minutes ago" },
     { id: "knowledge", name: "Knowledge Base", status: "connected", lastSync: "4 minutes ago" }
   ],
-  notifications: ["Campaign progress updated", "Knowledge freshness above target", "Voice quality check completed"],
-  pinnedNotes: ["Use premium plan comparison for high-intent customers.", "Escalate claims older than 14 days."],
+  notifications: [`${employee.currentCampaign ?? "Campaign"} progress updated`, "Knowledge freshness above target", `${employee.voice} quality check completed`],
+  pinnedNotes: [profile?.personality ?? "Use approved comparison language for high-intent customers.", "Escalate high-risk compliance or sentiment issues."],
   recommendations: [
     { id: "knowledge", priority: "high", title: "Knowledge requires update", impact: "Pricing accuracy can improve active conversations.", action: "Update Pricing Guide", href: "/app/knowledge" },
     { id: "quality", priority: "medium", title: "Conversation quality improving", impact: "CSAT rose after the latest script training.", action: "Review transcript", href: "/app/conversations" },
     { id: "appointments", priority: "medium", title: "Appointments dropped", impact: "A short retraining pass can recover conversion.", action: "Retrain Employee", href: `/app/employees/${employee.id}` },
     { id: "campaign", priority: "low", title: "Campaign nearly complete", impact: "This employee is ready for another assignment.", action: "Assign new campaign", href: "/app/campaigns" }
   ]
-});
+};
+};
 
-const getPerformance = (employee: Employee): EmployeePerformance => ({
+const getPerformance = (employee: Employee): EmployeePerformance => {
+  const profile = getEmployeeProfile(employee.id);
+  return {
   businessContribution: {
-    revenueInfluenced: `Rs. ${(employee.performance * 18500).toLocaleString("en-IN")}`,
-    appointmentsBooked: employee.appointmentsToday * 21,
-    callsCompleted: employee.callsToday * 21,
+    revenueInfluenced: `Rs. ${(profile?.revenueInfluenced ?? employee.performance * 18500).toLocaleString("en-IN")}`,
+    appointmentsBooked: profile?.appointmentsBooked ?? employee.appointmentsToday * 21,
+    callsCompleted: profile?.callsCompleted ?? employee.callsToday * 21,
     qualifiedLeads: Math.round(employee.callsToday * 0.42),
     customerSatisfaction: employee.csat,
-    hoursSaved: Math.round(employee.callsToday * 0.8),
+    hoursSaved: Math.round((profile?.callsCompleted ?? employee.callsToday) * 0.18),
     conversionRate: Math.min(39, employee.performance - 68)
   },
   monthlyTrends: [
@@ -94,7 +101,8 @@ const getPerformance = (employee: Employee): EmployeePerformance => ({
     { name: "Week 4", calls: employee.callsToday * 6, appointments: employee.appointmentsToday * 6, revenue: employee.performance * 6900 }
   ],
   leaderboardPosition: [...employees].sort((first, second) => second.performance - first.performance).findIndex((item) => item.id === employee.id) + 1
-});
+};
+};
 
 const getHealth = (employee: Employee): EmployeeHealth => ({
   overall: employee.health,
@@ -126,8 +134,12 @@ const getTimeline = (employee: Employee): EmployeeTimelineItem[] => [
   { id: "improved", title: "Performance Improved", description: `Performance reached ${employee.performance}%.`, date: "Today" }
 ];
 
-const getEmployeeKnowledge = (): EmployeeKnowledgeItem[] =>
-  knowledge.slice(0, 6).map((item, index) => ({
+const getEmployeeKnowledge = (employee: Employee): EmployeeKnowledgeItem[] => {
+  const profile = getEmployeeProfile(employee.id);
+  const assignedKnowledge = profile?.knowledgeIds
+    .map((knowledgeId) => knowledge.find((item) => item.id === knowledgeId))
+    .filter((item): item is NonNullable<typeof item> => Boolean(item)) ?? knowledge.slice(0, 4);
+  return assignedKnowledge.map((item, index) => ({
     id: item.id,
     title: item.title,
     type: item.type,
@@ -136,6 +148,7 @@ const getEmployeeKnowledge = (): EmployeeKnowledgeItem[] =>
     version: item.version,
     lastUpdated: index < 2 ? "Today" : `${index + 1} days ago`
   }));
+};
 
 const getTraining = (employee: Employee): EmployeeTrainingItem[] => [
   { id: "current", title: `${employee.currentCampaign ?? "Campaign"} readiness`, status: "Current", date: "Today", outcome: "Ready for customer conversations" },
@@ -160,8 +173,7 @@ export const employeeService = {
   getHealth: (id: string) => mockApi<EmployeeHealth>(() => getHealth(getEmployeeOrThrow(id))),
   getTimeline: (id: string) => mockApi<EmployeeTimelineItem[]>(() => getTimeline(getEmployeeOrThrow(id))),
   getKnowledge: (id: string) => mockApi<EmployeeKnowledgeItem[]>(() => {
-    getEmployeeOrThrow(id);
-    return getEmployeeKnowledge();
+    return getEmployeeKnowledge(getEmployeeOrThrow(id));
   }),
   getVersions: () => mockApi<EmployeeVersionItem[]>(() => getVersions()),
   getTraining: (id: string) => mockApi<EmployeeTrainingItem[]>(() => getTraining(getEmployeeOrThrow(id))),
@@ -173,8 +185,8 @@ export const employeeService = {
         .map((conversation, index) => ({
           ...conversation,
           campaign: campaigns.find((campaign) => campaign.assignedEmployeeId === conversation.employeeId)?.name ?? "General Support",
-          outcome: index % 2 === 0 ? "Appointment booked" : "Follow-up scheduled",
-          knowledgeUsed: knowledge[index % knowledge.length]?.title ?? "FAQ.pdf",
+          outcome: conversation.outcome ?? (index % 2 === 0 ? "Appointment booked" : "Follow-up scheduled"),
+          knowledgeUsed: conversationRecords.find((item) => item.id === conversation.id)?.knowledgeUsed.join(", ") ?? knowledge[index % knowledge.length]?.title ?? "Customer FAQ",
           date: index === 0 ? "Today" : `${index + 1} days ago`
         }))
     ),

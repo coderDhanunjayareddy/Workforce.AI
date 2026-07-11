@@ -33,19 +33,19 @@ const getDashboard = (): KnowledgeDashboard => ({
     { id: "queue_3", title: "Policy Addendum.docx", stage: "Virus Scan", progress: 22, eta: "8 min", status: "scanning" }
   ],
   activity: [
-    { id: "activity_1", title: "Pricing Guide uploaded", description: "Sales collection received updated premium tables.", time: "09:42", href: "/app/knowledge/kn_pricing_guide_v3_pdf" },
-    { id: "activity_2", title: "Claims SOP updated", description: "David and Charlotte were assigned the new claims flow.", time: "09:18", href: "/app/knowledge/kn_claims_sop_pdf" },
+    { id: "activity_1", title: "Premium Pricing Guide uploaded", description: "Sales collection received updated premium tables.", time: "09:42", href: "/app/knowledge/kn_premium_pricing" },
+    { id: "activity_2", title: "Claims SOP updated", description: "David and Charlotte were assigned the new claims flow.", time: "09:18", href: "/app/knowledge/kn_claims_sop" },
     { id: "activity_3", title: "Emma retrained", description: "Renewal knowledge refreshed for Customer Support.", time: "08:56", href: "/app/employees/emp_emma" },
-    { id: "activity_4", title: "Insurance FAQ indexed", description: "FAQ collection passed quality checks.", time: "08:21", href: "/app/knowledge/kn_faq_pdf" }
+    { id: "activity_4", title: "Customer FAQ indexed", description: "FAQ collection passed quality checks.", time: "08:21", href: "/app/knowledge/kn_customer_faq" }
   ],
   recommendations: [
-    { id: "rec_pricing", priority: "critical", title: "Pricing Guide is outdated", impact: "Quote accuracy may drop in active sales conversations.", action: "Update document", href: "/app/knowledge/kn_pricing_guide_v3_pdf" },
-    { id: "rec_claims", priority: "high", title: "Claims SOP has low usage", impact: "Claims employees can resolve more cases if this is assigned broadly.", action: "Assign to Support Team", href: "/app/knowledge/kn_claims_sop_pdf" },
+    { id: "rec_pricing", priority: "critical", title: "Premium Pricing Guide is outdated", impact: "Quote accuracy may drop in active sales conversations.", action: "Update document", href: "/app/knowledge/kn_premium_pricing" },
+    { id: "rec_claims", priority: "high", title: "Claims SOP has low usage", impact: "Claims employees can resolve more cases if this is assigned broadly.", action: "Assign to Support Team", href: "/app/knowledge/kn_claims_sop" },
     { id: "rec_sales", priority: "medium", title: "Sales Script missing FAQ", impact: "Add objection responses to improve conversion.", action: "Upload additional material", href: "/app/knowledge/upload" },
     { id: "rec_overlap", priority: "low", title: "Knowledge overlap detected", impact: "Merge duplicate policy sections to reduce conflicting answers.", action: "Merge documents", href: "/app/knowledge/categories" }
   ],
-  recentlyUpdated: ["Pricing Guide v3.pdf", "Claims SOP.pdf", "FAQ.pdf", "IRDA Guidelines.pdf"],
-  mostUsed: ["Insurance Products.pdf", "Sales Script.docx", "FAQ.pdf", "Health Insurance Handbook.pdf"]
+  recentlyUpdated: ["Premium Pricing Guide", "Claims SOP", "Customer FAQ", "IRDA Guidelines"],
+  mostUsed: ["Motor Insurance Handbook", "Sales Conversation Playbook", "Customer FAQ", "Health Insurance Guide"]
 });
 
 const getDetail = (id: string): KnowledgeDetail => {
