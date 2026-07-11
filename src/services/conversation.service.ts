@@ -1,5 +1,5 @@
 import { mockApi } from "@/mocks/mockApi";
-import { campaigns, contacts, conversations, employees, knowledge } from "@/mocks/mockData";
+import { contacts, conversationRecords, conversations, employees, knowledge } from "@/mocks/mockData";
 import type {
   Conversation,
   ConversationDetail,
@@ -13,51 +13,7 @@ import type {
   TranscriptLine
 } from "@/types";
 
-const additionalLiveCalls = [
-  ["emp_sophia", "Nisha Menon", "Motor Insurance", "02:34", "positive", "live"],
-  ["emp_emma", "Pooja Nair", "Policy Renewal", "05:02", "satisfied", "live"],
-  ["emp_david", "Karthik Shah", "Claim Support", "01:18", "neutral", "on-hold"],
-  ["emp_liam", "Ishita Das", "Health Insurance", "04:46", "positive", "live"],
-  ["emp_noah", "Arvind Singh", "Invoice Follow-up", "03:22", "neutral", "queued"],
-  ["emp_ava", "Vikram Reddy", "General Support", "06:08", "negative", "escalated"]
-] as const;
-
-const baseLiveCalls: Conversation[] = [
-  ...conversations.map((conversation) => [
-    conversation.employeeId,
-    conversation.customerName,
-    conversation.goal,
-    conversation.duration,
-    conversation.sentiment,
-    conversation.status
-  ] as const),
-  ...additionalLiveCalls
-].map(([employeeId, customerName, goal, duration, sentiment, status], index) => {
-  const employee = employees.find((item) => item.id === employeeId);
-  const campaign = campaigns[index % campaigns.length];
-  const contact = contacts.find((item) => item.fullName === customerName) ?? contacts[index % contacts.length];
-  return {
-    id: index < conversations.length ? `conv_${index + 1}` : `conv_live_${index + 1}`,
-    employeeId: String(employeeId),
-    employeeName: employee?.name,
-    department: employee?.department,
-    campaignId: campaign?.id,
-    campaignName: campaign?.name ?? String(goal),
-    contactId: contact?.id,
-    customerName: String(customerName),
-    customerPhone: contact?.phone ?? `+91 98765 12${String(index + 40).padStart(3, "0")}`,
-    goal: String(goal),
-    duration: String(duration),
-    sentiment: sentiment as Conversation["sentiment"],
-    status: status as Conversation["status"],
-    outcome: index % 3 === 0 ? "Appointment likely" : index % 3 === 1 ? "Follow-up needed" : "Question answered",
-    health: Math.max(74, 96 - index * 2),
-    currentStage: ["Greeting", "Identity Verification", "Need Discovery", "Recommendation", "Objection Handling", "Appointment", "Closing"][index % 7],
-    buyingIntent: index % 3 === 0 ? "High" : index % 3 === 1 ? "Medium" : "Low",
-    riskLevel: index === 9 ? "High" : index % 4 === 0 ? "Medium" : "Low",
-    confidence: Math.max(78, 94 - index)
-  };
-});
+const baseLiveCalls: Conversation[] = conversations;
 
 const dashboard: LiveOperationsDashboard = {
   activeCalls: 8,
@@ -84,25 +40,17 @@ const dashboard: LiveOperationsDashboard = {
     { id: "notif_appointment", title: "Sophia booked appointment.", description: "Rajesh Kumar accepted a motor insurance review slot.", time: "Now", href: "/app/conversations/conv_1" },
     { id: "notif_callback", title: "Customer requested callback.", description: "Anjali Rao prefers renewal follow-up tomorrow.", time: "2m ago", href: "/app/conversations/conv_2" },
     { id: "notif_escalated", title: "David escalated conversation.", description: "Claim support sentiment requires manager review.", time: "4m ago", href: "/app/conversations/conv_3" },
-    { id: "notif_renewal", title: "Emma completed renewal.", description: "Policy Renewal Drive reached a positive outcome.", time: "7m ago", href: "/app/campaigns" }
+    { id: "notif_renewal", title: "Emma protected renewal revenue.", description: "Policy Expiry Renewal Drive reached a positive outcome.", time: "7m ago", href: "/app/campaigns/camp_policy_expiry" }
   ],
   recommendations: [
     { id: "rec_intent", priority: "high", title: "Customer showing strong buying intent.", action: "Offer Premium Plan", reason: "Positive sentiment and premium questions indicate readiness.", href: "/app/conversations/conv_1" },
-    { id: "rec_negative", priority: "critical", title: "Negative sentiment increasing.", action: "Escalate conversation", reason: "Support conversation includes repeated objection signals.", href: "/app/conversations/conv_live_10" },
+    { id: "rec_negative", priority: "critical", title: "Negative sentiment increasing.", action: "Escalate conversation", reason: "Support conversation includes repeated objection signals.", href: "/app/conversations/conv_10" },
     { id: "rec_docs", priority: "medium", title: "Customer requested documentation.", action: "Send brochure", reason: "Pricing and coverage documents were requested.", href: "/app/knowledge" }
   ]
 };
 
 function transcript(conversation: Conversation): TranscriptLine[] {
-  const employeeName = conversation.employeeName ?? "AI Employee";
-  return [
-    { id: `${conversation.id}_t1`, speaker: employeeName, role: "employee", text: `Good morning ${conversation.customerName}. I hope you are doing well today.`, timestamp: "00:08" },
-    { id: `${conversation.id}_t2`, speaker: "Customer", role: "customer", text: "Yes. How can I help you?", timestamp: "00:18" },
-    { id: `${conversation.id}_t3`, speaker: employeeName, role: "employee", text: `I am calling regarding ${conversation.goal.toLowerCase()} and the options available for your business.`, timestamp: "00:36" },
-    { id: `${conversation.id}_t4`, speaker: "Customer", role: "customer", text: "I am interested. Can you explain the premium and coverage?", timestamp: "01:04" },
-    { id: `${conversation.id}_t5`, speaker: employeeName, role: "employee", text: "Based on your profile, the premium plan offers stronger coverage and a faster claim path.", timestamp: "01:31" },
-    { id: `${conversation.id}_t6`, speaker: "Customer", role: "customer", text: "That sounds useful. Can we schedule a detailed review?", timestamp: "02:12" }
-  ];
+  return conversationRecords.find((item) => item.id === conversation.id)?.transcript ?? [];
 }
 
 function insight(conversation: Conversation): ConversationInsight {
@@ -111,33 +59,35 @@ function insight(conversation: Conversation): ConversationInsight {
     confidence: conversation.confidence ?? 94,
     buyingIntent: conversation.buyingIntent ?? "High",
     riskLevel: conversation.riskLevel ?? "Low",
-    knowledgeUsed: ["Pricing Guide v3", "Policy Handbook", "Sales Script"],
+    knowledgeUsed: conversationRecords.find((item) => item.id === conversation.id)?.knowledgeUsed ?? ["Customer FAQ"],
     currentObjective: "Book Appointment",
     recommendedAction: conversation.riskLevel === "High" ? "Escalate conversation" : "Offer Premium Plan"
   };
 }
 
 function summary(conversation: Conversation): ConversationSummary {
+  const record = conversationRecords.find((item) => item.id === conversation.id);
   return {
     topicsDiscussed: [conversation.goal, "Coverage", "Premium", "Appointment timing"],
     products: ["Comprehensive Plan", "Premium Plan"],
     objections: conversation.sentiment === "negative" ? ["Pricing concern", "Claim delay"] : ["Needs comparison"],
     questions: ["Premium amount", "Coverage benefits", "Documents required"],
-    commitments: ["Send brochure", "Schedule appointment"],
-    appointmentStatus: conversation.outcome ?? "Appointment likely"
+    commitments: record?.appointment === "Not scheduled" ? ["Send follow-up note", "Monitor response"] : ["Send brochure", "Schedule appointment"],
+    appointmentStatus: record?.appointment === "Not scheduled" ? "Not scheduled" : "Scheduled"
   };
 }
 
 function postCall(conversation: Conversation): PostCallSummary {
+  const record = conversationRecords.find((item) => item.id === conversation.id);
   return {
     customerIntent: conversation.buyingIntent ?? "High",
-    summary: `${conversation.customerName} discussed ${conversation.goal.toLowerCase()} and showed ${conversation.buyingIntent ?? "High"} intent.`,
+    summary: record?.summary ?? `${conversation.customerName} discussed ${conversation.goal.toLowerCase()} and showed ${conversation.buyingIntent ?? "High"} intent.`,
     productsDiscussed: ["Premium Plan", "Comprehensive Plan"],
     outcome: conversation.outcome ?? "Follow-up needed",
-    appointment: conversation.buyingIntent === "High" ? "Scheduled" : "Pending",
-    followUpNeeded: "Send brochure and confirm appointment slot.",
-    suggestedNextSteps: ["Send policy comparison", "Confirm appointment", "Update campaign outcome"],
-    knowledgeUsed: ["Pricing Guide v3", "Policy Handbook"],
+    appointment: record?.appointment === "Not scheduled" ? "Not scheduled" : "Scheduled",
+    followUpNeeded: record?.followUp ?? "Send brochure and confirm appointment slot.",
+    suggestedNextSteps: record?.appointment === "Not scheduled" ? ["Send status note", "Monitor customer sentiment", "Update conversation outcome"] : ["Send policy comparison", "Confirm appointment", "Update campaign outcome"],
+    knowledgeUsed: record?.knowledgeUsed ?? ["Customer FAQ"],
     employeePerformance: `${conversation.employeeName ?? "AI Employee"} maintained clear business context and strong compliance language.`
   };
 }
@@ -153,8 +103,9 @@ function sentimentTimeline(conversation: Conversation): SentimentPoint[] {
 }
 
 function detail(conversation: Conversation): ConversationDetail {
+  const record = conversationRecords.find((item) => item.id === conversation.id);
   const contact = contacts.find((item) => item.id === conversation.contactId) ?? contacts[0];
-  const usedKnowledge = knowledge.slice(0, 3);
+  const usedKnowledge = record?.knowledgeUsed ?? knowledge.slice(0, 3).map((item) => item.title);
   return {
     ...conversation,
     overview: `${conversation.employeeName ?? "AI Employee"} is handling ${conversation.customerName} for ${conversation.goal}.`,
@@ -168,7 +119,7 @@ function detail(conversation: Conversation): ConversationDetail {
     insights: insight(conversation),
     decision: {
       whyAsked: "The customer asked about premium value, so the next question confirms budget and timeline.",
-      knowledgeReferenced: usedKnowledge.map((item) => item.title).join(", "),
+      knowledgeReferenced: usedKnowledge.join(", "),
       customerIntent: `${conversation.buyingIntent ?? "High"} buying intent with ${conversation.sentiment} sentiment.`,
       confidence: conversation.confidence ?? 94,
       nextRecommendedAction: conversation.riskLevel === "High" ? "Escalate conversation" : "Offer Premium Plan"
@@ -179,10 +130,10 @@ function detail(conversation: Conversation): ConversationDetail {
       company: contact.company,
       existingPolicies: ["Motor Insurance", "Health Insurance"],
       leadScore: contact.leadScore,
-      previousCalls: 4,
-      assignedCampaign: conversation.campaignName ?? "Motor Insurance Q3",
+      previousCalls: Math.max(1, conversationRecords.filter((item) => item.contactId === contact.id).length),
+      assignedCampaign: conversation.campaignName ?? "Motor Insurance Renewal Q3",
       lastConversation: "Jun 28",
-      lifetimeValue: "Rs. 4.8L"
+      lifetimeValue: `Rs. ${Math.max(1.2, (contact.leadScore / 18)).toFixed(1)}L`
     },
     summary: summary(conversation),
     postCallSummary: postCall(conversation),
@@ -192,9 +143,9 @@ function detail(conversation: Conversation): ConversationDetail {
 
 const queue: ConversationQueueItem[] = [
   ["queue_1", "Meera Iyer", "high", "01:20", "emp_liam", "Liam", "Health Insurance Premium"],
-  ["queue_2", "Farah Khan", "medium", "02:45", "emp_mia", "Mia", "Life Insurance Expansion"],
-  ["queue_3", "Harish Gupta", "critical", "00:54", "emp_henry", "Henry", "Commercial Insurance"],
-  ["queue_4", "Rina Fernandes", "medium", "03:10", "emp_lucas", "Lucas", "Travel Insurance"]
+  ["queue_2", "Farah Khan", "medium", "02:45", "emp_mia", "Mia", "Corporate Health Plans"],
+  ["queue_3", "Harish Gupta", "critical", "00:54", "emp_henry", "Henry", "Corporate Health Plans"],
+  ["queue_4", "Rina Fernandes", "medium", "03:10", "emp_lucas", "Lucas", "Travel Insurance Leads"]
 ].map(([id, customerName, priority, estimatedWait, assignedEmployeeId, assignedEmployeeName, campaignName]) => ({
   id: String(id),
   customerName: String(customerName),

@@ -3,8 +3,10 @@ import { Archive, ArrowRight, BriefcaseBusiness, Edit3, Megaphone, PauseCircle, 
 
 import { HealthRing, StatusBadge } from "@/components/shared";
 import { Avatar, Button, Card, CardContent } from "@/components/ui";
+import { VoicePreview } from "@/demo/components";
 import type { Employee } from "@/types";
 import { formatRelativeTime } from "@/utils/date";
+import { useState } from "react";
 
 import { getEmployeePerformanceSummary } from "../utils/employeeFilters";
 
@@ -17,10 +19,12 @@ interface EmployeeDirectoryCardProps {
 
 export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }: EmployeeDirectoryCardProps) {
   const performance = getEmployeePerformanceSummary(employee);
+  const [voiceOpen, setVoiceOpen] = useState(false);
 
   return (
-    <Card className="transition hover:-translate-y-0.5 hover:shadow-sm">
-      <CardContent>
+    <>
+      <Card className="transition hover:-translate-y-0.5 hover:shadow-sm">
+        <CardContent>
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <Avatar name={employee.name} className="h-12 w-12" />
@@ -38,7 +42,9 @@ export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }
         </div>
 
         <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
-          <Metric label="Voice" value={employee.voice} />
+          <button type="button" onClick={() => setVoiceOpen(true)} className="text-left">
+            <Metric label="Voice" value={employee.voice} />
+          </button>
           <Metric label="Language" value={employee.language} />
           <Metric label="Calls Today" value={String(performance.callsToday)} />
           <Metric label="Appointments" value={String(performance.appointments)} />
@@ -55,6 +61,10 @@ export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-2">
+          <Button variant="ghost" size="sm" type="button" onClick={() => setVoiceOpen(true)}>
+            <PlayCircle className="h-4 w-4" aria-hidden="true" />
+            Preview Voice
+          </Button>
           <Button variant="ghost" size="sm" type="button">
             <Edit3 className="h-4 w-4" aria-hidden="true" />
             Edit
@@ -93,8 +103,10 @@ export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }
             <Archive className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <VoicePreview employee={employee} open={voiceOpen} onClose={() => setVoiceOpen(false)} />
+    </>
   );
 }
 

@@ -11,47 +11,9 @@ import type {
   LeadScoreSummary
 } from "@/types";
 
-const policyTypes = ["Motor Insurance", "Health Insurance", "Travel Insurance", "Life Insurance"];
-const cities = ["Hyderabad", "Bengaluru", "Chennai", "Pune", "Mumbai", "Delhi", "Ahmedabad", "Kochi"];
-const industries = ["Logistics", "Healthcare", "Automotive", "Retail", "Manufacturing", "Technology", "Hospitality", "Education"];
-const states = ["Telangana", "Karnataka", "Tamil Nadu", "Maharashtra", "Gujarat", "Kerala", "Delhi"];
 const tags = ["high-value", "renewal", "family-plan", "fleet", "priority", "support-case", "warm-lead"];
 
-const extraContacts: Contact[] = [
-  ["Nisha Menon", "Lotus Retail", "nisha@lotusretail.demo", "+91 98765 12005", "qualified", 92, "emp_james"],
-  ["Arvind Singh", "Singh Exports", "arvind@singhexports.demo", "+91 98765 12006", "customer", 84, "emp_harper"],
-  ["Pooja Nair", "Nair Resorts", "pooja@nairresorts.demo", "+91 98765 12007", "renewal-due", 79, "emp_emma"],
-  ["Vikram Reddy", "Reddy Farms", "vikram@reddyfarms.demo", "+91 98765 12008", "inactive", 42, "emp_ava"],
-  ["Farah Khan", "Khan Studios", "farah@khanstudios.demo", "+91 98765 12009", "new-lead", 58, "emp_mia"],
-  ["Karthik Shah", "Shah Manufacturing", "karthik@shahmfg.demo", "+91 98765 12010", "qualified", 86, "emp_sophia"],
-  ["Divya Chandra", "Chandra Schools", "divya@chandraschools.demo", "+91 98765 12011", "customer", 73, "emp_liam"],
-  ["Sameer Bansal", "Bansal Tech", "sameer@bansaltech.demo", "+91 98765 12012", "blacklisted", 12, "emp_david"],
-  ["Ishita Das", "Das Healthcare", "ishita@dashealth.demo", "+91 98765 12013", "qualified", 91, "emp_liam"],
-  ["Manoj Kulkarni", "Kulkarni Motors", "manoj@kulkarni.demo", "+91 98765 12014", "archived", 35, "emp_sophia"],
-  ["Rina Fernandes", "Fernandes Travel", "rina@fernandestravel.demo", "+91 98765 12015", "renewal-due", 82, "emp_lucas"],
-  ["Harish Gupta", "Gupta Builders", "harish@guptabuilders.demo", "+91 98765 12016", "customer", 77, "emp_henry"]
-].map(([fullName, company, email, phone, status, leadScore, assignedEmployeeId], index) => ({
-  id: `contact_${String(fullName).toLowerCase().replaceAll(" ", "_")}`,
-  fullName: String(fullName),
-  company: String(company),
-  email: String(email),
-  phone: String(phone),
-  status: status as Contact["status"],
-  leadScore: Number(leadScore),
-  assignedEmployeeId: String(assignedEmployeeId),
-  currentCampaign: campaigns[index % campaigns.length]?.name,
-  recentActivity: index % 3 === 0 ? "Appointment scheduled" : index % 3 === 1 ? "Campaign response received" : "Follow-up due",
-  tags: [tags[index % tags.length], tags[(index + 2) % tags.length]],
-  policyType: policyTypes[index % policyTypes.length],
-  industry: industries[index % industries.length],
-  city: cities[index % cities.length],
-  state: states[index % states.length],
-  country: "India",
-  lastContact: new Date(Date.now() - (index + 1) * 18 * 60 * 60 * 1000).toISOString(),
-  policyNumber: `NOVA-${2026}${String(index + 21).padStart(4, "0")}`
-}));
-
-const contactDirectory: Contact[] = [...contacts, ...extraContacts].map((contact, index) => {
+const contactDirectory: Contact[] = contacts.map((contact, index) => {
   const employee = employees.find((item) => item.id === contact.assignedEmployeeId);
   const campaign = campaigns[index % campaigns.length];
   return {
@@ -60,10 +22,10 @@ const contactDirectory: Contact[] = [...contacts, ...extraContacts].map((contact
     currentCampaign: contact.currentCampaign ?? campaign?.name,
     recentActivity: contact.recentActivity ?? (index % 2 === 0 ? "Voice conversation completed" : "Renewal reminder sent"),
     tags: contact.tags ?? [tags[index % tags.length], tags[(index + 1) % tags.length]],
-    policyType: contact.policyType ?? policyTypes[index % policyTypes.length],
-    industry: contact.industry ?? industries[index % industries.length],
-    city: contact.city ?? cities[index % cities.length],
-    state: contact.state ?? states[index % states.length],
+    policyType: contact.policyType ?? "Motor Insurance",
+    industry: contact.industry ?? "Insurance",
+    city: contact.city ?? "Hyderabad",
+    state: contact.state ?? "Telangana",
     country: contact.country ?? "India",
     lastContact: contact.lastContact ?? new Date(Date.now() - (index + 2) * 12 * 60 * 60 * 1000).toISOString(),
     policyNumber: contact.policyNumber ?? `NOVA-${2026}${String(index + 1).padStart(4, "0")}`
@@ -218,11 +180,11 @@ function buildContactDetail(contact: Contact, index: number): ContactDetail {
 }
 
 const dashboard: ContactDashboard = {
-  totalContacts: 2350,
-  qualifiedLeads: 640,
-  activeCustomers: 1280,
-  renewalsDue: 310,
-  pendingFollowUps: 120,
+  totalContacts: contactDirectory.length,
+  qualifiedLeads: contactDirectory.filter((contact) => contact.status === "qualified").length,
+  activeCustomers: contactDirectory.filter((contact) => contact.status === "customer").length,
+  renewalsDue: contactDirectory.filter((contact) => contact.status === "renewal-due").length,
+  pendingFollowUps: contactDirectory.filter((contact) => contact.recentActivity?.includes("Follow-up")).length,
   appointmentsToday: 216,
   recentlyAdded: 185,
   campaignCoverage: 84,

@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 
+import { DemoOverlay } from "@/demo/components";
+import { DemoProvider } from "@/demo/hooks";
+
 import { NotificationProvider } from "./NotificationProvider";
 import { OrganizationProvider } from "./OrganizationProvider";
 import { QueryProvider } from "./QueryProvider";
@@ -14,8 +17,11 @@ export function AppProviders({ children }: { children: ReactNode }) {
         <SessionProvider>
           <OrganizationProvider>
             <NotificationProvider>
-              {children}
-              <ToastProvider />
+              <DemoProvider>
+                {children}
+                <DemoOverlay />
+                <ToastProvider />
+              </DemoProvider>
             </NotificationProvider>
           </OrganizationProvider>
         </SessionProvider>

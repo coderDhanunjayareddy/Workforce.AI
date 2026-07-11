@@ -20,6 +20,7 @@ import {
 
 import { ChartCard, HealthRing } from "@/components/shared";
 import { Badge, Button, Card, CardContent, CardHeader, Input, Select, Table } from "@/components/ui";
+import { VoicePreview } from "@/demo/components";
 import type {
   Employee,
   EmployeeConversationItem,
@@ -33,6 +34,7 @@ import type {
 
 import type { WorkspaceTabId } from "../../constants/workspace.constants";
 import { MetricTile, ProgressRow } from "./WorkspacePrimitives";
+import { useState } from "react";
 
 const colors = ["var(--ai-accent)", "var(--secondary)", "var(--warning)", "var(--success)", "var(--danger)"];
 
@@ -187,20 +189,24 @@ function SkillsTab({ workspace }: { workspace: EmployeeWorkspaceData }) {
 }
 
 function VoiceTab({ employee, workspace }: { employee: Employee; workspace: EmployeeWorkspaceData }) {
+  const [voiceOpen, setVoiceOpen] = useState(false);
   return (
-    <Card>
-      <CardHeader title="Voice Profile" description="Communication quality, tone and preview controls." action={<Button variant="secondary">Preview Voice</Button>} />
-      <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        <MetricTile label="Voice Name" value={employee.voice} />
-        <MetricTile label="Language" value={employee.language} />
-        <MetricTile label="Accent" value={workspace.voiceProfile.accent} />
-        <MetricTile label="Tone" value={workspace.voiceProfile.tone} />
-        <MetricTile label="Speaking Speed" value={workspace.voiceProfile.speakingSpeed} />
-        <MetricTile label="Pitch" value={workspace.voiceProfile.pitch} />
-        <MetricTile label="Emotion" value={workspace.voiceProfile.emotion} />
-        <MetricTile label="Voice Quality" value={`${workspace.voiceProfile.quality}%`} />
-      </CardContent>
-    </Card>
+    <>
+      <Card>
+        <CardHeader title="Voice Profile" description="Communication quality, tone and preview controls." action={<Button variant="secondary" onClick={() => setVoiceOpen(true)}>Preview Voice</Button>} />
+        <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <MetricTile label="Voice Name" value={employee.voice} />
+          <MetricTile label="Language" value={employee.language} />
+          <MetricTile label="Accent" value={workspace.voiceProfile.accent} />
+          <MetricTile label="Tone" value={workspace.voiceProfile.tone} />
+          <MetricTile label="Speaking Speed" value={workspace.voiceProfile.speakingSpeed} />
+          <MetricTile label="Pitch" value={workspace.voiceProfile.pitch} />
+          <MetricTile label="Emotion" value={workspace.voiceProfile.emotion} />
+          <MetricTile label="Voice Quality" value={`${workspace.voiceProfile.quality}%`} />
+        </CardContent>
+      </Card>
+      <VoicePreview employee={employee} open={voiceOpen} onClose={() => setVoiceOpen(false)} />
+    </>
   );
 }
 

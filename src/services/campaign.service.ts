@@ -24,26 +24,7 @@ const campaignTypes: CampaignType[] = [
   "Custom Campaign"
 ];
 
-const extraCampaigns: Campaign[] = [
-  ["Life Insurance Expansion", "scheduled", "emp_mia", 390, 12, 0, 0, "Expand family protection policies", "Sales", "Sales", "high"],
-  ["High Value Customer Review", "completed", "emp_harper", 210, 100, 38, 860000, "Increase retention among premium customers", "Renewals", "Customer Support", "critical"],
-  ["Collections Recovery July", "draft", "emp_noah", 260, 0, 0, 0, "Recover overdue premiums with compliant reminders", "Collections", "Finance", "medium"]
-].map(([name, status, assignedEmployeeId, contactCount, progress, appointments, revenueInfluenced, businessGoal, type, department, priority]) => ({
-  id: `camp_${String(name).toLowerCase().replaceAll(/[^a-z0-9]+/g, "_")}`,
-  name: String(name),
-  status: status as Campaign["status"],
-  assignedEmployeeId: String(assignedEmployeeId),
-  contacts: Number(contactCount),
-  progress: Number(progress),
-  appointments: Number(appointments),
-  revenueInfluenced: Number(revenueInfluenced),
-  businessGoal: String(businessGoal),
-  type: type as CampaignType,
-  department: String(department),
-  priority: priority as Campaign["priority"]
-}));
-
-const campaignDirectory: Campaign[] = [...campaigns, ...extraCampaigns].map((campaign, index) => {
+const campaignDirectory: Campaign[] = campaigns.map((campaign, index) => {
   const employee = employees.find((item) => item.id === campaign.assignedEmployeeId);
   const type = campaign.type ?? campaignTypes[index % campaignTypes.length];
   return {
@@ -63,13 +44,13 @@ const campaignDirectory: Campaign[] = [...campaigns, ...extraCampaigns].map((cam
 });
 
 const dashboard: CampaignDashboard = {
-  totalCampaigns: 8,
-  runningCampaigns: 3,
+  totalCampaigns: campaignDirectory.length,
+  runningCampaigns: campaignDirectory.filter((campaign) => campaign.status === "running").length,
   scheduledCampaigns: 2,
-  completedCampaigns: 2,
+  completedCampaigns: campaignDirectory.filter((campaign) => campaign.status === "completed").length,
   pausedCampaigns: 1,
-  appointmentsGenerated: 216,
-  revenueInfluenced: "Rs. 24.8L",
+  appointmentsGenerated: campaignDirectory.reduce((total, campaign) => total + campaign.appointments, 0),
+  revenueInfluenced: `Rs. ${(campaignDirectory.reduce((total, campaign) => total + campaign.revenueInfluenced, 0) / 100000).toFixed(1)}L`,
   campaignSuccessRate: 78,
   recommendations: [
     {
@@ -94,7 +75,7 @@ const dashboard: CampaignDashboard = {
       id: "rec_pricing",
       priority: "critical",
       title: "Knowledge outdated.",
-      reason: "Pricing Guide v3 is used by three active campaigns and requires review.",
+      reason: "Premium Pricing Guide is used by four active campaigns and requires review.",
       impact: "Quote accuracy and compliance may be affected.",
       action: "Update Pricing Guide",
       href: "/app/knowledge"
@@ -103,7 +84,7 @@ const dashboard: CampaignDashboard = {
       id: "rec_duplicate",
       priority: "low",
       title: "High-performing campaign detected.",
-      reason: "Motor Insurance Q3 is converting 18% above baseline.",
+      reason: "Motor Insurance Renewal Q3 is converting 18% above baseline.",
       impact: "Duplicating the campaign can expand a proven playbook.",
       action: "Duplicate campaign",
       href: "/app/campaigns"
@@ -113,7 +94,7 @@ const dashboard: CampaignDashboard = {
     { id: "created", title: "Campaign Created", description: "Health Insurance Premium moved through review.", date: "Today", href: "/app/campaigns/camp_health_insurance_premium" },
     { id: "knowledge", title: "Knowledge Assigned", description: "Sales Script and Health Insurance Handbook attached.", date: "Today", href: "/app/knowledge" },
     { id: "employee", title: "Employee Assigned", description: "Liam is scheduled for launch readiness.", date: "Yesterday", href: "/app/employees/emp_liam" },
-    { id: "started", title: "Campaign Started", description: "Motor Insurance Q3 continued with 680 assigned contacts.", date: "Jul 1", href: "/app/campaigns/camp_motor_insurance_q3" },
+    { id: "started", title: "Campaign Started", description: "Motor Insurance Renewal Q3 continued with 680 assigned contacts.", date: "Jul 1", href: "/app/campaigns/camp_motor_renewal_q3" },
     { id: "appointments", title: "Appointments Generated", description: "216 appointments created across active campaigns.", date: "This week", href: "/app/analytics" },
     { id: "completed", title: "Campaign Completed", description: "High Value Customer Review closed above target.", date: "Jun 28", href: "/app/campaigns/history" }
   ]

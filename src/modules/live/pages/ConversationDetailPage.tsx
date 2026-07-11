@@ -3,6 +3,7 @@ import { ArrowLeft, Radio } from "lucide-react";
 
 import { ErrorState, PageHeader } from "@/components/shared";
 import { Badge, Card, CardContent, CardHeader } from "@/components/ui";
+import { ConversationPlayer } from "@/demo/components";
 import { useConversation, useSentiment, useTranscript } from "@/hooks";
 
 import { CustomerAndSummaryPanel, InsightActionPanel, LiveConversationPanel } from "../components/LiveOperationsPanels";
@@ -56,6 +57,12 @@ export function ConversationDetailPage() {
         <LiveConversationPanel conversation={conversation} transcript={transcriptQuery.data ?? conversation.transcript} />
         <InsightActionPanel conversation={conversation} sentiment={sentimentQuery.data ?? conversation.sentimentTimeline} />
       </section>
+      <ConversationPlayer transcript={(transcriptQuery.data ?? conversation.transcript).map((line, index) => ({
+        id: line.id,
+        start: index * 8,
+        end: index === (transcriptQuery.data ?? conversation.transcript).length - 1 ? 48 : (index + 1) * 8,
+        text: `${line.speaker}: ${line.text}`
+      }))} />
       <CustomerAndSummaryPanel conversation={conversation} />
       <Card>
         <CardHeader title="Knowledge Used and Follow-up" description="Knowledge references, outcome, follow-up, and suggested next steps." />
