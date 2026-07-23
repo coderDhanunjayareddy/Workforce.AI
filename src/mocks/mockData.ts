@@ -11,6 +11,7 @@ import type {
   Session,
   TranscriptLine
 } from "@/types";
+import { employeeAssetService } from "@/services/employeeAssetService";
 
 export const organization: Organization = {
   id: "org_nova",
@@ -83,6 +84,9 @@ const now = Date.now();
 const minutesAgo = (minutes: number) => new Date(now - minutes * 60 * 1000).toISOString();
 const daysAgo = (days: number) => new Date(now - days * 24 * 60 * 60 * 1000).toISOString();
 const daysFromNow = (days: number) => new Date(now + days * 24 * 60 * 60 * 1000).toISOString();
+const sophiaAsset = employeeAssetService.getHeroEmployee();
+const percentValue = (value: string) => Number(value.replace(/[^0-9.]/g, ""));
+const numberValue = (value: string) => Number(value.replace(/[^0-9]/g, ""));
 
 export const knowledge: Knowledge[] = [
   ["kn_motor_handbook", "Motor Insurance Handbook", "pdf", "indexed", "Sales", 97, "v4.1"],
@@ -111,29 +115,29 @@ export const employeeProfiles: EmployeeContentProfile[] = [
   {
     id: "emp_sophia",
     name: "Sophia",
-    role: "Sales Executive",
-    department: "Sales",
-    manager: "Rahul Sharma",
+    role: sophiaAsset.role,
+    department: sophiaAsset.department,
+    manager: "Director of Sales Operations",
     aiExperienceYears: 4,
-    languages: ["English", "Hindi"],
+    languages: ["Telugu", "English"],
     voice: "Sophia Premium",
-    personality: "Professional, consultative and confident",
-    workingHours: "09:30 - 18:30 IST",
-    health: 99,
-    knowledgeScore: 97,
-    conversationQuality: 98,
+    personality: "Warm, calm, professional and consultative",
+    workingHours: "09:00 - 18:00 IST",
+    health: percentValue(sophiaAsset.KPIs.aiHealthScore),
+    knowledgeScore: percentValue(sophiaAsset.KPIs.knowledgeAccuracy),
+    conversationQuality: percentValue(sophiaAsset.KPIs.conversationQuality),
     toolConnectivity: 100,
-    performance: 99,
+    performance: percentValue(sophiaAsset.KPIs.conversationQuality),
     callsToday: 132,
     appointmentsToday: 18,
-    callsCompleted: 2860,
-    appointmentsBooked: 384,
-    revenueInfluenced: 4820000,
-    csat: 98,
+    callsCompleted: numberValue(sophiaAsset.KPIs.conversationsCompleted),
+    appointmentsBooked: numberValue(sophiaAsset.KPIs.appointmentsScheduled),
+    revenueInfluenced: 48000000,
+    csat: percentValue(sophiaAsset.KPIs.customerSatisfaction),
     currentCampaign: "Motor Insurance Renewal Q3",
-    goals: ["Book 42 renewal appointments this week", "Maintain quote accuracy above 96%"],
-    knowledgeIds: ["kn_motor_handbook", "kn_premium_pricing", "kn_sales_playbook", "kn_customer_verification"],
-    status: "active",
+    goals: ["Book qualified advisor appointments", "Maintain Knowledge accuracy above 99%"],
+    knowledgeIds: ["kn_motor_handbook", "kn_health_guide", "kn_travel_products", "kn_premium_pricing", "kn_sales_playbook", "kn_customer_faq", "kn_compliance_manual", "kn_irda_guidelines"],
+    status: sophiaAsset.status,
     lastActiveMinutesAgo: 3
   },
   {
@@ -622,6 +626,7 @@ export const employees: Employee[] = employeeProfiles.map((profile) => ({
   status: profile.status,
   voice: profile.voice,
   language: profile.languages.join(" + "),
+  avatarUrl: employeeAssetService.getProfileImage(profile.id),
   health: profile.health,
   knowledgeScore: profile.knowledgeScore,
   performance: profile.performance,
@@ -732,6 +737,8 @@ export const conversationRecords: ConversationContentRecord[] = [
   const contact = contacts[Number(contactIndex)];
   const campaign = campaigns.find((item) => item.id === campaignId)!;
   const usedKnowledge = employee.knowledgeIds.slice(0, 3).map((knowledgeId) => knowledge.find((item) => item.id === knowledgeId)?.title ?? "Customer FAQ");
+  const sophiaConversation = String(id) === "conv_1" ? sophiaAsset.conversations[0] : undefined;
+  const sophiaAnalytics = sophiaConversation?.analytics;
   return {
     id: String(id),
     employeeId: String(employeeId),
@@ -742,20 +749,20 @@ export const conversationRecords: ConversationContentRecord[] = [
     contactId: contact.id,
     customerName: contact.fullName,
     customerPhone: contact.phone,
-    goal: String(goal),
-    duration: String(duration),
+    goal: sophiaConversation?.scenario ?? String(goal),
+    duration: sophiaAnalytics?.Duration ?? String(duration),
     sentiment: sentiment as Conversation["sentiment"],
     status: status as Conversation["status"],
-    outcome: Number(revenueInfluenced) > 0 ? "Appointment booked" : status === "escalated" ? "Escalated to manager" : "Question resolved",
+    outcome: sophiaConversation?.outcome.join(", ") ?? (Number(revenueInfluenced) > 0 ? "Appointment booked" : status === "escalated" ? "Escalated to manager" : "Question resolved"),
     health: employee.health,
     currentStage: status === "live" ? "Recommendation" : "Closing",
-    buyingIntent: Number(revenueInfluenced) > 250000 ? "High" : Number(revenueInfluenced) > 0 ? "Medium" : "Low",
+    buyingIntent: (sophiaAnalytics?.Confidence === "High" || sophiaAnalytics?.Confidence === "Medium" || sophiaAnalytics?.Confidence === "Low") ? sophiaAnalytics.Confidence : Number(revenueInfluenced) > 250000 ? "High" : Number(revenueInfluenced) > 0 ? "Medium" : "Low",
     riskLevel: status === "escalated" ? "High" : sentiment === "neutral" ? "Medium" : "Low",
-    confidence: Math.min(98, employee.conversationQuality),
-    audio: `/demo/assets/audio/${String(audio)}`,
-    knowledgeUsed: usedKnowledge,
-    transcript: transcript(String(id), employee.name, contact.fullName, String(goal).toLowerCase(), String(objection).toLowerCase(), String(recommendation)),
-    summary: `${employee.name} handled ${contact.fullName} for ${goal}, referenced ${usedKnowledge.join(", ")}, and produced a ${Number(revenueInfluenced) > 0 ? "commercial" : "service"} outcome.`,
+    confidence: sophiaAnalytics?.Compliance ? percentValue(sophiaAnalytics.Compliance) : Math.min(98, employee.conversationQuality),
+    audio: String(id) === "conv_1" ? sophiaAsset.previewAudio : `/demo/assets/audio/${String(audio)}`,
+    knowledgeUsed: sophiaConversation?.knowledgeUsed ?? usedKnowledge,
+    transcript: sophiaConversation?.transcript ?? transcript(String(id), employee.name, contact.fullName, String(goal).toLowerCase(), String(objection).toLowerCase(), String(recommendation)),
+    summary: sophiaConversation ? `${employee.name} qualified ${sophiaConversation.participants.customer}, recommended motor insurance, and booked an advisor appointment using approved Knowledge.` : `${employee.name} handled ${contact.fullName} for ${goal}, referenced ${usedKnowledge.join(", ")}, and produced a ${Number(revenueInfluenced) > 0 ? "commercial" : "service"} outcome.`,
     appointment: Number(revenueInfluenced) > 0 ? daysFromNow((Number(contactIndex) % 5) + 1) : "Not scheduled",
     revenueInfluenced: Number(revenueInfluenced),
     followUp: Number(revenueInfluenced) > 0 ? "Send comparison and confirm advisor slot." : "Send status note and monitor next customer response."

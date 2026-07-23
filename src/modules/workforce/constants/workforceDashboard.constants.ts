@@ -91,9 +91,9 @@ export const workforceDashboardData: WorkforceDashboardData = {
       id: "live-sophia",
       employeeId: "emp_sophia",
       employeeName: "Sophia",
-      role: "Sales Executive",
+      role: "Senior AI Sales Executive",
       currentActivity: "Talking with Rajesh Kumar",
-      duration: "03:41",
+      duration: "04:42",
       customerName: "Rajesh Kumar",
       status: "talking"
     },

@@ -3,21 +3,24 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, P
 
 import { ChartCard, HealthRing, MetricCard } from "@/components/shared";
 import { Badge, Button, Card, CardContent, CardHeader, Select, Table } from "@/components/ui";
+import { employeeAssetService } from "@/services/employeeAssetService";
 import type { AnalyticsDashboard, AnalyticsForecast, AnalyticsInsight, EmployeeAnalyticsRow, ReportDefinition } from "@/types";
-import { Activity, CalendarCheck2, Clock, IndianRupee, Percent, Target, ThumbsUp, UsersRound } from "lucide-react";
+import { Activity, CalendarCheck2, Clock, Gauge, IndianRupee, Percent, Target, ThumbsUp } from "lucide-react";
 
 export function ExecutiveKpis({ dashboard }: { dashboard: AnalyticsDashboard }) {
   const kpis = dashboard.kpis;
+  const sophiaKpis = employeeAssetService.getHeroEmployee().KPIs;
   return (
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
-      <MetricCard icon={IndianRupee} label="Revenue Influenced" value="Rs. 2.4 Cr" trend="+18%" subtitle="Quarterly influence" />
+      <MetricCard icon={IndianRupee} label="Revenue Influenced" value={sophiaKpis.revenueInfluenced} trend="+18%" subtitle="Sophia influence" />
+      <MetricCard icon={Activity} label="Health Score" value={sophiaKpis.aiHealthScore} trend="+4%" subtitle="Sophia health" />
+      <MetricCard icon={Gauge} label="Conversation Quality" value={sophiaKpis.conversationQuality} trend="+4%" subtitle="Quality score" />
+      <MetricCard icon={ThumbsUp} label="Customer Satisfaction" value={sophiaKpis.customerSatisfaction} trend="+4%" subtitle="CSAT score" />
+      <MetricCard icon={Percent} label="Conversion Rate" value={sophiaKpis.conversionRate} trend="+4%" subtitle="Campaign conversion" />
       <MetricCard icon={CalendarCheck2} label="Appointments" value={kpis.appointments.toLocaleString("en-IN")} trend="+12%" subtitle="Booked outcomes" />
       <MetricCard icon={Activity} label="Calls Completed" value={kpis.callsAutomated.toLocaleString("en-IN")} trend="+16%" subtitle="Conversations handled" />
       <MetricCard icon={Target} label="Qualified Leads" value={kpis.qualifiedLeads.toLocaleString("en-IN")} trend="+9%" subtitle="Sales-ready prospects" />
-      <MetricCard icon={Percent} label="Conversion Rate" value={`${kpis.conversionRate}%`} trend="+4%" subtitle="Campaign conversion" />
-      <MetricCard icon={ThumbsUp} label="Customer Satisfaction" value={`${kpis.customerSatisfaction}%`} trend="+4%" subtitle="CSAT score" />
       <MetricCard icon={Clock} label="Hours Saved" value={kpis.hoursSaved.toLocaleString("en-IN")} trend="+22%" subtitle="Operational workload" />
-      <MetricCard icon={UsersRound} label="ROI" value={`${kpis.roi}%`} trend="+38%" subtitle="Return on workforce" />
     </section>
   );
 }

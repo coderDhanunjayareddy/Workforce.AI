@@ -46,7 +46,7 @@ export function WorkspaceOverviewTab({
           <CardHeader title="Identity Card" description="Profile, ownership and current version." />
           <CardContent>
             <div className="flex gap-4">
-              <Avatar name={employee.name} className="h-16 w-16" />
+              <Avatar name={employee.name} src={employee.avatarUrl} className="h-16 w-16" />
               <div>
                 <h2 className="font-display text-2xl font-semibold">{employee.name}</h2>
                 <p className="mt-1 text-sm text-[var(--text-secondary)]">{employee.role}</p>
@@ -77,6 +77,41 @@ export function WorkspaceOverviewTab({
           </CardContent>
         </Card>
       </section>
+
+      {workspace.overview ? (
+        <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <Card>
+            <CardHeader title="Biography" description="Hero AI Employee profile and operating style." />
+            <CardContent>
+              <p className="text-sm leading-6 text-[var(--text-secondary)]">{workspace.overview.biography}</p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {workspace.overview.personality.map((trait) => (
+                  <span key={trait} className="rounded-[12px] bg-[var(--surface-elevated)] p-3 text-sm font-semibold">
+                    {trait}
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader title="Sophia KPIs" description="Production metrics from the approved profile." />
+            <CardContent className="space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                {workspace.overview.kpiHighlights.map((item) => (
+                  <MetricTile key={item.label} label={item.label} value={item.value} />
+                ))}
+              </div>
+              <div className="space-y-2">
+                {workspace.overview.speakingRules.slice(0, 4).map((rule) => (
+                  <p key={rule} className="rounded-[12px] bg-[var(--surface-elevated)] p-3 text-sm leading-6 text-[var(--text-secondary)]">
+                    {rule}
+                  </p>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+      ) : null}
 
       <section className="grid gap-6 xl:grid-cols-3">
         <Card>

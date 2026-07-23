@@ -47,6 +47,10 @@ export function ConversationPlayer({ transcript }: { transcript: DemoTranscriptS
             ))}
           </div>
           <div className="grid gap-3 md:grid-cols-3">
+            <Panel title="Participants" icon={<Smile className="h-4 w-4" />}>
+              <p className="text-sm font-semibold text-[var(--text-primary)]">{playback.participants.employee}</p>
+              <p className="mt-1 text-sm text-[var(--text-secondary)]">{playback.participants.customer}</p>
+            </Panel>
             <Panel title="Sentiment" icon={<Smile className="h-4 w-4" />}>
               <div className="flex flex-wrap gap-2">
                 {playback.sentiment.map((item) => <Badge key={item.label} tone={item.tone === "positive" ? "green" : item.tone === "warning" ? "amber" : "blue"}>{item.label}</Badge>)}
@@ -56,7 +60,10 @@ export function ConversationPlayer({ transcript }: { transcript: DemoTranscriptS
               <ul className="space-y-2 text-sm text-[var(--text-secondary)]">{playback.knowledgeUsed.map((item) => <li key={item}>{item}</li>)}</ul>
             </Panel>
             <Panel title="Timeline" icon={<Timer className="h-4 w-4" />}>
-              <ol className="space-y-2 text-sm text-[var(--text-secondary)]">{playback.timeline.map((item) => <li key={item.stage}><span className="font-semibold text-[var(--text-primary)]">{item.time}</span> {item.stage}</li>)}</ol>
+              <ol className="space-y-2 text-sm text-[var(--text-secondary)]">{playback.timeline.map((item) => <li key={`${item.time}-${item.stage}`}><span className="font-semibold text-[var(--text-primary)]">{item.time}</span> {item.stage}</li>)}</ol>
+            </Panel>
+            <Panel title="Outcome" icon={<Gauge className="h-4 w-4" />}>
+              <ul className="space-y-2 text-sm text-[var(--text-secondary)]">{playback.outcome.map((item) => <li key={item}>{item}</li>)}</ul>
             </Panel>
           </div>
         </div>

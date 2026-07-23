@@ -1,11 +1,13 @@
 import { Building2, CheckCircle2, Play } from "lucide-react";
 
 import { Avatar, Button } from "@/components/ui";
+import { employeeAssetService } from "@/services/employeeAssetService";
 
 import { useDemo } from "../hooks";
 
 export function DemoPlayer() {
   const { enabled, started, startDemo, disableDemo, experiences, selectedExperience, selectExperience } = useDemo();
+  const sophia = employeeAssetService.getHeroEmployee();
 
   if (!enabled || started) return null;
 
@@ -26,7 +28,7 @@ export function DemoPlayer() {
         <h1 className="mt-4 font-display text-5xl font-semibold transition md:text-6xl">Workforce AI</h1>
         <p className="mt-4 text-2xl font-semibold text-white/90">Build Your Digital Workforce</p>
         <div className="mt-6 flex max-w-2xl items-center gap-4 rounded-[24px] border border-white/15 bg-white/10 p-4 text-left backdrop-blur">
-          <Avatar name="Sophia" className="h-16 w-16 text-xl" />
+          <Avatar name="Sophia" src={sophia.speakingImage} className="h-16 w-16 text-xl" />
           <p className="text-sm leading-6 text-white/75">
             I am Sophia, an AI Employee at Nova Insurance. Choose the demo path and I will guide the story from Knowledge to Campaigns, Conversations and measurable Analytics.
           </p>

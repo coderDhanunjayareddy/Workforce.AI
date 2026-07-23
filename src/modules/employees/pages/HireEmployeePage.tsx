@@ -15,16 +15,16 @@ import { hireEmployeeSchema, type HireEmployeeFormValues } from "../schemas/hire
 
 const defaultValues: HireEmployeeFormValues = {
   name: "Sophia",
-  department: "Sales",
-  role: "Sales Executive",
+  department: "Enterprise Sales",
+  role: "Senior AI Sales Executive",
   voice: "Sophia Premium",
-  language: "English",
-  accent: "Indian English",
-  tone: "Consultative",
-  speakingSpeed: "Balanced",
-  personality: ["Professional", "Consultative"],
-  responsibilities: ["Lead Qualification", "Sales", "Scheduling"],
-  knowledge: ["PDFs", "FAQs", "Website"],
+  language: "Telugu + English",
+  accent: "Neutral Telangana Telugu",
+  tone: "Warm, Calm, Professional",
+  speakingSpeed: "Medium",
+  personality: ["Professional", "Empathetic", "Consultative"],
+  responsibilities: ["Lead Qualification", "Product Recommendation", "Appointment Booking"],
+  knowledge: ["Motor Insurance Handbook", "Premium Pricing Guide", "Sales Conversation Playbook"],
   tools: ["CRM", "Calendar", "Email"],
   policies: ["Business Rules", "Escalation", "Compliance"]
 };

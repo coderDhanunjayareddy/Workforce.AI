@@ -4,6 +4,7 @@ export { campaignService } from "./campaign.service";
 export { contactService } from "./contact.service";
 export { conversationService } from "./conversation.service";
 export { employeeService } from "./employee.service";
+export { employeeAssetService } from "./employeeAssetService";
 export { knowledgeService } from "./knowledge.service";
 export { notificationService } from "./notification.service";
 export { organizationService } from "./organization.service";

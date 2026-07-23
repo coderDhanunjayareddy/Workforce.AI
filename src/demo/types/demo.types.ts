@@ -70,6 +70,10 @@ export interface VoicePreviewProfile {
 
 export interface ConversationPlaybackData {
   audio: string;
+  participants: {
+    employee: string;
+    customer: string;
+  };
   analytics: {
     label: string;
     value: string;
@@ -80,6 +84,7 @@ export interface ConversationPlaybackData {
     tone: "positive" | "neutral" | "warning";
   }[];
   knowledgeUsed: string[];
+  outcome: string[];
   timeline: {
     stage: string;
     detail: string;

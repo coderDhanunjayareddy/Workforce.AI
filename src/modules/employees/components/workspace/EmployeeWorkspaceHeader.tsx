@@ -23,7 +23,7 @@ export function EmployeeWorkspaceHeader({
     <header className="rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-5">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
         <div className="flex min-w-0 gap-4">
-          <Avatar name={employee.name} className="h-16 w-16" />
+          <Avatar name={employee.name} src={employee.avatarUrl} className="h-16 w-16" />
           <div className="min-w-0">
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <Link to="/app/employees" className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--secondary)] hover:underline">

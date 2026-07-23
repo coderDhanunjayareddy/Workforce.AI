@@ -41,6 +41,7 @@ export interface Employee {
   status: Status;
   voice: string;
   language: string;
+  avatarUrl?: string;
   health: number;
   knowledgeScore: number;
   performance: number;
@@ -49,6 +50,54 @@ export interface Employee {
   csat: number;
   currentCampaign?: string;
   lastActive: string;
+}
+
+export interface HeroEmployeeKpis {
+  conversationsCompleted: string;
+  avgConversationDuration: string;
+  conversionRate: string;
+  appointmentsScheduled: string;
+  customerSatisfaction: string;
+  firstResponseTime: string;
+  knowledgeAccuracy: string;
+  aiHealthScore: string;
+  conversationQuality: string;
+  revenueInfluenced: string;
+}
+
+export interface HeroEmployeeConversation {
+  id: string;
+  scenario: string;
+  objective: string;
+  participants: {
+    employee: string;
+    customer: string;
+  };
+  transcript: TranscriptLine[];
+  analytics: Record<string, string>;
+  knowledgeUsed: string[];
+  outcome: string[];
+}
+
+export interface HeroEmployeeAsset {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  status: Status;
+  profileImage: string;
+  speakingImage: string;
+  heroImage: string;
+  transparentImage: string;
+  thumbnailImage: string;
+  previewAudio: string;
+  identity: string;
+  biography: string;
+  personality: string;
+  speakingRules: string;
+  voiceDNA: string;
+  KPIs: HeroEmployeeKpis;
+  conversations: HeroEmployeeConversation[];
 }
 
 export interface EmployeeHealth {
@@ -161,6 +210,12 @@ export interface EmployeeWorkspaceData {
   manager: string;
   currentVersion: string;
   createdDate: string;
+  overview?: {
+    biography: string;
+    personality: string[];
+    speakingRules: string[];
+    kpiHighlights: { label: string; value: string }[];
+  };
   assignment: {
     campaign: string;
     department: string;

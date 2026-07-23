@@ -1,5 +1,6 @@
 import { mockApi } from "@/mocks/mockApi";
 import { campaigns, conversationRecords, conversations, employeeProfiles, employees, knowledge } from "@/mocks/mockData";
+import { employeeAssetService } from "@/services/employeeAssetService";
 import type {
   Employee,
   EmployeeConversationItem,
@@ -19,13 +20,36 @@ const getEmployeeOrThrow = (id: string) => {
 };
 
 const getEmployeeProfile = (id: string) => employeeProfiles.find((profile) => profile.id === id);
+const getSophiaAsset = (id: string) => employeeAssetService.getByEmployeeId(id);
+
+const extractSectionText = (markdown: string, title: string) => {
+  const match = markdown.match(new RegExp(`## ${title}\\n\\n([\\s\\S]*?)(?=\\n---|\\n## |$)`));
+  return match?.[1]?.trim().replace(/\n\n/g, " ") ?? "";
+};
+
+const extractList = (markdown: string, title: string) => {
+  const section = extractSectionText(markdown, title);
+  return section.split("\n").filter((line) => line.trim().startsWith("- ")).map((line) => line.replace(/^- /, "").trim());
+};
 
 const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => {
   const profile = getEmployeeProfile(employee.id);
+  const sophiaAsset = getSophiaAsset(employee.id);
   return {
   manager: profile?.manager ?? "Priya Reddy",
-  currentVersion: "v2.1",
-  createdDate: profile?.aiExperienceYears && profile.aiExperienceYears >= 4 ? "2025-11-18" : "2026-01-12",
+  currentVersion: sophiaAsset ? "v1.0" : "v2.1",
+  createdDate: sophiaAsset ? "2026-07-01" : profile?.aiExperienceYears && profile.aiExperienceYears >= 4 ? "2025-11-18" : "2026-01-12",
+  overview: sophiaAsset ? {
+    biography: extractSectionText(sophiaAsset.biography, "Executive Summary"),
+    personality: extractList(sophiaAsset.personality, "Communication Style").slice(0, 6),
+    speakingRules: extractList(sophiaAsset.speakingRules, "Always"),
+    kpiHighlights: [
+      { label: "Health Score", value: sophiaAsset.KPIs.aiHealthScore },
+      { label: "Conversation Quality", value: sophiaAsset.KPIs.conversationQuality },
+      { label: "Customer Satisfaction", value: sophiaAsset.KPIs.customerSatisfaction },
+      { label: "Revenue Influenced", value: sophiaAsset.KPIs.revenueInfluenced }
+    ]
+  } : undefined,
   assignment: {
     campaign: employee.currentCampaign ?? "Available for assignment",
     department: employee.department,
@@ -34,11 +58,11 @@ const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => {
     workingHours: profile?.workingHours ?? "09:00 - 18:00 IST"
   },
   voiceProfile: {
-    accent: "Indian English",
-    tone: profile?.personality.split(",")[0] ?? (employee.department === "Claims" ? "Empathetic" : "Consultative"),
-    speakingSpeed: "Balanced",
+    accent: sophiaAsset ? "Neutral Telangana Telugu" : "Indian English",
+    tone: sophiaAsset ? "Warm, Calm, Professional" : profile?.personality.split(",")[0] ?? (employee.department === "Claims" ? "Empathetic" : "Consultative"),
+    speakingSpeed: sophiaAsset ? "Medium" : "Balanced",
     pitch: "Medium",
-    emotion: profile?.personality.split(" and ").at(-1) ?? "Confident",
+    emotion: sophiaAsset ? "Friendly Confidence" : profile?.personality.split(" and ").at(-1) ?? "Confident",
     quality: Math.min(100, profile?.conversationQuality ?? employee.health + 1)
   },
   policies: [
@@ -54,7 +78,16 @@ const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => {
     { id: "weekly", title: "Weekly Target", target: `${Math.max(24, employee.appointmentsToday * 3)} appointments`, progress: Math.min(100, employee.appointmentsToday * 12), achievement: profile?.goals[1] ?? "+8% above baseline" },
     { id: "monthly", title: "Monthly Target", target: `Rs. ${(((profile?.revenueInfluenced ?? 1800000) / 100000)).toFixed(1)}L influenced`, progress: employee.performance, achievement: "Strong" }
   ],
-  skills: [
+  skills: sophiaAsset ? [
+    { id: "motor-insurance", title: "Motor Insurance", level: 99, trend: "+8%", lastTraining: "Current" },
+    { id: "health-insurance", title: "Health Insurance", level: 96, trend: "+5%", lastTraining: "Current" },
+    { id: "travel-insurance", title: "Travel Insurance", level: 94, trend: "+4%", lastTraining: "Current" },
+    { id: "policy-renewals", title: "Policy Renewals", level: 98, trend: "+7%", lastTraining: "Current" },
+    { id: "lead-qualification", title: "Lead Qualification", level: 97, trend: "+6%", lastTraining: "Current" },
+    { id: "appointment-booking", title: "Appointment Booking", level: 98, trend: "+9%", lastTraining: "Current" },
+    { id: "customer-education", title: "Customer Education", level: 96, trend: "+5%", lastTraining: "Current" },
+    { id: "product-comparison", title: "Product Comparison", level: 95, trend: "+4%", lastTraining: "Current" }
+  ] : [
     { id: "lead", title: "Lead Qualification", level: employee.performance, trend: "+6%", lastTraining: "2 days ago" },
     { id: "sales", title: "Sales", level: Math.max(82, employee.performance - 2), trend: "+4%", lastTraining: "5 days ago" },
     { id: "support", title: "Support", level: Math.max(80, employee.health - 3), trend: "+3%", lastTraining: "1 week ago" },
@@ -72,7 +105,10 @@ const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => {
     { id: "knowledge", name: "Knowledge Base", status: "connected", lastSync: "4 minutes ago" }
   ],
   notifications: [`${employee.currentCampaign ?? "Campaign"} progress updated`, "Knowledge freshness above target", `${employee.voice} quality check completed`],
-  pinnedNotes: [profile?.personality ?? "Use approved comparison language for high-intent customers.", "Escalate high-risk compliance or sentiment issues."],
+  pinnedNotes: sophiaAsset ? [
+    "Speak naturally, listen before responding, and explain concepts simply.",
+    "Protect customer data, follow company policies, and escalate regulated conversations."
+  ] : [profile?.personality ?? "Use approved comparison language for high-intent customers.", "Escalate high-risk compliance or sentiment issues."],
   recommendations: [
     { id: "knowledge", priority: "high", title: "Knowledge requires update", impact: "Pricing accuracy can improve active conversations.", action: "Update Pricing Guide", href: "/app/knowledge" },
     { id: "quality", priority: "medium", title: "Conversation quality improving", impact: "CSAT rose after the latest script training.", action: "Review transcript", href: "/app/conversations" },
@@ -84,15 +120,16 @@ const getWorkspaceData = (employee: Employee): EmployeeWorkspaceData => {
 
 const getPerformance = (employee: Employee): EmployeePerformance => {
   const profile = getEmployeeProfile(employee.id);
+  const sophiaAsset = getSophiaAsset(employee.id);
   return {
   businessContribution: {
-    revenueInfluenced: `Rs. ${(profile?.revenueInfluenced ?? employee.performance * 18500).toLocaleString("en-IN")}`,
+    revenueInfluenced: sophiaAsset?.KPIs.revenueInfluenced ?? `Rs. ${(profile?.revenueInfluenced ?? employee.performance * 18500).toLocaleString("en-IN")}`,
     appointmentsBooked: profile?.appointmentsBooked ?? employee.appointmentsToday * 21,
     callsCompleted: profile?.callsCompleted ?? employee.callsToday * 21,
     qualifiedLeads: Math.round(employee.callsToday * 0.42),
     customerSatisfaction: employee.csat,
     hoursSaved: Math.round((profile?.callsCompleted ?? employee.callsToday) * 0.18),
-    conversionRate: Math.min(39, employee.performance - 68)
+    conversionRate: sophiaAsset ? Number(sophiaAsset.KPIs.conversionRate.replace("%", "")) : Math.min(39, employee.performance - 68)
   },
   monthlyTrends: [
     { name: "Week 1", calls: employee.callsToday * 4, appointments: employee.appointmentsToday * 4, revenue: employee.performance * 4200 },

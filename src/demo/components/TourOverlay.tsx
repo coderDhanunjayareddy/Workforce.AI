@@ -1,19 +1,21 @@
 import { Avatar } from "@/components/ui";
+import { employeeAssetService } from "@/services/employeeAssetService";
 
 import { useDemo } from "../hooks";
 
 export function TourOverlay() {
   const { enabled, started, currentScenario } = useDemo();
+  const sophia = employeeAssetService.getHeroEmployee();
 
   if (!enabled || !started) return null;
 
   return (
     <aside className="fixed right-4 top-20 z-40 hidden w-80 rounded-[24px] border border-[var(--border)] bg-[var(--surface)]/92 p-4 shadow-xl backdrop-blur lg:block" aria-label="Sophia demo presenter">
       <div className="flex items-center gap-3">
-        <Avatar name="Sophia" className="h-12 w-12" />
+        <Avatar name="Sophia" src={sophia.speakingImage} className="h-12 w-12" />
         <div>
           <p className="font-display text-base font-semibold">Sophia</p>
-          <p className="text-xs text-[var(--text-secondary)]">AI Employee · Sales Executive</p>
+          <p className="text-xs text-[var(--text-secondary)]">AI Employee · Senior AI Sales Executive</p>
         </div>
       </div>
       <div className="mt-4 rounded-[16px] bg-[var(--surface-elevated)] p-4">

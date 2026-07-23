@@ -1,6 +1,9 @@
 import { mockApi } from "@/mocks/mockApi";
 import { analyticsSummary, campaigns, employees, insights, knowledge } from "@/mocks/mockData";
+import { employeeAssetService } from "@/services/employeeAssetService";
 import type { AnalyticsChartPoint, AnalyticsDashboard, AnalyticsForecast, AnalyticsInsight, EmployeeAnalyticsRow, Insight, ReportDefinition } from "@/types";
+
+const sophiaKpis = employeeAssetService.getHeroEmployee().KPIs;
 
 const revenueTrend: AnalyticsChartPoint[] = [
   { name: "Jan", revenue: 14000000, appointments: 680, calls: 9400, leads: 420 },
@@ -16,10 +19,10 @@ const leaderboard: EmployeeAnalyticsRow[] = employees.slice(0, 8).map((employee,
   employeeId: employee.id,
   employee: employee.name,
   department: employee.department,
-  calls: 132 - index * 7,
-  appointments: 18 - Math.min(index, 8),
-  revenue: `Rs. ${(18.2 - index * 1.4).toFixed(1)}L`,
-  csat: Math.max(90, employee.csat),
+  calls: employee.id === "emp_sophia" ? Number(sophiaKpis.conversationsCompleted.replace(/[^0-9]/g, "")) : 132 - index * 7,
+  appointments: employee.id === "emp_sophia" ? Number(sophiaKpis.appointmentsScheduled.replace(/[^0-9]/g, "")) : 18 - Math.min(index, 8),
+  revenue: employee.id === "emp_sophia" ? sophiaKpis.revenueInfluenced : `Rs. ${(18.2 - index * 1.4).toFixed(1)}L`,
+  csat: employee.id === "emp_sophia" ? Number(sophiaKpis.customerSatisfaction.replace("%", "")) : Math.max(90, employee.csat),
   health: employee.health,
   trend: index < 3 ? "+12%" : "+6%"
 }));
@@ -54,8 +57,8 @@ const dashboard: AnalyticsDashboard = {
     appointments: 1248,
     callsAutomated: 18420,
     qualifiedLeads: 842,
-    conversionRate: 28.6,
-    customerSatisfaction: 94,
+    conversionRate: Number(sophiaKpis.conversionRate.replace("%", "")),
+    customerSatisfaction: Number(sophiaKpis.customerSatisfaction.replace("%", "")),
     hoursSaved: 1842,
     roi: 324
   },

@@ -27,7 +27,7 @@ export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }
         <CardContent>
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
-            <Avatar name={employee.name} className="h-12 w-12" />
+            <Avatar name={employee.name} src={employee.avatarUrl} className="h-12 w-12" />
             <div className="min-w-0">
               <h3 className="truncate font-display text-lg font-semibold">{employee.name}</h3>
               <p className="truncate text-sm text-[var(--text-secondary)]">{employee.role}</p>
@@ -46,7 +46,7 @@ export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }
             <Metric label="Voice" value={employee.voice} />
           </button>
           <Metric label="Language" value={employee.language} />
-          <Metric label="Calls Today" value={String(performance.callsToday)} />
+          <Metric label="Calls" value={String(performance.callsToday)} />
           <Metric label="Appointments" value={String(performance.appointments)} />
           <Metric label="CSAT" value={`${performance.customerSatisfaction}%`} />
           <Metric label="Performance" value={`${performance.successRate}%`} />
