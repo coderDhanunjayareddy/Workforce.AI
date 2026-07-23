@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 669 406" role="img" aria-labelledby="title desc">
+  <title id="title">Workforce AI monochrome logo</title>
+  <desc id="desc">Single-color official Workforce AI logo.</desc>
+  <g id="mark" stroke="#0F172A" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M209 86 L270 203 L315 126" stroke-width="33"/>
+    <path d="M281 86 L342 203 L390 126" stroke-width="33"/>
+    <path d="M390 126 L366 174" stroke-width="33"/>
+    <circle cx="401" cy="86" r="18" fill="#0F172A" stroke="none"/>
+  </g>
+  <text x="62" y="308" font-family="Manrope, Sora, Arial, sans-serif" font-size="80" font-weight="800" letter-spacing="0" fill="#0F172A">Workforce AI</text>
+  <text x="86" y="351" font-family="Manrope, Arial, sans-serif" font-size="29" font-weight="500" letter-spacing="0" fill="#0F172A">Intelligent Workforce. Real Results.</text>
+</svg>

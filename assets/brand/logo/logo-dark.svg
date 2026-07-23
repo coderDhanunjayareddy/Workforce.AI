@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 669 406" role="img" aria-labelledby="title desc">
+  <title id="title">Workforce AI logo for dark backgrounds</title>
+  <desc id="desc">Official Workforce AI logo optimized for dark backgrounds.</desc>
+  <defs>
+    <linearGradient id="navy-stroke" x1="188" y1="70" x2="394" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="teal-stroke" x1="270" y1="70" x2="359" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+    <linearGradient id="dot-gradient" x1="383" y1="69" x2="418" y2="104" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#14B8A6"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+  <g id="mark" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M209 86 L270 203 L315 126" stroke="url(#navy-stroke)" stroke-width="33"/>
+    <path d="M281 86 L342 203 L390 126" stroke="url(#teal-stroke)" stroke-width="33"/>
+    <path d="M390 126 L366 174" stroke="#FFFFFF" stroke-width="33"/>
+    <circle cx="401" cy="86" r="18" fill="url(#dot-gradient)" stroke="none"/>
+  </g>
+  <g id="wordmark" font-family="Manrope, Sora, Arial, sans-serif" font-weight="800">
+    <text x="62" y="308" font-size="80" letter-spacing="0" fill="#FFFFFF">Workforce</text>
+    <text x="499" y="308" font-size="80" letter-spacing="0" fill="#14B8A6">AI</text>
+  </g>
+  <text x="86" y="351" font-family="Manrope, Arial, sans-serif" font-size="29" font-weight="500" letter-spacing="0" fill="#F8FAFC">Intelligent Workforce. Real Results.</text>
+</svg>
