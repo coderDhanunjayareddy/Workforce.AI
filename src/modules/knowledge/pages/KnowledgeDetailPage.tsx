@@ -4,6 +4,7 @@ import { ArrowLeft, Trash2, Upload, UsersRound } from "lucide-react";
 import { ErrorState, HealthRing, LoadingState, PageHeader } from "@/components/shared";
 import { Avatar, Badge, Button, Card, CardContent, CardHeader } from "@/components/ui";
 import { useDocument } from "@/hooks";
+import { employeeAssetService } from "@/services/employeeAssetService";
 
 const statusTone = {
   indexed: "green",
@@ -100,7 +101,7 @@ export function KnowledgeDetailPage() {
           <CardContent className="space-y-3">
             {document.assignedEmployees.map((employee) => (
               <Link key={employee} to="/app/employees/$employeeId" params={{ employeeId: `emp_${employee.toLowerCase()}` }} className="flex items-center gap-3 rounded-[12px] bg-[var(--surface-elevated)] p-3 hover:shadow-sm">
-                <Avatar name={employee} className="h-9 w-9" />
+                <Avatar name={employee} src={employeeAssetService.getThumbnailImageByName(employee)} className="h-9 w-9" />
                 <span className="font-semibold">{employee}</span>
               </Link>
             ))}

@@ -31,7 +31,7 @@ export function TopPerformersTable({ employees }: { employees: Employee[] }) {
                 <td className="p-3 font-semibold">{index + 1}</td>
                 <td className="min-w-56 p-3">
                   <div className="flex items-center gap-3">
-                    <Avatar name={employee.name} className="h-9 w-9" />
+                    <Avatar name={employee.name} src={employee.avatarUrl} className="h-9 w-9" />
                     <span>
                       <span className="block font-semibold">{employee.name}</span>
                       <span className="block text-xs text-[var(--text-secondary)]">{employee.role}</span>

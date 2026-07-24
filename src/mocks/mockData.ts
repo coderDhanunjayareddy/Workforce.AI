@@ -85,6 +85,8 @@ const minutesAgo = (minutes: number) => new Date(now - minutes * 60 * 1000).toIS
 const daysAgo = (days: number) => new Date(now - days * 24 * 60 * 60 * 1000).toISOString();
 const daysFromNow = (days: number) => new Date(now + days * 24 * 60 * 60 * 1000).toISOString();
 const sophiaAsset = employeeAssetService.getHeroEmployee();
+const emmaAsset = employeeAssetService.getCustomerSuccessHeroEmployee();
+const kpiValue = (value: string | undefined, fallback: string) => value ?? fallback;
 const percentValue = (value: string) => Number(value.replace(/[^0-9.]/g, ""));
 const numberValue = (value: string) => Number(value.replace(/[^0-9]/g, ""));
 
@@ -123,17 +125,17 @@ export const employeeProfiles: EmployeeContentProfile[] = [
     voice: "Sophia Premium",
     personality: "Warm, calm, professional and consultative",
     workingHours: "09:00 - 18:00 IST",
-    health: percentValue(sophiaAsset.KPIs.aiHealthScore),
-    knowledgeScore: percentValue(sophiaAsset.KPIs.knowledgeAccuracy),
-    conversationQuality: percentValue(sophiaAsset.KPIs.conversationQuality),
+    health: percentValue(kpiValue(sophiaAsset.KPIs.aiHealthScore, "97/100")),
+    knowledgeScore: percentValue(kpiValue(sophiaAsset.KPIs.knowledgeAccuracy, "99.2%")),
+    conversationQuality: percentValue(kpiValue(sophiaAsset.KPIs.conversationQuality, "96/100")),
     toolConnectivity: 100,
-    performance: percentValue(sophiaAsset.KPIs.conversationQuality),
+    performance: percentValue(kpiValue(sophiaAsset.KPIs.conversationQuality, "96/100")),
     callsToday: 132,
     appointmentsToday: 18,
-    callsCompleted: numberValue(sophiaAsset.KPIs.conversationsCompleted),
-    appointmentsBooked: numberValue(sophiaAsset.KPIs.appointmentsScheduled),
+    callsCompleted: numberValue(kpiValue(sophiaAsset.KPIs.conversationsCompleted, "14,862")),
+    appointmentsBooked: numberValue(kpiValue(sophiaAsset.KPIs.appointmentsScheduled, "2,846")),
     revenueInfluenced: 48000000,
-    csat: percentValue(sophiaAsset.KPIs.customerSatisfaction),
+    csat: percentValue(kpiValue(sophiaAsset.KPIs.customerSatisfaction, "98%")),
     currentCampaign: "Motor Insurance Renewal Q3",
     goals: ["Book qualified advisor appointments", "Maintain Knowledge accuracy above 99%"],
     knowledgeIds: ["kn_motor_handbook", "kn_health_guide", "kn_travel_products", "kn_premium_pricing", "kn_sales_playbook", "kn_customer_faq", "kn_compliance_manual", "kn_irda_guidelines"],
@@ -142,30 +144,30 @@ export const employeeProfiles: EmployeeContentProfile[] = [
   },
   {
     id: "emp_emma",
-    name: "Emma",
-    role: "Renewal Specialist",
-    department: "Customer Support",
-    manager: "Priya Reddy",
+    name: emmaAsset.name,
+    role: emmaAsset.role,
+    department: emmaAsset.department,
+    manager: "Director of Customer Experience",
     aiExperienceYears: 3,
-    languages: ["English", "Hindi", "Telugu"],
+    languages: ["Telugu", "English"],
     voice: "Emma Care",
-    personality: "Warm, patient and support focused",
+    personality: "Calm, friendly, reassuring and patient",
     workingHours: "09:00 - 18:00 IST",
-    health: 98,
-    knowledgeScore: 96,
-    conversationQuality: 98,
+    health: percentValue(kpiValue(emmaAsset.KPIs.aiHealthScore, "98/100")),
+    knowledgeScore: percentValue(kpiValue(emmaAsset.KPIs.knowledgeAccuracy, "99.5%")),
+    conversationQuality: percentValue(kpiValue(emmaAsset.KPIs.conversationQuality, "98/100")),
     toolConnectivity: 99,
     performance: 97,
     callsToday: 118,
     appointmentsToday: 16,
-    callsCompleted: 2440,
-    appointmentsBooked: 326,
+    callsCompleted: numberValue(kpiValue(emmaAsset.KPIs.customersAssisted, "22,416")),
+    appointmentsBooked: numberValue(kpiValue(emmaAsset.KPIs.renewalAssistance, "5,182")),
     revenueInfluenced: 3760000,
-    csat: 99,
+    csat: percentValue(kpiValue(emmaAsset.KPIs.customerSatisfaction, "99%")),
     currentCampaign: "Policy Expiry Renewal Drive",
-    goals: ["Protect Rs. 1.2 Cr renewal pipeline", "Keep churn-risk follow-up below 24 hours"],
-    knowledgeIds: ["kn_customer_faq", "kn_customer_verification", "kn_sales_playbook"],
-    status: "active",
+    goals: ["Resolve customer issues accurately", "Keep escalations at or below 2%"],
+    knowledgeIds: ["kn_health_guide", "kn_customer_faq", "kn_claims_sop", "kn_customer_verification"],
+    status: emmaAsset.status,
     lastActiveMinutesAgo: 6
   },
   {
@@ -737,8 +739,8 @@ export const conversationRecords: ConversationContentRecord[] = [
   const contact = contacts[Number(contactIndex)];
   const campaign = campaigns.find((item) => item.id === campaignId)!;
   const usedKnowledge = employee.knowledgeIds.slice(0, 3).map((knowledgeId) => knowledge.find((item) => item.id === knowledgeId)?.title ?? "Customer FAQ");
-  const sophiaConversation = String(id) === "conv_1" ? sophiaAsset.conversations[0] : undefined;
-  const sophiaAnalytics = sophiaConversation?.analytics;
+  const assetConversation = String(id) === "conv_1" ? sophiaAsset.conversations[0] : String(id) === "conv_2" ? emmaAsset.conversations[0] : undefined;
+  const assetAnalytics = assetConversation?.analytics;
   return {
     id: String(id),
     employeeId: String(employeeId),
@@ -749,20 +751,20 @@ export const conversationRecords: ConversationContentRecord[] = [
     contactId: contact.id,
     customerName: contact.fullName,
     customerPhone: contact.phone,
-    goal: sophiaConversation?.scenario ?? String(goal),
-    duration: sophiaAnalytics?.Duration ?? String(duration),
+    goal: assetConversation?.scenario ?? String(goal),
+    duration: assetAnalytics?.Duration ?? String(duration),
     sentiment: sentiment as Conversation["sentiment"],
     status: status as Conversation["status"],
-    outcome: sophiaConversation?.outcome.join(", ") ?? (Number(revenueInfluenced) > 0 ? "Appointment booked" : status === "escalated" ? "Escalated to manager" : "Question resolved"),
+    outcome: assetConversation?.outcome.join(", ") ?? (Number(revenueInfluenced) > 0 ? "Appointment booked" : status === "escalated" ? "Escalated to manager" : "Question resolved"),
     health: employee.health,
     currentStage: status === "live" ? "Recommendation" : "Closing",
-    buyingIntent: (sophiaAnalytics?.Confidence === "High" || sophiaAnalytics?.Confidence === "Medium" || sophiaAnalytics?.Confidence === "Low") ? sophiaAnalytics.Confidence : Number(revenueInfluenced) > 250000 ? "High" : Number(revenueInfluenced) > 0 ? "Medium" : "Low",
+    buyingIntent: (assetAnalytics?.Confidence === "High" || assetAnalytics?.Confidence === "Medium" || assetAnalytics?.Confidence === "Low") ? assetAnalytics.Confidence : Number(revenueInfluenced) > 250000 ? "High" : Number(revenueInfluenced) > 0 ? "Medium" : "Low",
     riskLevel: status === "escalated" ? "High" : sentiment === "neutral" ? "Medium" : "Low",
-    confidence: sophiaAnalytics?.Compliance ? percentValue(sophiaAnalytics.Compliance) : Math.min(98, employee.conversationQuality),
-    audio: String(id) === "conv_1" ? sophiaAsset.previewAudio : `/demo/assets/audio/${String(audio)}`,
-    knowledgeUsed: sophiaConversation?.knowledgeUsed ?? usedKnowledge,
-    transcript: sophiaConversation?.transcript ?? transcript(String(id), employee.name, contact.fullName, String(goal).toLowerCase(), String(objection).toLowerCase(), String(recommendation)),
-    summary: sophiaConversation ? `${employee.name} qualified ${sophiaConversation.participants.customer}, recommended motor insurance, and booked an advisor appointment using approved Knowledge.` : `${employee.name} handled ${contact.fullName} for ${goal}, referenced ${usedKnowledge.join(", ")}, and produced a ${Number(revenueInfluenced) > 0 ? "commercial" : "service"} outcome.`,
+    confidence: assetAnalytics?.Compliance ? percentValue(assetAnalytics.Compliance) : Math.min(98, employee.conversationQuality),
+    audio: String(id) === "conv_1" ? sophiaAsset.previewAudio : String(id) === "conv_2" ? emmaAsset.previewAudio : `/demo/assets/audio/${String(audio)}`,
+    knowledgeUsed: assetConversation?.knowledgeUsed ?? usedKnowledge,
+    transcript: assetConversation?.transcript ?? transcript(String(id), employee.name, contact.fullName, String(goal).toLowerCase(), String(objection).toLowerCase(), String(recommendation)),
+    summary: assetConversation ? `${employee.name} helped ${assetConversation.participants.customer} with ${assetConversation.scenario.toLowerCase()} and produced: ${assetConversation.outcome.join(", ")}.` : `${employee.name} handled ${contact.fullName} for ${goal}, referenced ${usedKnowledge.join(", ")}, and produced a ${Number(revenueInfluenced) > 0 ? "commercial" : "service"} outcome.`,
     appointment: Number(revenueInfluenced) > 0 ? daysFromNow((Number(contactIndex) % 5) + 1) : "Not scheduled",
     revenueInfluenced: Number(revenueInfluenced),
     followUp: Number(revenueInfluenced) > 0 ? "Send comparison and confirm advisor slot." : "Send status note and monitor next customer response."
@@ -815,7 +817,7 @@ export const audioManifest = {
 export const notifications: AppNotification[] = [
   ["Sophia booked an advisor appointment.", "Rajesh Kumar accepted a motor insurance renewal review.", "success", "/app/conversations/conv_1"],
   ["Pricing Guide requires review.", "Premium Pricing Guide is used in four revenue campaigns.", "warning", "/app/knowledge/kn_premium_pricing"],
-  ["Emma protected renewal revenue.", "Policy Expiry Renewal Drive generated 67 appointments.", "success", "/app/campaigns/camp_policy_expiry"],
+  ["Emma resolved customer query.", "Health policy clarification closed with no escalation required.", "success", "/app/conversations/conv_2"],
   ["Claims follow-up improved satisfaction.", "David resolved claim status questions using Claims SOP.", "info", "/app/conversations/conv_3"],
   ["Customer Satisfaction Pulse needs attention.", "Negative support sentiment was escalated to manager review.", "error", "/app/conversations/conv_10"]
 ].map(([title, description, type, href], index) => ({

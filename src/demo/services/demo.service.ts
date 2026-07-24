@@ -13,7 +13,11 @@ export const demoService = {
       role: employee.role,
       voice: employee.voice,
       audio: asset?.previewAudio ?? "/demo/assets/audio/workspace.mp3",
-      transcript: asset ? [
+      transcript: asset?.id === employeeAssetService.customerSuccessHeroEmployeeId ? [
+        { id: "voice_1", start: 0, end: 5, text: "నమస్కారం. నేను ఎమ్మా." },
+        { id: "voice_2", start: 5, end: 11, text: "Workforce AI నుండి Customer Success Specialist‌గా మాట్లాడుతున్నాను." },
+        { id: "voice_3", start: 11, end: 17, text: "మీ సమస్యను ప్రశాంతంగా విని స్పష్టమైన సహాయం అందిస్తాను." }
+      ] : asset ? [
         { id: "voice_1", start: 0, end: 5, text: "నమస్కారం. నేను సోఫియా." },
         { id: "voice_2", start: 5, end: 11, text: "Workforce AI నుండి Senior AI Sales Executive‌గా మాట్లాడుతున్నాను." },
         { id: "voice_3", start: 11, end: 17, text: "మీ అవసరాలను ప్రశాంతంగా అర్థం చేసుకుని సరైన తదుపరి దశను సూచిస్తాను." }

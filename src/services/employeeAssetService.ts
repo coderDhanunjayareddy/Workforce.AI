@@ -1,33 +1,34 @@
-import profileImage from "../../assets/employees/sophia/images/profile.png";
-import speakingImage from "../../assets/employees/sophia/images/speaking.png";
-import heroImage from "../../assets/employees/sophia/images/hero.png";
-import transparentImage from "../../assets/employees/sophia/images/transparent.png";
-import thumbnailImage from "../../assets/employees/sophia/images/thumbnail.png";
-import previewAudio from "../../assets/employees/sophia/audio/voice-preview.mp3";
-import identity from "../../assets/employees/sophia/identity.md?raw";
-import biography from "../../assets/employees/sophia/biography.md?raw";
-import personality from "../../assets/employees/sophia/personality.md?raw";
-import speakingRules from "../../assets/employees/sophia/speaking-rules.md?raw";
-import voiceDNA from "../../assets/employees/sophia/voice-dna.md?raw";
-import kpis from "../../assets/employees/sophia/kpis.md?raw";
-import conversation01 from "../../assets/employees/sophia/conversations/conversation-01.md?raw";
+import sophiaProfileImage from "../../assets/employees/sophia/images/profile.png";
+import sophiaSpeakingImage from "../../assets/employees/sophia/images/speaking.png";
+import sophiaHeroImage from "../../assets/employees/sophia/images/hero.png";
+import sophiaTransparentImage from "../../assets/employees/sophia/images/transparent.png";
+import sophiaThumbnailImage from "../../assets/employees/sophia/images/thumbnail.png";
+import sophiaPreviewAudio from "../../assets/employees/sophia/audio/voice-preview.mp3";
+import sophiaIdentity from "../../assets/employees/sophia/identity.md?raw";
+import sophiaBiography from "../../assets/employees/sophia/biography.md?raw";
+import sophiaPersonality from "../../assets/employees/sophia/personality.md?raw";
+import sophiaSpeakingRules from "../../assets/employees/sophia/speaking-rules.md?raw";
+import sophiaVoiceDNA from "../../assets/employees/sophia/voice-dna.md?raw";
+import sophiaKpis from "../../assets/employees/sophia/kpis.md?raw";
+import sophiaConversation01 from "../../assets/employees/sophia/conversations/conversation-01.md?raw";
+import emmaProfileImage from "../../assets/employees/emma/images/profile.png";
+import emmaSpeakingImage from "../../assets/employees/emma/images/speaking.png";
+import emmaHeroImage from "../../assets/employees/emma/images/hero.png";
+import emmaTransparentImage from "../../assets/employees/emma/images/transparent.png";
+import emmaThumbnailImage from "../../assets/employees/emma/images/thumbnail.png";
+import emmaPreviewAudio from "../../assets/employees/emma/audio/voice-preview.mp3";
+import emmaIdentity from "../../assets/employees/emma/identity.md?raw";
+import emmaBiography from "../../assets/employees/emma/biography.md?raw";
+import emmaPersonality from "../../assets/employees/emma/personality.md?raw";
+import emmaSpeakingRules from "../../assets/employees/emma/speaking-rules.md?raw";
+import emmaVoiceDNA from "../../assets/employees/emma/voice-dna.md?raw";
+import emmaKpis from "../../assets/employees/emma/kpis.md?raw";
+import emmaConversation01 from "../../assets/employees/emma/conversations/conversation-01.md?raw";
 
 import type { HeroEmployeeAsset, HeroEmployeeConversation, HeroEmployeeKpis, Status, TranscriptLine } from "@/types";
 
 const SOPHIA_ID = "emp_sophia";
-
-const fallbackKpis: HeroEmployeeKpis = {
-  conversationsCompleted: "14,862",
-  avgConversationDuration: "5m 12s",
-  conversionRate: "38%",
-  appointmentsScheduled: "2,846",
-  customerSatisfaction: "98%",
-  firstResponseTime: "1.3 sec",
-  knowledgeAccuracy: "99.2%",
-  aiHealthScore: "97/100",
-  conversationQuality: "96/100",
-  revenueInfluenced: "₹4.8 Crore"
-};
+const EMMA_ID = "emp_emma";
 
 const kpiKeyMap: Record<string, keyof HeroEmployeeKpis> = {
   "Conversations Completed": "conversationsCompleted",
@@ -39,7 +40,13 @@ const kpiKeyMap: Record<string, keyof HeroEmployeeKpis> = {
   "Knowledge Accuracy": "knowledgeAccuracy",
   "AI Health Score": "aiHealthScore",
   "Conversation Quality": "conversationQuality",
-  "Revenue Influenced": "revenueInfluenced"
+  "Revenue Influenced": "revenueInfluenced",
+  "Customers Assisted": "customersAssisted",
+  "Avg Resolution Time": "avgResolutionTime",
+  "First Contact Resolution": "firstContactResolution",
+  "Renewal Assistance": "renewalAssistance",
+  "Retention Contribution": "retentionContribution",
+  "Escalation Rate": "escalationRate"
 };
 
 function parseTable(markdown: string): Record<string, string> {
@@ -52,10 +59,10 @@ function parseTable(markdown: string): Record<string, string> {
 
 function parseKpis(markdown: string): HeroEmployeeKpis {
   const values = parseTable(markdown);
-  return Object.entries(kpiKeyMap).reduce<HeroEmployeeKpis>((result, [label, key]) => ({
-    ...result,
-    [key]: values[label] ?? fallbackKpis[key]
-  }), fallbackKpis);
+  return Object.entries(kpiKeyMap).reduce<HeroEmployeeKpis>((result, [label, key]) => {
+    const value = values[label];
+    return value ? { ...result, [key]: value } : result;
+  }, {});
 }
 
 function section(markdown: string, title: string): string {
@@ -67,7 +74,7 @@ function parseList(markdown: string): string[] {
   return markdown.split("\n").filter((line) => line.trim().startsWith("- ")).map((line) => line.replace(/^- /, "").trim());
 }
 
-function parseConversation(markdown: string): HeroEmployeeConversation {
+function parseConversation(markdown: string, employeeName: string, idPrefix: string): HeroEmployeeConversation {
   const conversation = section(markdown, "Conversation");
   const transcript: TranscriptLine[] = conversation
     .split(/\n---\n/)
@@ -75,9 +82,9 @@ function parseConversation(markdown: string): HeroEmployeeConversation {
       const speaker = block.match(/### (.+)/)?.[1]?.trim() ?? "Customer";
       const text = block.replace(/### .+\n/, "").trim().replace(/\n\n/g, "\n");
       return {
-        id: `sophia_conversation_01_t${index + 1}`,
+        id: `${idPrefix}_conversation_01_t${index + 1}`,
         speaker,
-        role: speaker === "Sophia" ? "employee" as const : "customer" as const,
+        role: speaker === employeeName ? "employee" as const : "customer" as const,
         text,
         timestamp: `${String(Math.floor(index * 36 / 60)).padStart(2, "0")}:${String((index * 36) % 60).padStart(2, "0")}`
       };
@@ -85,12 +92,12 @@ function parseConversation(markdown: string): HeroEmployeeConversation {
     .filter((line) => line.text);
 
   return {
-    id: "sophia-conversation-01",
+    id: `${idPrefix}-conversation-01`,
     scenario: section(markdown, "Scenario"),
     objective: section(markdown, "Objective"),
     participants: {
-      employee: markdown.match(/AI Employee:\n(.+)/)?.[1]?.trim() ?? "Sophia",
-      customer: markdown.match(/Customer:\n(.+)/)?.[1]?.trim() ?? "Mr. Rajesh Kumar"
+      employee: markdown.match(/AI Employee:\n(.+)/)?.[1]?.trim() ?? employeeName,
+      customer: markdown.match(/Customer:\n(.+)/)?.[1]?.trim() ?? "Customer"
     },
     transcript,
     analytics: parseTable(section(markdown, "Analytics")),
@@ -99,39 +106,76 @@ function parseConversation(markdown: string): HeroEmployeeConversation {
   };
 }
 
-const sophiaAsset: HeroEmployeeAsset = {
+function createAsset(input: Omit<HeroEmployeeAsset, "KPIs" | "conversations"> & { kpis: string; conversation: string }): HeroEmployeeAsset {
+  return {
+    ...input,
+    KPIs: parseKpis(input.kpis),
+    conversations: [parseConversation(input.conversation, input.name, input.name.toLowerCase())]
+  };
+}
+
+const sophiaAsset = createAsset({
   id: SOPHIA_ID,
   name: "Sophia",
   role: "Senior AI Sales Executive",
   department: "Enterprise Sales",
   status: "active" as Status,
-  profileImage,
-  speakingImage,
-  heroImage,
-  transparentImage,
-  thumbnailImage,
-  previewAudio,
-  identity,
-  biography,
-  personality,
-  speakingRules,
-  voiceDNA,
-  KPIs: parseKpis(kpis),
-  conversations: [parseConversation(conversation01)]
-};
+  profileImage: sophiaProfileImage,
+  speakingImage: sophiaSpeakingImage,
+  heroImage: sophiaHeroImage,
+  transparentImage: sophiaTransparentImage,
+  thumbnailImage: sophiaThumbnailImage,
+  previewAudio: sophiaPreviewAudio,
+  identity: sophiaIdentity,
+  biography: sophiaBiography,
+  personality: sophiaPersonality,
+  speakingRules: sophiaSpeakingRules,
+  voiceDNA: sophiaVoiceDNA,
+  kpis: sophiaKpis,
+  conversation: sophiaConversation01
+});
+
+const emmaAsset = createAsset({
+  id: EMMA_ID,
+  name: "Emma",
+  role: "Senior Customer Success Specialist",
+  department: "Customer Success",
+  status: "active" as Status,
+  profileImage: emmaProfileImage,
+  speakingImage: emmaSpeakingImage,
+  heroImage: emmaHeroImage,
+  transparentImage: emmaTransparentImage,
+  thumbnailImage: emmaThumbnailImage,
+  previewAudio: emmaPreviewAudio,
+  identity: emmaIdentity,
+  biography: emmaBiography,
+  personality: emmaPersonality,
+  speakingRules: emmaSpeakingRules,
+  voiceDNA: emmaVoiceDNA,
+  kpis: emmaKpis,
+  conversation: emmaConversation01
+});
+
+const employeeAssets = [sophiaAsset, emmaAsset];
 
 export const employeeAssetService = {
   heroEmployeeId: SOPHIA_ID,
+  customerSuccessHeroEmployeeId: EMMA_ID,
   getHeroEmployee: (): HeroEmployeeAsset => sophiaAsset,
-  getByEmployeeId: (employeeId: string): HeroEmployeeAsset | undefined => (employeeId === SOPHIA_ID ? sophiaAsset : undefined),
+  getCustomerSuccessHeroEmployee: (): HeroEmployeeAsset => emmaAsset,
+  getAssets: (): HeroEmployeeAsset[] => employeeAssets,
+  getByEmployeeId: (employeeId: string): HeroEmployeeAsset | undefined => employeeAssets.find((asset) => asset.id === employeeId),
+  getByEmployeeName: (employeeName: string): HeroEmployeeAsset | undefined => employeeAssets.find((asset) => asset.name.toLowerCase() === employeeName.toLowerCase()),
   getProfileImage: (employeeId: string): string | undefined => employeeAssetService.getByEmployeeId(employeeId)?.profileImage,
+  getThumbnailImage: (employeeId: string): string | undefined => employeeAssetService.getByEmployeeId(employeeId)?.thumbnailImage,
+  getThumbnailImageByName: (employeeName: string): string | undefined => employeeAssetService.getByEmployeeName(employeeName)?.thumbnailImage,
   getPreviewAudio: (employeeId: string): string | undefined => employeeAssetService.getByEmployeeId(employeeId)?.previewAudio,
   preloadHeroEmployeeCoreAssets: () => {
     if (typeof document === "undefined") return;
-    [
-      { rel: "preload", as: "image", href: sophiaAsset.profileImage },
-      { rel: "preload", as: "audio", href: sophiaAsset.previewAudio }
-    ].forEach((attributes) => {
+    employeeAssets.flatMap((asset) => [
+      { rel: "preload", as: "image", href: asset.profileImage },
+      { rel: "preload", as: "audio", href: asset.previewAudio }
+    ]).forEach((attributes) => {
       if (document.querySelector(`link[href="${attributes.href}"]`)) return;
       const link = document.createElement("link");
       link.rel = attributes.rel;

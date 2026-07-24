@@ -32,6 +32,7 @@ export function VoicePreview({
 
     const onLoadStart = () => setLoading(true);
     const onLoadedMetadata = () => setLoading(false);
+    const onCanPlay = () => setLoading(false);
     const onTimeUpdate = () => setProgress(audio.currentTime);
     const onPause = () => setPlaying(false);
     const onPlay = () => setPlaying(true);
@@ -48,6 +49,7 @@ export function VoicePreview({
 
     audio.addEventListener("loadstart", onLoadStart);
     audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("canplay", onCanPlay);
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("play", onPlay);
@@ -58,6 +60,7 @@ export function VoicePreview({
       audio.pause();
       audio.removeEventListener("loadstart", onLoadStart);
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("canplay", onCanPlay);
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("play", onPlay);
@@ -67,11 +70,14 @@ export function VoicePreview({
   }, [profile.audio]);
 
   useEffect(() => {
+    setAudioError(false);
+    setLoading(false);
+    setProgress(0);
     if (!open) {
       audioRef.current?.pause();
       setPlaying(false);
     }
-  }, [open]);
+  }, [open, profile.audio]);
 
   const togglePlayback = async () => {
     const audio = audioRef.current;
@@ -118,7 +124,7 @@ export function VoicePreview({
               variant="secondary"
               size="icon"
               onClick={() => { void togglePlayback(); }}
-              disabled={audioError || loading}
+              disabled={audioError}
               aria-label={playing ? "Pause voice preview" : "Play voice preview"}
             >
               {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}

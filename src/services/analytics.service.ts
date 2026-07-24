@@ -4,6 +4,7 @@ import { employeeAssetService } from "@/services/employeeAssetService";
 import type { AnalyticsChartPoint, AnalyticsDashboard, AnalyticsForecast, AnalyticsInsight, EmployeeAnalyticsRow, Insight, ReportDefinition } from "@/types";
 
 const sophiaKpis = employeeAssetService.getHeroEmployee().KPIs;
+const emmaKpis = employeeAssetService.getCustomerSuccessHeroEmployee().KPIs;
 
 const revenueTrend: AnalyticsChartPoint[] = [
   { name: "Jan", revenue: 14000000, appointments: 680, calls: 9400, leads: 420 },
@@ -19,10 +20,10 @@ const leaderboard: EmployeeAnalyticsRow[] = employees.slice(0, 8).map((employee,
   employeeId: employee.id,
   employee: employee.name,
   department: employee.department,
-  calls: employee.id === "emp_sophia" ? Number(sophiaKpis.conversationsCompleted.replace(/[^0-9]/g, "")) : 132 - index * 7,
-  appointments: employee.id === "emp_sophia" ? Number(sophiaKpis.appointmentsScheduled.replace(/[^0-9]/g, "")) : 18 - Math.min(index, 8),
-  revenue: employee.id === "emp_sophia" ? sophiaKpis.revenueInfluenced : `Rs. ${(18.2 - index * 1.4).toFixed(1)}L`,
-  csat: employee.id === "emp_sophia" ? Number(sophiaKpis.customerSatisfaction.replace("%", "")) : Math.max(90, employee.csat),
+  calls: employee.id === "emp_sophia" ? Number((sophiaKpis.conversationsCompleted ?? "0").replace(/[^0-9]/g, "")) : employee.id === "emp_emma" ? Number((emmaKpis.customersAssisted ?? "0").replace(/[^0-9]/g, "")) : 132 - index * 7,
+  appointments: employee.id === "emp_sophia" ? Number((sophiaKpis.appointmentsScheduled ?? "0").replace(/[^0-9]/g, "")) : employee.id === "emp_emma" ? Number((emmaKpis.renewalAssistance ?? "0").replace(/[^0-9]/g, "")) : 18 - Math.min(index, 8),
+  revenue: employee.id === "emp_sophia" ? sophiaKpis.revenueInfluenced ?? "₹4.8 Crore" : employee.id === "emp_emma" ? emmaKpis.retentionContribution ?? "96%" : `Rs. ${(18.2 - index * 1.4).toFixed(1)}L`,
+  csat: employee.id === "emp_sophia" ? Number((sophiaKpis.customerSatisfaction ?? "98%").replace("%", "")) : employee.id === "emp_emma" ? Number((emmaKpis.customerSatisfaction ?? "99%").replace("%", "")) : Math.max(90, employee.csat),
   health: employee.health,
   trend: index < 3 ? "+12%" : "+6%"
 }));
@@ -30,7 +31,7 @@ const leaderboard: EmployeeAnalyticsRow[] = employees.slice(0, 8).map((employee,
 const analyticsInsights: AnalyticsInsight[] = [
   { id: "sales_conversion", priority: "high", title: "Sales conversations increased conversion by 18%.", businessImpact: "Motor campaigns influenced Rs. 42L more than baseline.", recommendedAction: "Expand campaign", href: "/app/campaigns" },
   { id: "knowledge_freshness", priority: "critical", title: "Knowledge freshness declined.", businessImpact: "Pricing Guide updates affect active sales conversations.", recommendedAction: "Retrain employees", href: "/app/knowledge" },
-  { id: "emma_csat", priority: "medium", title: "Emma consistently exceeds customer satisfaction.", businessImpact: "Renewal customers handled by Emma report 98% CSAT.", recommendedAction: "Assign premium customers", href: "/app/employees/emp_emma" },
+  { id: "emma_csat", priority: "medium", title: "Emma consistently exceeds customer satisfaction.", businessImpact: "Customers assisted by Emma report 99% CSAT with a 2% escalation rate.", recommendedAction: "Review customer success playbook", href: "/app/employees/emp_emma" },
   { id: "renewal_underperforming", priority: "high", title: "Renewal campaign underperforming.", businessImpact: "Response rate is 7% below the quarter target.", recommendedAction: "Review knowledge base", href: "/app/knowledge" }
 ];
 
@@ -57,8 +58,8 @@ const dashboard: AnalyticsDashboard = {
     appointments: 1248,
     callsAutomated: 18420,
     qualifiedLeads: 842,
-    conversionRate: Number(sophiaKpis.conversionRate.replace("%", "")),
-    customerSatisfaction: Number(sophiaKpis.customerSatisfaction.replace("%", "")),
+    conversionRate: Number((sophiaKpis.conversionRate ?? "38%").replace("%", "")),
+    customerSatisfaction: Number((emmaKpis.customerSatisfaction ?? "99%").replace("%", "")),
     hoursSaved: 1842,
     roi: 324
   },

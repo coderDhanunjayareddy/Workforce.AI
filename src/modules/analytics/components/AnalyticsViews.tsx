@@ -10,13 +10,17 @@ import { Activity, CalendarCheck2, Clock, Gauge, IndianRupee, Percent, Target, T
 export function ExecutiveKpis({ dashboard }: { dashboard: AnalyticsDashboard }) {
   const kpis = dashboard.kpis;
   const sophiaKpis = employeeAssetService.getHeroEmployee().KPIs;
+  const emmaKpis = employeeAssetService.getCustomerSuccessHeroEmployee().KPIs;
   return (
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
-      <MetricCard icon={IndianRupee} label="Revenue Influenced" value={sophiaKpis.revenueInfluenced} trend="+18%" subtitle="Sophia influence" />
-      <MetricCard icon={Activity} label="Health Score" value={sophiaKpis.aiHealthScore} trend="+4%" subtitle="Sophia health" />
-      <MetricCard icon={Gauge} label="Conversation Quality" value={sophiaKpis.conversationQuality} trend="+4%" subtitle="Quality score" />
-      <MetricCard icon={ThumbsUp} label="Customer Satisfaction" value={sophiaKpis.customerSatisfaction} trend="+4%" subtitle="CSAT score" />
-      <MetricCard icon={Percent} label="Conversion Rate" value={sophiaKpis.conversionRate} trend="+4%" subtitle="Campaign conversion" />
+      <MetricCard icon={IndianRupee} label="Revenue Influenced" value={sophiaKpis.revenueInfluenced ?? "₹4.8 Crore"} trend="+18%" subtitle="Sophia influence" />
+      <MetricCard icon={Activity} label="Sophia Health" value={sophiaKpis.aiHealthScore ?? "97/100"} trend="+4%" subtitle="Hero sales employee" />
+      <MetricCard icon={ThumbsUp} label="Emma CSAT" value={emmaKpis.customerSatisfaction ?? "99%"} trend="+4%" subtitle="Customer success" />
+      <MetricCard icon={Clock} label="Resolution Time" value={emmaKpis.avgResolutionTime ?? "3m 48s"} trend="-8%" subtitle="Average resolution" />
+      <MetricCard icon={Gauge} label="First Contact Resolution" value={emmaKpis.firstContactResolution ?? "95%"} trend="+5%" subtitle="Resolved first touch" />
+      <MetricCard icon={Activity} label="Emma Health" value={emmaKpis.aiHealthScore ?? "98/100"} trend="+4%" subtitle="Customer success health" />
+      <MetricCard icon={Percent} label="Retention Contribution" value={emmaKpis.retentionContribution ?? "96%"} trend="+6%" subtitle="Retention support" />
+      <MetricCard icon={Target} label="Escalation Rate" value={emmaKpis.escalationRate ?? "2%"} trend="-3%" subtitle="Escalation control" />
       <MetricCard icon={CalendarCheck2} label="Appointments" value={kpis.appointments.toLocaleString("en-IN")} trend="+12%" subtitle="Booked outcomes" />
       <MetricCard icon={Activity} label="Calls Completed" value={kpis.callsAutomated.toLocaleString("en-IN")} trend="+16%" subtitle="Conversations handled" />
       <MetricCard icon={Target} label="Qualified Leads" value={kpis.qualifiedLeads.toLocaleString("en-IN")} trend="+9%" subtitle="Sales-ready prospects" />

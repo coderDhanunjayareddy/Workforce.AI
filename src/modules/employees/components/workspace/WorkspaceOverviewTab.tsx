@@ -94,7 +94,7 @@ export function WorkspaceOverviewTab({
             </CardContent>
           </Card>
           <Card>
-            <CardHeader title="Sophia KPIs" description="Production metrics from the approved profile." />
+            <CardHeader title={`${employee.name} KPIs`} description="Production metrics from the approved profile." />
             <CardContent className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 {workspace.overview.kpiHighlights.map((item) => (

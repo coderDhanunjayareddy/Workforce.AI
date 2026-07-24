@@ -40,7 +40,7 @@ const dashboard: LiveOperationsDashboard = {
     { id: "notif_appointment", title: "Sophia booked appointment.", description: "Rajesh Kumar accepted a motor insurance review slot.", time: "Now", href: "/app/conversations/conv_1" },
     { id: "notif_callback", title: "Customer requested callback.", description: "Anjali Rao prefers renewal follow-up tomorrow.", time: "2m ago", href: "/app/conversations/conv_2" },
     { id: "notif_escalated", title: "David escalated conversation.", description: "Claim support sentiment requires manager review.", time: "4m ago", href: "/app/conversations/conv_3" },
-    { id: "notif_renewal", title: "Emma protected renewal revenue.", description: "Policy Expiry Renewal Drive reached a positive outcome.", time: "7m ago", href: "/app/campaigns/camp_policy_expiry" }
+    { id: "notif_renewal", title: "Emma resolved customer query.", description: "Health policy clarification closed with no escalation required.", time: "7m ago", href: "/app/conversations/conv_2" }
   ],
   recommendations: [
     { id: "rec_intent", priority: "high", title: "Customer showing strong buying intent.", action: "Offer Premium Plan", reason: "Positive sentiment and premium questions indicate readiness.", href: "/app/conversations/conv_1" },

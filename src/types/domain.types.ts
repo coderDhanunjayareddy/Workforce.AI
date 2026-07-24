@@ -53,16 +53,22 @@ export interface Employee {
 }
 
 export interface HeroEmployeeKpis {
-  conversationsCompleted: string;
-  avgConversationDuration: string;
-  conversionRate: string;
-  appointmentsScheduled: string;
-  customerSatisfaction: string;
-  firstResponseTime: string;
-  knowledgeAccuracy: string;
-  aiHealthScore: string;
-  conversationQuality: string;
-  revenueInfluenced: string;
+  conversationsCompleted?: string;
+  avgConversationDuration?: string;
+  conversionRate?: string;
+  appointmentsScheduled?: string;
+  customerSatisfaction?: string;
+  firstResponseTime?: string;
+  knowledgeAccuracy?: string;
+  aiHealthScore?: string;
+  conversationQuality?: string;
+  revenueInfluenced?: string;
+  customersAssisted?: string;
+  avgResolutionTime?: string;
+  firstContactResolution?: string;
+  renewalAssistance?: string;
+  retentionContribution?: string;
+  escalationRate?: string;
 }
 
 export interface HeroEmployeeConversation {

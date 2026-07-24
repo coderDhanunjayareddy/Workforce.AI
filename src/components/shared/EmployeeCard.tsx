@@ -13,7 +13,7 @@ export function EmployeeCard({ employee }: { employee: Employee }) {
       <CardContent>
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Avatar name={employee.name} className="h-12 w-12" />
+            <Avatar name={employee.name} src={employee.avatarUrl} className="h-12 w-12" />
             <div>
               <h3 className="font-display text-lg font-semibold">{employee.name}</h3>
               <p className="text-sm text-[var(--text-secondary)]">{employee.role}</p>

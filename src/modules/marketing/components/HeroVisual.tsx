@@ -5,12 +5,13 @@ import { employeeAssetService } from "@/services/employeeAssetService";
 
 const workforce = [
   ["Sophia", "Senior AI Sales Executive", "97%"],
-  ["Emma", "Renewal Specialist", "98%"],
+  ["Emma", "Senior Customer Success Specialist", "98%"],
   ["David", "Claims Support", "95%"]
 ];
 
 export function HeroVisual() {
   const sophia = employeeAssetService.getHeroEmployee();
+  const emma = employeeAssetService.getCustomerSuccessHeroEmployee();
 
   return (
     <figure className="relative" aria-label="Workforce AI product preview">
@@ -42,7 +43,7 @@ export function HeroVisual() {
             {workforce.map(([name, role, health]) => (
               <div key={name} className="flex items-center justify-between rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-4">
                 <div className="flex items-center gap-3">
-                  <Avatar name={name} src={name === sophia.name ? sophia.profileImage : undefined} />
+                  <Avatar name={name} src={name === sophia.name ? sophia.profileImage : name === emma.name ? emma.heroImage : undefined} />
                   <div>
                     <p className="text-sm font-semibold">{name}</p>
                     <p className="text-xs text-[var(--text-secondary)]">{role}</p>

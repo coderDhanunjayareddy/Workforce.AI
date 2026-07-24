@@ -101,9 +101,9 @@ export const workforceDashboardData: WorkforceDashboardData = {
       id: "live-emma",
       employeeId: "emp_emma",
       employeeName: "Emma",
-      role: "Renewal Specialist",
-      currentActivity: "Renewal discussion",
-      duration: "05:18",
+      role: "Senior Customer Success Specialist",
+      currentActivity: "Resolving health policy clarification",
+      duration: "03:25",
       customerName: "Anjali Rao",
       status: "talking"
     },
@@ -140,8 +140,8 @@ export const workforceDashboardData: WorkforceDashboardData = {
     {
       id: "activity-2",
       time: "09:18",
-      title: "Emma renewed policy",
-      description: "Policy Expiry Renewal Drive recorded a high-value customer renewal.",
+      title: "Emma resolved policy query",
+      description: "Customer success conversation ended with no escalation required.",
       href: "/app/campaigns/camp_policy_expiry",
       tone: "success"
     },
@@ -208,7 +208,7 @@ export const workforceDashboardData: WorkforceDashboardData = {
       id: "emma-training",
       priority: "medium",
       title: "Approve Emma Training",
-      description: "Emma completed renewal handling updates and is ready for approval.",
+      description: "Emma completed customer success handling updates and is ready for approval.",
       cta: "Open Workspace",
       href: "/app/employees/emp_emma"
     },

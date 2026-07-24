@@ -4,6 +4,7 @@ import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Too
 
 import { ChartCard, MetricCard } from "@/components/shared";
 import { Avatar, Badge, Button, Card, CardContent, CardHeader, Table } from "@/components/ui";
+import { employeeAssetService } from "@/services/employeeAssetService";
 import type {
   ConversationDetail,
   ConversationQueueItem,
@@ -41,7 +42,7 @@ export function LiveWorkforcePanel({ employees, selectedId, onSelect }: { employ
             className={`w-full rounded-[16px] border p-4 text-left transition hover:bg-[var(--surface-elevated)] ${selectedId === employee.conversationId ? "border-[var(--ai-accent)]" : "border-[var(--border)]"}`}
           >
             <div className="flex items-start gap-3">
-              <Avatar name={employee.employeeName} />
+              <Avatar name={employee.employeeName} src={employeeAssetService.getThumbnailImage(employee.employeeId)} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-3">
                   <p className="truncate font-semibold text-[var(--text-primary)]">{employee.employeeName}</p>

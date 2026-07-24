@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { Avatar, Badge, Card, CardContent, CardHeader } from "@/components/ui";
+import { employeeAssetService } from "@/services/employeeAssetService";
 
 import type { LiveWorkforceStatus } from "../types/workforceDashboard.types";
 
@@ -24,7 +25,7 @@ export function LiveWorkforcePanel({ items }: { items: LiveWorkforceStatus[] }) 
           >
             <div className="flex min-w-0 items-center gap-3">
               <span className="relative">
-                <Avatar name={item.employeeName} className="h-11 w-11" />
+                <Avatar name={item.employeeName} src={employeeAssetService.getThumbnailImage(item.employeeId)} className="h-11 w-11" />
                 <span
                   className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-[var(--surface)] bg-[var(--success)]"
                   aria-hidden="true"
