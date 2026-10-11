@@ -24,7 +24,7 @@ export function ResetPasswordPage() {
   const onSubmit = async (values: ResetPasswordFormValues) => {
     try {
       await authService.resetPassword({ token: "mock-reset-token", password: values.password });
-      toast.success("Password updated successfully.");
+      toast.success("Demo reset flow complete. Use the sample credentials to sign in.");
       await navigate({ to: "/login" });
     } catch {
       toast.error("The reset link expired. Request a new reset link.");
@@ -32,12 +32,12 @@ export function ResetPasswordPage() {
   };
 
   return (
-    <AuthLayout title="Choose a new password" description="Use a strong password to protect access to your Workforce AI workspace.">
+    <AuthLayout title="Preview new password step" description="This is a sample form. Entered passwords are not saved or used to sign in.">
       <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
         <FormField label="New password" type="password" autoComplete="new-password" registration={register("password")} error={errors.password} />
         <PasswordStrength password={watch("password")} />
         <FormField label="Confirm new password" type="password" autoComplete="new-password" registration={register("confirmPassword")} error={errors.confirmPassword} />
-        <Button type="submit" loading={isSubmitting} className="w-full">Update Password</Button>
+        <Button type="submit" loading={isSubmitting} className="w-full">Complete Demo Reset</Button>
         <Link to="/login" className="text-center text-sm font-semibold text-[var(--secondary)]">Back to login</Link>
       </form>
     </AuthLayout>

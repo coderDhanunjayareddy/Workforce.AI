@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
+import { useState } from "react";
 
 import { Seo } from "@/components/shared/Seo";
 import { Button, Card, CardContent, Input, Textarea } from "@/components/ui";
@@ -50,31 +51,46 @@ const contentByPage = {
 } satisfies Record<SubPageKey, { title: string; description: string }[]>;
 
 function ContactPanel() {
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [operation, setOperation] = useState("");
+
+  const downloadBrief = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const content = `Workforce AI demo request\n\nWork email: ${email.trim()}\nCompany: ${company.trim()}\nCustomer operation: ${operation.trim()}\n`;
+    const url = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "workforce-ai-demo-request.txt";
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
   return (
     <Card>
       <CardContent>
-        <h2 className="font-display text-2xl font-semibold">Request a Workforce AI demo</h2>
+        <h2 className="font-display text-2xl font-semibold">Prepare a demo brief</h2>
         <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-          Tell us where your team wants to use AI Employees. This form is UI-only until the Phase 3 authentication and backend flows are implemented.
+          Describe your use case and download a brief to share with your Workforce AI contact. This demo does not submit information online.
         </p>
-        <div className="mt-6 grid gap-4">
+        <form className="mt-6 grid gap-4" onSubmit={downloadBrief}>
           <label className="grid gap-2 text-sm font-semibold">
             Work email
-            <Input aria-label="Work email" />
+            <Input aria-label="Work email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
           </label>
           <label className="grid gap-2 text-sm font-semibold">
             Company
-            <Input aria-label="Company" />
+            <Input aria-label="Company" required value={company} onChange={(event) => setCompany(event.target.value)} />
           </label>
           <label className="grid gap-2 text-sm font-semibold">
             Customer operation
-            <Textarea aria-label="What customer operation should your first AI Employee support?" />
+            <Textarea aria-label="What customer operation should your first AI Employee support?" required value={operation} onChange={(event) => setOperation(event.target.value)} />
           </label>
-          <Button>
-            Book Demo
-            <ArrowRight className="h-4 w-4" />
+          <Button type="submit">
+            Download demo brief
+            <Download className="h-4 w-4" />
           </Button>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );
@@ -103,7 +119,7 @@ export function MarketingSubPage({ page }: { page: SubPageKey }) {
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button variant="secondary">Book Demo</Button>
+                <Button variant="secondary">Prepare Demo Brief</Button>
               </Link>
             </div>
           </div>
@@ -111,8 +127,8 @@ export function MarketingSubPage({ page }: { page: SubPageKey }) {
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-[20px] bg-[var(--primary)] p-6 text-white">
                 <Icon className="h-8 w-8 text-[var(--ai-accent)]" />
-                <p className="mt-8 font-display text-3xl font-semibold">Version 0.9</p>
-                <p className="mt-2 text-sm text-white/75">Investor-ready enterprise prototype direction.</p>
+                <p className="mt-8 font-display text-3xl font-semibold">Version 1</p>
+                <p className="mt-2 text-sm text-white/75">Interactive product demo with sample data.</p>
               </div>
               <div className="grid gap-3">
                 {businessMetrics.slice(0, 3).map((metric) => (
@@ -129,7 +145,7 @@ export function MarketingSubPage({ page }: { page: SubPageKey }) {
           <SectionHeader
             eyebrow={page === "contact" ? "Next Step" : "Details"}
             title={page === "contact" ? "Start with the business outcome you want to improve." : "A connected product story, ready for the next implementation phase."}
-            description="These public pages use the same terminology, tokens, routing, and component system as the application shell."
+            description="Explore the connected workflows in the sample workspace."
           />
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {contentByPage[page].map((item) => (
@@ -151,10 +167,7 @@ export function MarketingSubPage({ page }: { page: SubPageKey }) {
                 title="Bring your customer operations scenario."
                 description="The strongest demo starts with a real business workflow: renewals, lead qualification, claims support, appointment scheduling, or customer success."
               />
-              <div className="mt-8 space-y-3 text-sm text-[var(--text-secondary)]">
-                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> hello@workforce-ai.demo</p>
-                <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> +91 90000 00000</p>
-              </div>
+              <p className="mt-8 text-sm text-[var(--text-secondary)]">The version 1 demo is self guided. Sign in with the sample credentials to walk through the product.</p>
             </div>
             <ContactPanel />
           </MarketingSection>

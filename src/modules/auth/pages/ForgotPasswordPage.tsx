@@ -25,24 +25,24 @@ export function ForgotPasswordPage() {
     try {
       await authService.forgotPassword(values.email);
       setSentEmail(values.email);
-      toast.success("Password reset instructions sent.");
+      toast.success("Demo reset step opened.");
     } catch {
       toast.error("We could not find that work email.");
     }
   };
 
   return (
-    <AuthLayout title="Reset your password" description="Enter your work email and we will send secure reset instructions.">
+    <AuthLayout title="Explore password reset" description="This sample flow shows the reset screens. No email is sent and no password is changed.">
       {sentEmail ? (
         <AuthSuccessState
-          title="Password reset instructions sent"
-          description={`We sent reset instructions to ${sentEmail}. Use the secure link to choose a new password.`}
+          title="Demo reset step ready"
+          description={`The sample reset flow is ready for ${sentEmail}. Continue to preview the new password screen.`}
           action={<Link to="/reset-password"><Button>Open Reset Screen</Button></Link>}
         />
       ) : (
         <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
           <FormField label="Work email" autoComplete="email" registration={register("email")} error={errors.email} />
-          <Button type="submit" loading={isSubmitting} className="w-full">Send Reset Link</Button>
+          <Button type="submit" loading={isSubmitting} className="w-full">Continue Demo Reset</Button>
           <Link to="/login" className="text-center text-sm font-semibold text-[var(--secondary)]">Back to login</Link>
         </form>
       )}

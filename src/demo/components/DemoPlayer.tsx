@@ -12,7 +12,7 @@ export function DemoPlayer() {
   if (!enabled || started) return null;
 
   return (
-    <section className="fixed inset-0 z-50 grid place-items-center bg-slate-950 text-white" aria-label="Investor Demo welcome experience">
+    <section className="fixed inset-0 z-50 grid place-items-center bg-slate-950 text-white" aria-label="Guided Demo welcome experience">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(45,212,191,0.18),transparent_32%),linear-gradient(135deg,rgba(15,27,61,0.98),rgba(2,6,23,1))]" />
       <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-6 text-center">
         <div className="mb-7 flex items-center gap-4 rounded-[24px] border border-white/15 bg-white/10 p-4 shadow-xl backdrop-blur">
@@ -24,7 +24,7 @@ export function DemoPlayer() {
             <p className="text-xs text-white/65">Enterprise Pro · 18 AI Employees</p>
           </div>
         </div>
-        <p className="text-sm font-semibold uppercase tracking-normal text-teal-200">Investor Demo</p>
+        <p className="text-sm font-semibold uppercase tracking-normal text-teal-200">Guided Demo · Sample Data</p>
         <h1 className="mt-4 font-display text-5xl font-semibold transition md:text-6xl">Workforce AI</h1>
         <p className="mt-4 text-2xl font-semibold text-white/90">Build Your Digital Workforce</p>
         <div className="mt-6 flex max-w-2xl items-center gap-4 rounded-[24px] border border-white/15 bg-white/10 p-4 text-left backdrop-blur">

@@ -13,8 +13,34 @@ import type {
   EmployeeWorkspaceData
 } from "@/types";
 
+const demoEmployeesKey = "workforce-ai-demo-employees-v1";
+
+function loadDemoEmployees(): Employee[] {
+  try {
+    const saved = localStorage.getItem(demoEmployeesKey);
+    if (!saved) return [...employees];
+    const parsed: unknown = JSON.parse(saved);
+    return Array.isArray(parsed) && parsed.every((item) => item && typeof item.id === "string")
+      ? parsed as Employee[]
+      : [...employees];
+  } catch {
+    return [...employees];
+  }
+}
+
+let demoEmployees = loadDemoEmployees();
+
+function saveDemoEmployees(next: Employee[]) {
+  demoEmployees = next;
+  try {
+    localStorage.setItem(demoEmployeesKey, JSON.stringify(next));
+  } catch {
+    // The demo remains usable when browser storage is unavailable.
+  }
+}
+
 const getEmployeeOrThrow = (id: string) => {
-  const employee = employees.find((item) => item.id === id);
+  const employee = demoEmployees.find((item) => item.id === id);
   if (!employee) throw new Error("AI Employee was not found.");
   return employee;
 };
@@ -147,7 +173,7 @@ const getPerformance = (employee: Employee): EmployeePerformance => {
     { name: "Week 3", calls: employee.callsToday * 6, appointments: employee.appointmentsToday * 6, revenue: employee.performance * 6100 },
     { name: "Week 4", calls: employee.callsToday * 6, appointments: employee.appointmentsToday * 6, revenue: employee.performance * 6900 }
   ],
-  leaderboardPosition: [...employees].sort((first, second) => second.performance - first.performance).findIndex((item) => item.id === employee.id) + 1
+  leaderboardPosition: [...demoEmployees].sort((first, second) => second.performance - first.performance).findIndex((item) => item.id === employee.id) + 1
 };
 };
 
@@ -212,7 +238,11 @@ const getVersions = (): EmployeeVersionItem[] => [
 ];
 
 export const employeeService = {
-  getEmployees: () => mockApi<Employee[]>(() => employees),
+  resetDemoEmployees: () => mockApi<Employee[]>(() => {
+    saveDemoEmployees([...employees]);
+    return demoEmployees;
+  }),
+  getEmployees: () => mockApi<Employee[]>(() => demoEmployees),
   getEmployee: (id: string) =>
     mockApi<Employee>(() => getEmployeeOrThrow(id)),
   getWorkspace: (id: string) => mockApi<EmployeeWorkspaceData>(() => getWorkspaceData(getEmployeeOrThrow(id))),
@@ -237,14 +267,25 @@ export const employeeService = {
           date: index === 0 ? "Today" : `${index + 1} days ago`
         }))
     ),
-  hireEmployee: (employee: Employee) => mockApi<Employee>(() => employee),
+  hireEmployee: (employee: Employee) => mockApi<Employee>(() => {
+    saveDemoEmployees([employee, ...demoEmployees]);
+    return employee;
+  }),
   updateEmployee: (id: string, updates: Partial<Employee>) =>
-    mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, ...updates })),
+    mockApi<Employee>(() => {
+      const employee = { ...getEmployeeOrThrow(id), ...updates };
+      saveDemoEmployees(demoEmployees.map((item) => item.id === id ? employee : item));
+      return employee;
+    }),
   pauseEmployee: (id: string) =>
-    mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, status: "paused" })),
+    employeeService.updateEmployee(id, { status: "paused" }),
   resumeEmployee: (id: string) =>
-    mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, status: "active" })),
+    employeeService.updateEmployee(id, { status: "active" }),
   archiveEmployee: (id: string) =>
-    mockApi<Employee>(() => ({ ...employees.find((item) => item.id === id)!, status: "archived" })),
-  deleteEmployee: (id: string) => mockApi(() => ({ id, deleted: true }))
+    employeeService.updateEmployee(id, { status: "archived" }),
+  deleteEmployee: (id: string) => mockApi(() => {
+    getEmployeeOrThrow(id);
+    saveDemoEmployees(demoEmployees.filter((item) => item.id !== id));
+    return { id, deleted: true };
+  })
 };

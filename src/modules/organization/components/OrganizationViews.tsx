@@ -37,7 +37,7 @@ export function OrganizationProfilePanel({ dashboard }: { dashboard: Organizatio
   ];
   return (
     <Card>
-      <CardHeader title="Organization Profile" description="Core workspace identity, locale and business operating preferences." action={<Badge tone="green">Enterprise Ready</Badge>} />
+      <CardHeader title="Organization Profile" description="Sample workspace identity, locale and business operating preferences." action={<Badge tone="blue">Demo preview</Badge>} />
       <CardContent className="grid gap-4 lg:grid-cols-[220px_1fr]">
         <div className="grid place-items-center rounded-[20px] bg-[var(--surface-elevated)] p-6 text-center">
           <div className="grid h-24 w-24 place-items-center rounded-[24px] bg-[var(--primary)] font-display text-3xl font-semibold text-white">{profile.logoInitials}</div>
@@ -48,7 +48,7 @@ export function OrganizationProfilePanel({ dashboard }: { dashboard: Organizatio
           {fields.map(([label, value]) => (
             <label key={label} className="space-y-1 text-sm font-semibold">
               <span>{label}</span>
-              <Input defaultValue={value} aria-label={label} />
+              <Input defaultValue={value} aria-label={label} readOnly />
             </label>
           ))}
         </div>
@@ -92,11 +92,11 @@ export function TeamManagement({ team }: { team: TeamMember[] }) {
   if (team.length === 0) return null;
   return (
     <Card>
-      <CardHeader title="Team Management" description="Invite, edit, deactivate, assign roles and review access for human users." action={<Button size="sm">Invite Member</Button>} />
+      <CardHeader title="Team Management" description="Sample team and access overview. Team changes are unavailable in this demo." />
       <CardContent>
         <Table>
           <thead><tr className="border-b border-[var(--border)] text-xs uppercase tracking-[0.12em] text-[var(--text-muted)]">{["User", "Email", "Department", "Role", "Status", "Last Login", "Actions"].map((header) => <th key={header} className="p-3">{header}</th>)}</tr></thead>
-          <tbody>{team.map((member) => <tr key={member.id} className="border-b border-[var(--border)] last:border-0"><td className="p-3"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--surface-elevated)] text-xs font-bold">{member.avatar}</span><span className="font-semibold">{member.name}</span></div></td><td className="p-3 text-[var(--text-secondary)]">{member.email}</td><td className="p-3">{member.department}</td><td className="p-3">{member.role}</td><td className="p-3"><Badge tone={member.status === "active" ? "green" : member.status === "invited" ? "blue" : "slate"}>{member.status}</Badge></td><td className="p-3">{member.lastLogin}</td><td className="p-3"><Button variant="secondary" size="sm">Edit</Button></td></tr>)}</tbody>
+          <tbody>{team.map((member) => <tr key={member.id} className="border-b border-[var(--border)] last:border-0"><td className="p-3"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--surface-elevated)] text-xs font-bold">{member.avatar}</span><span className="font-semibold">{member.name}</span></div></td><td className="p-3 text-[var(--text-secondary)]">{member.email}</td><td className="p-3">{member.department}</td><td className="p-3">{member.role}</td><td className="p-3"><Badge tone={member.status === "active" ? "green" : member.status === "invited" ? "blue" : "slate"}>{member.status}</Badge></td><td className="p-3">{member.lastLogin}</td><td className="p-3"><Button variant="secondary" size="sm" disabled title="Preview only">Edit</Button></td></tr>)}</tbody>
         </Table>
       </CardContent>
     </Card>
@@ -142,7 +142,7 @@ export function SecurityCenter({ dashboard }: { dashboard: OrganizationAdminDash
             ["Two-Factor Authentication", security.twoFactorEnabled],
             ["IP Whitelist", security.ipWhitelistEnabled],
             ["Device Management", security.deviceManagement]
-          ].map(([label, enabled]) => <label key={String(label)} className="flex items-center gap-3 rounded-[16px] bg-[var(--surface-elevated)] p-3 text-sm font-semibold"><Checkbox defaultChecked={Boolean(enabled)} aria-label={String(label)} />{label}</label>)}
+          ].map(([label, enabled]) => <label key={String(label)} className="flex items-center gap-3 rounded-[16px] bg-[var(--surface-elevated)] p-3 text-sm font-semibold"><Checkbox defaultChecked={Boolean(enabled)} aria-label={String(label)} disabled />{label}</label>)}
         </CardContent>
       </Card>
       <Card>
@@ -150,7 +150,7 @@ export function SecurityCenter({ dashboard }: { dashboard: OrganizationAdminDash
         <CardContent>
           <Table>
             <thead><tr className="border-b border-[var(--border)] text-xs uppercase tracking-[0.12em] text-[var(--text-muted)]">{["Device", "Browser", "Location", "IP Address", "Last Active", "Action"].map((header) => <th key={header} className="p-3">{header}</th>)}</tr></thead>
-            <tbody>{security.activeSessions.map((session) => <tr key={session.id} className="border-b border-[var(--border)] last:border-0"><td className="p-3 font-semibold">{session.device}</td><td className="p-3">{session.browser}</td><td className="p-3">{session.location}</td><td className="p-3">{session.ipAddress}</td><td className="p-3">{session.lastActive}</td><td className="p-3"><Button variant="secondary" size="sm">Terminate</Button></td></tr>)}</tbody>
+            <tbody>{security.activeSessions.map((session) => <tr key={session.id} className="border-b border-[var(--border)] last:border-0"><td className="p-3 font-semibold">{session.device}</td><td className="p-3">{session.browser}</td><td className="p-3">{session.location}</td><td className="p-3">{session.ipAddress}</td><td className="p-3">{session.lastActive}</td><td className="p-3"><Button variant="secondary" size="sm" disabled title="Preview only">Terminate</Button></td></tr>)}</tbody>
           </Table>
         </CardContent>
       </Card>
@@ -173,11 +173,11 @@ export function WorkforceDefaultsPanel({ dashboard }: { dashboard: OrganizationA
 export function NotificationSettingsPanel({ dashboard }: { dashboard: OrganizationAdminDashboard }) {
   return (
     <Card>
-      <CardHeader title="Notification Settings" description="Control email, push, campaign, conversation, security, knowledge and employee health alerts." action={<Button size="sm">Save Preferences</Button>} />
+      <CardHeader title="Notification Settings" description="Sample email, push, campaign, conversation, security, knowledge and employee health preferences." />
       <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {Object.entries(dashboard.notifications).map(([key, enabled]) => (
           <label key={key} className="flex items-center gap-3 rounded-[16px] bg-[var(--surface-elevated)] p-4 text-sm font-semibold">
-            <Checkbox defaultChecked={enabled} aria-label={labelize(key)} />
+            <Checkbox defaultChecked={enabled} aria-label={labelize(key)} disabled />
             {labelize(key)}
           </label>
         ))}

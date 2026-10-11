@@ -1,117 +1,39 @@
-# Workforce AI
+# Workforce AI — Version 1 Demo
 
-Workforce AI is an enterprise SaaS prototype for hiring, training, deploying and managing AI Employees across business workflows. The application is built from the documentation in `docs/` and currently includes the foundation, marketing website, authentication flows and the Workforce Dashboard command center.
+Workforce AI is an interactive client demo of an AI workforce platform. It uses a fictional Nova Insurance workspace and sample data to show AI Employees, knowledge, contacts, campaigns, conversations, analytics, and organization settings.
 
-## Current Scope
+## Run locally
 
-- Premium public marketing website
-- Complete mock authentication and onboarding flows
-- Protected application shell with sidebar, topbar, command palette, notifications and theme support
-- Workforce Overview dashboard at `/app` and `/app/workforce`
-- Mock service layer for employees, campaigns, contacts, knowledge, conversations, analytics, notifications and organization data
-- Reusable UI and shared product components
-
-## Tech Stack
-
-- React 19
-- TypeScript
-- Vite
-- TanStack Router
-- TanStack Query
-- Tailwind CSS v4
-- Recharts
-- Lucide React
-- Framer Motion
-- React Hook Form
-- Zod
-
-## Getting Started
-
-Install dependencies:
+Requires Node.js and npm.
 
 ```bash
-npm install
-```
-
-Start the development server:
-
-```bash
+npm ci
 npm run dev
 ```
 
-Build for production:
+Open the local URL printed by Vite, choose **Login**, and use the prefilled sample credentials. In the workspace, select **Guided Demo** for a narrated tour. The tour includes local audio and conversation playback.
 
-```bash
-npm run build
-```
-
-Run lint checks:
+For a production build:
 
 ```bash
 npm run lint
-```
-
-Preview the production build:
-
-```bash
+npm run build
 npm run preview
 ```
 
-## Main Routes
+The static build in `dist/` can be hosted on a service that serves `index.html` for application routes. `vercel.json` includes a rewrite for Vercel.
 
-- `/` - Marketing landing page
-- `/features` - Features page
-- `/solutions` - Solutions page
-- `/pricing` - Pricing page
-- `/about` - About page
-- `/contact` - Contact page
-- `/login` - Login
-- `/register` - Registration
-- `/forgot-password` - Password recovery
-- `/reset-password` - Password reset
-- `/verify-email` - Email verification
-- `/onboarding` - Organization onboarding
-- `/app` - Workforce Overview
-- `/app/workforce` - Workforce Overview
-- `/app/employees` - AI Workforce foundation route
-- `/app/knowledge` - Knowledge Center foundation route
-- `/app/contacts` - Contacts foundation route
-- `/app/campaigns` - Campaigns foundation route
-- `/app/conversations` - Conversations foundation route
-- `/app/analytics` - Analytics foundation route
-- `/app/organization` - Organization Settings foundation route
-- `/app/settings` - Settings foundation route
+## Version 1 scope
 
-## Documentation
+- Responsive public pages and a protected sample workspace
+- Sample account creation, onboarding, and password reset screens
+- AI Employee directory, hiring flow, and workspace
+- Knowledge, contacts, campaigns, conversation review, and analytics views
+- Guided tour with narration, transcripts, and audio examples
+- Employee changes saved in the browser so the hiring demo survives a refresh
 
-The product, architecture, design system, mock data and phase specifications live in `docs/`. These markdown files are the source of truth for implementation decisions.
+## Demo boundaries
 
-Key documents:
+The workspace is a demonstration. The account and administration screens do not provide production authentication, email delivery, tenant isolation, API keys, billing, or live integrations. Calls, metrics, testimonials, and organization details are fictional. The contact page downloads a demo brief; it does not send a request. Most sample services return fixed data, while employee changes are stored locally in the browser. Do not enter real customer data or use the demo to run operations.
 
-- `docs/01_PROJECT_VISION.md`
-- `docs/02_PRODUCT_PHILOSOPHY.md`
-- `docs/03_FRONTEND_ARCHITECTURE.md`
-- `docs/04_DESIGN_SYSTEM.md`
-- `docs/05_MOCK_DATA_SPEC.md`
-- `docs/06_IMPLEMENTATION_RULES.md`
-- `docs/07_CLAUDE_CODE_EXECUTION_PROMPT.md`
-
-## Architecture
-
-The frontend follows a service-first flow:
-
-```text
-UI components
-  -> hooks
-  -> services
-  -> mock API
-  -> future backend
-```
-
-UI components do not import mock data directly. Server-like data is accessed through TanStack Query hooks and typed service functions so the mock API can later be replaced by production endpoints with minimal UI changes.
-
-## Notes
-
-- `node_modules/`, `dist/`, env files, logs and local agent metadata are intentionally ignored.
-- The current backend is mocked in `src/mocks/`.
-- The app uses Nova Insurance Pvt. Ltd. as the connected demo organization.
+Product and architecture references are in `docs/`. The production backend roadmap is in [`docs/20_BACKEND_READY_GUIDE.md`](docs/20_BACKEND_READY_GUIDE.md).

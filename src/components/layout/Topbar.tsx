@@ -25,6 +25,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <span className="hidden rounded-full bg-[var(--surface-elevated)] px-3 py-1 text-xs font-semibold text-[var(--text-secondary)] xl:inline-flex">Sample data · v1 demo</span>
         <Button variant="secondary" className="hidden md:flex" onClick={() => setCommandOpen(true)}>
           <Search className="h-4 w-4" />
           Search
@@ -35,10 +36,10 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           className="hidden sm:flex"
           onClick={demo.enabled ? demo.disableDemo : demo.enableDemo}
           aria-pressed={demo.enabled}
-          aria-label={demo.enabled ? "Exit Investor Demo" : "Enable Investor Demo"}
+          aria-label={demo.enabled ? "Exit Guided Demo" : "Enable Guided Demo"}
         >
           <Presentation className="h-4 w-4" />
-          Investor Demo
+          Guided Demo
         </Button>
         <OrganizationSwitcher />
         <NotificationMenu />

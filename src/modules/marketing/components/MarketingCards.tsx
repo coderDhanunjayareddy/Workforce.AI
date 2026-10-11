@@ -228,7 +228,7 @@ export function TestimonialsSection() {
       <SectionHeader
         eyebrow="Customer Stories"
         title="Realistic operating teams, measurable workforce outcomes."
-        description="Fictional demo companies show the buyer story without pretending the prototype has production customers."
+        description="Fictional demo companies illustrate possible workflows and outcomes."
       />
       <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {testimonials.map((item) => (
@@ -270,7 +270,7 @@ export function PricingPreview() {
               </ul>
               <Link to="/contact">
                 <Button className="mt-6 w-full" variant={plan.name === "Enterprise" ? "primary" : "secondary"}>
-                  Contact Sales
+                  Prepare Demo Brief
                 </Button>
               </Link>
             </CardContent>
@@ -317,7 +317,7 @@ export function FinalCta() {
               <Button variant="success">Hire Your First AI Employee</Button>
             </Link>
             <Link to="/contact">
-              <Button variant="secondary">Book Demo</Button>
+              <Button variant="secondary">Prepare Demo Brief</Button>
             </Link>
           </div>
         </div>

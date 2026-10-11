@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { AuthSuccessState } from "@/modules/auth/components";
@@ -12,47 +12,35 @@ import { AuthLayout } from "../components";
 export function VerifyEmailPage() {
   const navigate = useNavigate();
   const { setSession } = useSession();
-  const [seconds, setSeconds] = useState(30);
   const [verified, setVerified] = useState(false);
-
-  useEffect(() => {
-    if (verified || seconds === 0) return;
-    const timer = window.setTimeout(() => setSeconds((value) => value - 1), 1000);
-    return () => window.clearTimeout(timer);
-  }, [seconds, verified]);
 
   const verify = async () => {
     try {
       const session = await authService.verifyEmail("mock-verification-token");
       setSession(session);
       setVerified(true);
-      toast.success("Email verified successfully.");
+      toast.success("Demo account confirmed.");
     } catch {
       toast.error("Verification link expired. Resend the email and try again.");
     }
   };
 
   return (
-    <AuthLayout title="Verify your email" description="Confirm your work email before creating the Nova Insurance workspace.">
+    <AuthLayout title="Continue demo setup" description="This confirmation step demonstrates the account setup flow. No email is sent.">
       {verified ? (
         <AuthSuccessState
-          title="Email verified"
+          title="Demo account confirmed"
           description="Your account is confirmed. Continue to organization onboarding and build your digital workforce."
           action={<Button onClick={() => void navigate({ to: "/onboarding" })}>Continue to Onboarding</Button>}
         />
       ) : (
         <Card>
           <CardContent>
-            <h3 className="font-display text-xl font-semibold">Verification email sent</h3>
+            <h3 className="font-display text-xl font-semibold">Demo confirmation</h3>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-              We sent a secure verification link to your work email. For this mock flow, use the action below to confirm the account.
+              Confirm this sample account to continue to organization onboarding.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <Button onClick={verify}>Verify Email</Button>
-              <Button variant="secondary" disabled={seconds > 0}>
-                {seconds > 0 ? `Resend in ${seconds}s` : "Resend Email"}
-              </Button>
-            </div>
+            <div className="mt-6"><Button onClick={verify}>Confirm demo account</Button></div>
             <Link to="/login" className="mt-5 block text-sm font-semibold text-[var(--secondary)]">Back to login</Link>
           </CardContent>
         </Card>

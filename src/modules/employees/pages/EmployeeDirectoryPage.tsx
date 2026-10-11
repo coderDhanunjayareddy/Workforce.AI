@@ -1,10 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Download, UsersRound } from "lucide-react";
+import { RotateCcw, UsersRound } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { EmptyState, ErrorState, PageHeader } from "@/components/shared";
 import { Button, Card, CardContent } from "@/components/ui";
 import { useArchiveEmployee, useEmployees, usePauseEmployee, useResumeEmployee } from "@/hooks";
+import { employeeKeys } from "@/hooks/useEmployees";
+import { employeeService } from "@/services";
 import type { Employee } from "@/types";
 
 import { EmployeeBulkActions } from "../components/EmployeeBulkActions";
@@ -19,6 +22,7 @@ import type { EmployeeViewMode } from "../types/employeeModule.types";
 const pageSize = 8;
 
 export function EmployeeDirectoryPage() {
+  const queryClient = useQueryClient();
   const employeesQuery = useEmployees();
   const pauseEmployee = usePauseEmployee();
   const resumeEmployee = useResumeEmployee();
@@ -51,6 +55,15 @@ export function EmployeeDirectoryPage() {
     setSelectedIds([]);
   };
 
+  const resetDemo = async () => {
+    if (!window.confirm("Reset AI Employees to the original sample data? Your local employee changes will be removed.")) return;
+    const original = await employeeService.resetDemoEmployees();
+    queryClient.setQueryData(employeeKeys.all, original);
+    queryClient.removeQueries({ queryKey: ["employee"] });
+    setSelectedIds([]);
+    resetFilters();
+  };
+
   if (employeesQuery.isLoading) return <EmployeeDirectorySkeleton />;
 
   if (employeesQuery.isError) {
@@ -71,9 +84,9 @@ export function EmployeeDirectoryPage() {
         description="Hire, monitor and manage every AI Employee working across your organization."
         actions={
           <>
-            <Button variant="secondary" type="button">
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Import AI Employees
+            <Button variant="secondary" type="button" onClick={() => void resetDemo()}>
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              Reset Demo Employees
             </Button>
             <Link
               to="/app/employees/hire"

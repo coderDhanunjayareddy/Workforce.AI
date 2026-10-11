@@ -35,7 +35,7 @@ export function RegisterPage() {
     try {
       const session = await authService.register(values);
       setSession(session);
-      toast.success("Account created. Verify your email to continue.");
+      toast.success("Sample account ready. Continue the demo setup.");
       await navigate({ to: "/verify-email" });
     } catch {
       toast.error("This work email is already registered.");
@@ -43,7 +43,7 @@ export function RegisterPage() {
   };
 
   return (
-    <AuthLayout title="Create your Workforce AI account" description="Start with a secure account, then create your organization workspace.">
+    <AuthLayout title="Create a sample account" description="Explore the onboarding flow with sample data. This does not create a production account.">
       <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField label="First name" autoComplete="given-name" registration={register("firstName")} error={errors.firstName} />
@@ -56,7 +56,7 @@ export function RegisterPage() {
         <FormField label="Confirm password" type="password" autoComplete="new-password" registration={register("confirmPassword")} error={errors.confirmPassword} />
         <label className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
           <Checkbox {...register("terms")} />
-          <span>I accept the Terms and Conditions and Privacy Policy.</span>
+          <span>I understand this is a sample workspace using fictional data.</span>
         </label>
         {errors.terms ? <p className="text-xs font-medium text-[var(--danger)]">{errors.terms.message}</p> : null}
         <Button type="submit" loading={isSubmitting} className="w-full">Create Account</Button>

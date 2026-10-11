@@ -192,10 +192,10 @@ function ActionBar({
 }) {
   return (
     <Card>
-      <CardHeader title="Administration Actions" description="Changes are applied through mock services and will be ready for backend API replacement." />
+      <CardHeader title="Administration Actions" description="These controls are unavailable in the version 1 demo." />
       <CardContent className="flex flex-wrap gap-2">
-        {onSave ? <Button loading={saving} onClick={onSave}>Save Changes</Button> : null}
-        {onInvite ? <Button loading={inviting} onClick={onInvite}>Invite Team Member</Button> : null}
+        {onSave ? <Button loading={saving} onClick={onSave} disabled>Save Changes</Button> : null}
+        {onInvite ? <Button loading={inviting} onClick={onInvite} disabled>Invite Team Member</Button> : null}
       </CardContent>
     </Card>
   );

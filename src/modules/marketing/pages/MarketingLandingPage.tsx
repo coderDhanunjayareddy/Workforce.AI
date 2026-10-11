@@ -52,12 +52,12 @@ export function MarketingLandingPage() {
               <Link to="/contact">
                 <Button size="lg" variant="secondary">
                   <CalendarCheck className="h-5 w-5" />
-                  Book Live Demo
+                  Prepare Demo Brief
                 </Button>
               </Link>
             </div>
             <p className="mt-6 text-sm text-[var(--text-secondary)]">
-              Trusted by forward-thinking organizations preparing customer operations for digital workforce scale.
+              Version 1 is an interactive demonstration with fictional organizations and sample data.
             </p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }}>

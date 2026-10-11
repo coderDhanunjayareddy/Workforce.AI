@@ -20,8 +20,8 @@ export function IntegrationsGrid({ integrations }: { integrations: Integration[]
             <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">Last Sync</p>
             <p className="mt-1 font-semibold">{integration.lastSync}</p>
             <div className="mt-5 flex gap-2">
-              <Button size="sm" variant={integration.status === "connected" ? "secondary" : "primary"}>{integration.status === "connected" ? "Configure" : "Connect"}</Button>
-              {integration.status === "connected" ? <Button size="sm" variant="ghost">Disconnect</Button> : null}
+              <Button size="sm" variant={integration.status === "connected" ? "secondary" : "primary"} disabled title="Preview only">{integration.status === "connected" ? "Configure" : "Connect"}</Button>
+              {integration.status === "connected" ? <Button size="sm" variant="ghost" disabled title="Preview only">Disconnect</Button> : null}
             </div>
           </CardContent>
         </Card>
@@ -41,11 +41,11 @@ export function BillingPanel({ dashboard }: { dashboard: OrganizationAdminDashbo
         <MetricCard icon={PlugZap} label="API Usage" value={billing.apiUsage.toLocaleString("en-IN")} trend="+18%" subtitle="Requests today" />
       </div>
       <Card>
-        <CardHeader title="Invoices" description={`Payment method: ${billing.paymentMethod}`} action={<Button size="sm">Upgrade Plan</Button>} />
+        <CardHeader title="Sample Invoices" description={`Sample payment method: ${billing.paymentMethod}`} action={<Button size="sm" disabled title="Preview only">Upgrade Plan</Button>} />
         <CardContent>
           <Table>
             <thead><tr className="border-b border-[var(--border)] text-xs uppercase tracking-[0.12em] text-[var(--text-muted)]">{["Invoice", "Date", "Amount", "Status", "Action"].map((header) => <th key={header} className="p-3">{header}</th>)}</tr></thead>
-            <tbody>{billing.invoices.map((invoice) => <tr key={invoice.id} className="border-b border-[var(--border)] last:border-0"><td className="p-3 font-semibold">{invoice.id}</td><td className="p-3">{invoice.date}</td><td className="p-3">{invoice.amount}</td><td className="p-3"><Badge tone={invoice.status === "paid" ? "green" : invoice.status === "upcoming" ? "blue" : "red"}>{invoice.status}</Badge></td><td className="p-3"><Button variant="secondary" size="sm">Preview</Button></td></tr>)}</tbody>
+            <tbody>{billing.invoices.map((invoice) => <tr key={invoice.id} className="border-b border-[var(--border)] last:border-0"><td className="p-3 font-semibold">{invoice.id}</td><td className="p-3">{invoice.date}</td><td className="p-3">{invoice.amount}</td><td className="p-3"><Badge tone={invoice.status === "paid" ? "green" : invoice.status === "upcoming" ? "blue" : "red"}>{invoice.status}</Badge></td><td className="p-3"><Button variant="secondary" size="sm" disabled title="Preview only">Preview</Button></td></tr>)}</tbody>
           </Table>
         </CardContent>
       </Card>
@@ -63,7 +63,7 @@ export function ApiManagementPanel({ dashboard, onGenerate, generating }: { dash
         <MetricCard icon={PlugZap} label="Webhook Endpoints" value={String(api.webhooks.length)} trend="Active" subtitle="Outbound events" />
       </div>
       <Card>
-        <CardHeader title="API Keys" description="Generate, rotate and revoke mock API keys for backend integration." action={<Button size="sm" loading={generating} onClick={onGenerate}>Generate API Key</Button>} />
+        <CardHeader title="Sample API Keys" description="API management is a preview in version 1." action={<Button size="sm" loading={generating} onClick={onGenerate} disabled>Generate API Key</Button>} />
         <CardContent className="space-y-3">
           {api.keys.map((key) => (
             <div key={key.id} className="flex flex-col gap-3 rounded-[16px] border border-[var(--border)] p-4 md:flex-row md:items-center md:justify-between">
@@ -72,7 +72,7 @@ export function ApiManagementPanel({ dashboard, onGenerate, generating }: { dash
                 <p className="mt-1 font-mono text-sm text-[var(--text-secondary)]">{key.keyPreview}</p>
                 <p className="mt-1 text-xs text-[var(--text-muted)]">Created {key.created} | Last used {key.lastUsed}</p>
               </div>
-              <div className="flex gap-2"><Badge tone="green">{key.status}</Badge><Button size="sm" variant="secondary">Rotate</Button><Button size="sm" variant="ghost">Revoke</Button></div>
+              <div className="flex gap-2"><Badge tone="green">{key.status}</Badge><Button size="sm" variant="secondary" disabled title="Preview only">Rotate</Button><Button size="sm" variant="ghost" disabled title="Preview only">Revoke</Button></div>
             </div>
           ))}
         </CardContent>
@@ -90,7 +90,7 @@ export function ApiManagementPanel({ dashboard, onGenerate, generating }: { dash
 export function AuditLogTable({ dashboard }: { dashboard: OrganizationAdminDashboard }) {
   return (
     <Card>
-      <CardHeader title="Audit Logs" description="Login, knowledge, campaign, employee, role, billing, security events and IP Address tracking." action={<Input aria-label="Search audit logs" placeholder="Search audit logs" className="w-56" />} />
+      <CardHeader title="Sample Audit Logs" description="Illustrative login, knowledge, campaign, employee, role, billing, and security events." />
       <CardContent>
         <Table>
           <thead><tr className="border-b border-[var(--border)] text-xs uppercase tracking-[0.12em] text-[var(--text-muted)]">{["Timestamp", "User", "Action", "Resource", "IP Address", "Status"].map((header) => <th key={header} className="p-3">{header}</th>)}</tr></thead>
@@ -107,7 +107,7 @@ export function WorkspaceCustomizationPanel({ dashboard }: { dashboard: Organiza
     <Card>
       <CardHeader title="Workspace Customization" description="Logo, brand colors, company name, email footer, signatures and dashboard layout." />
       <CardContent className="grid gap-3 md:grid-cols-2">
-        {items.map(([key, value]) => <label key={key} className="space-y-1 text-sm font-semibold"><span>{labelize(key)}</span><Input defaultValue={String(value)} aria-label={labelize(key)} /></label>)}
+        {items.map(([key, value]) => <label key={key} className="space-y-1 text-sm font-semibold"><span>{labelize(key)}</span><Input defaultValue={String(value)} aria-label={labelize(key)} readOnly /></label>)}
       </CardContent>
     </Card>
   );
@@ -137,7 +137,7 @@ export function DataManagementPanel({ dashboard }: { dashboard: OrganizationAdmi
         {dashboard.dataManagement.map((item) => (
           <Card key={item.id}>
             <CardHeader title={item.title} description={item.description} />
-            <CardContent><Button variant={item.tone === "danger" ? "danger" : item.tone === "secondary" ? "secondary" : "primary"}>{item.action}</Button></CardContent>
+            <CardContent><Button variant={item.tone === "danger" ? "danger" : item.tone === "secondary" ? "secondary" : "primary"} disabled title="Preview only">{item.action}</Button></CardContent>
           </Card>
         ))}
       </div>

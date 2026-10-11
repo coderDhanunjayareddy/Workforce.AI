@@ -32,12 +32,12 @@ export const marketingLinks: MarketingLink[] = [
 ];
 
 export const trustItems = [
-  { label: "Enterprise Ready", icon: Building2 },
-  { label: "Secure by Design", icon: ShieldCheck },
-  { label: "24/7 AI Workforce", icon: UsersRound },
-  { label: "99.9% Availability", icon: LineChart },
-  { label: "GDPR Ready", icon: ShieldCheck },
-  { label: "SOC2 Ready", icon: ShieldCheck }
+  { label: "Guided product tour", icon: Building2 },
+  { label: "Sample workspace", icon: ShieldCheck },
+  { label: "AI Employee profiles", icon: UsersRound },
+  { label: "Conversation playback", icon: LineChart },
+  { label: "Campaign walkthrough", icon: ShieldCheck },
+  { label: "Analytics preview", icon: ShieldCheck }
 ];
 
 export const features: MarketingFeature[] = [
@@ -172,7 +172,7 @@ export const pricingPlans = [
 
 export const faqs: MarketingFaq[] = [
   { question: "What is an AI Employee?", answer: "An AI Employee is a digital team member with identity, role, department, voice, knowledge, health, performance, and measurable business outcomes." },
-  { question: "How secure is Workforce AI?", answer: "The platform is designed for enterprise controls including organization isolation, role-based access, auditability, and backend-ready service boundaries." },
+  { question: "How secure is Workforce AI?", answer: "Version 1 is a sample-data demo. Production authentication, tenant isolation, access controls, and security certification are planned for a future release." },
   { question: "Can I train employees?", answer: "Yes. AI Employees learn from company Knowledge including documents, FAQs, policies, scripts, and websites." },
   { question: "Can AI Employees make calls?", answer: "Yes. The product roadmap centers on natural voice conversations with monitoring, sentiment, summaries, and escalation paths." },
   { question: "How do campaigns work?", answer: "Campaigns assign business objectives to AI Employees, connect contacts and knowledge, and measure appointments, revenue, and satisfaction." },

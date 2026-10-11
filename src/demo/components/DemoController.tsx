@@ -15,13 +15,13 @@ export function DemoController() {
   return (
     <section
       className="fixed bottom-4 left-4 right-4 z-50 rounded-[24px] border border-white/15 bg-slate-950/88 p-4 text-white shadow-xl backdrop-blur-xl lg:left-[calc(16rem+1rem)]"
-      aria-label="Investor Demo controller"
+      aria-label="Guided Demo controller"
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-normal text-teal-200">Investor Demo</p>
+              <p className="text-xs font-semibold uppercase tracking-normal text-teal-200">Guided Demo</p>
               <h2 className="font-display text-lg font-semibold">{demo.currentScenario.title}</h2>
               <p className="text-sm text-white/70">{demo.currentScenario.narration}</p>
             </div>

@@ -1,10 +1,8 @@
 import { Link } from "@tanstack/react-router";
 
-const footerGroups: { group: string; items: string[] }[] = [
-  { group: "Company", items: ["About", "Contact", "Pricing"] },
-  { group: "Features", items: ["AI Workforce", "Knowledge", "Campaigns"] },
-  { group: "Solutions", items: ["Insurance", "Healthcare", "Education"] },
-  { group: "Resources", items: ["Privacy", "Terms", "Support"] }
+const footerGroups = [
+  { group: "Company", items: [{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }, { label: "Pricing", href: "/pricing" }] },
+  { group: "Product", items: [{ label: "Features", href: "/features" }, { label: "Solutions", href: "/solutions" }, { label: "Explore Demo", href: "/login" }] }
 ];
 
 export function MarketingFooter() {
@@ -16,11 +14,7 @@ export function MarketingFooter() {
           <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-secondary)]">
             Build Your Digital Workforce with AI Employees that learn, perform, and improve alongside human teams.
           </p>
-          <div className="mt-5 flex gap-4 text-sm font-semibold text-[var(--text-secondary)]">
-            <a href="https://linkedin.com" aria-label="LinkedIn">LinkedIn</a>
-            <a href="https://x.com" aria-label="X">X</a>
-            <a href="https://github.com" aria-label="GitHub">GitHub</a>
-          </div>
+          <p className="mt-5 text-xs text-[var(--text-muted)]">Version 1 demo · Fictional companies and sample data</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-4">
           {footerGroups.map(({ group, items }) => (
@@ -28,9 +22,7 @@ export function MarketingFooter() {
               <p className="font-semibold">{group}</p>
               <div className="mt-3 grid gap-2">
                 {items.map((item) => (
-                  <a key={item} href="#" className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
-                    {item}
-                  </a>
+                  <Link key={item.href} to={item.href} className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]">{item.label}</Link>
                 ))}
               </div>
             </div>
