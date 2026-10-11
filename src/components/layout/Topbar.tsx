@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui";
 import { useDemo } from "@/demo/hooks";
+import { backendEnabled } from "@/services/apiClient";
 
 import { Breadcrumbs } from "../shared";
 import { CommandPalette } from "./CommandPalette";
@@ -25,7 +26,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="hidden rounded-full bg-[var(--surface-elevated)] px-3 py-1 text-xs font-semibold text-[var(--text-secondary)] xl:inline-flex">Sample data · v1 demo</span>
+        <span className="hidden rounded-full bg-[var(--surface-elevated)] px-3 py-1 text-xs font-semibold text-[var(--text-secondary)] xl:inline-flex">{backendEnabled ? "Shared contacts & employees / sample analytics" : "Browser workspace / sample analytics"}</span>
         <Button variant="secondary" className="hidden md:flex" onClick={() => setCommandOpen(true)}>
           <Search className="h-4 w-4" />
           Search

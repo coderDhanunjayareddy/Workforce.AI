@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button, Checkbox } from "@/components/ui";
 import { useSession } from "@/providers/SessionProvider";
 import { authService } from "@/services";
+import { backendEnabled } from "@/services/apiClient";
 
 import { AuthLayout, FormField } from "../components";
 import { loginSchema, type LoginFormValues } from "../schemas/auth.schemas";
@@ -21,7 +22,7 @@ export function LoginPage() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "priya.reddy@nova-insurance.demo",
-      password: "Workforce@123",
+      password: backendEnabled ? "" : "Workforce@123",
       remember: true
     }
   });
@@ -38,7 +39,7 @@ export function LoginPage() {
   };
 
   return (
-    <AuthLayout title="Explore the demo workspace" description="Use the prefilled sample credentials to explore AI Employees, Knowledge, Campaigns, Conversations, and Analytics. This is a local demo session.">
+    <AuthLayout title={backendEnabled ? "Sign in to your workspace" : "Explore the demo workspace"} description={backendEnabled ? "Enter the workspace credentials provided by your organization." : "Use the prefilled sample credentials to explore the workspace. Changes are saved in this browser."}>
       <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)}>
         <FormField label="Work email" autoComplete="email" registration={register("email")} error={errors.email} />
         <FormField label="Password" type="password" autoComplete="current-password" registration={register("password")} error={errors.password} />

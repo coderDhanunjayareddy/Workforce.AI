@@ -43,6 +43,7 @@ export function useCreateContact() {
     mutationFn: (contact: Contact) => contactService.createContact(contact),
     onSuccess: (contact) => {
       queryClient.setQueryData<Contact[]>(["contacts"], (contacts = []) => [contact, ...contacts]);
+      void queryClient.invalidateQueries({ queryKey: ["contacts"] });
     }
   });
 }
@@ -65,6 +66,7 @@ export function useDeleteContact() {
     onSuccess: ({ id }) => {
       queryClient.setQueryData<Contact[]>(["contacts"], (contacts = []) => contacts.filter((contact) => contact.id !== id));
       queryClient.removeQueries({ queryKey: ["contact", id] });
+      void queryClient.invalidateQueries({ queryKey: ["contacts"] });
     }
   });
 }

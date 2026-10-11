@@ -42,14 +42,14 @@ export function ContactCard({ contact }: { contact: Contact }) {
 
         <div className="rounded-[16px] bg-[var(--surface-elevated)] p-3">
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">Assigned AI Employee</p>
-          <Link
+          {contact.assignedEmployeeId ? <Link
             to="/app/employees/$employeeId"
             params={{ employeeId: contact.assignedEmployeeId }}
             className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-[var(--ai-accent)]"
           >
             <UserRoundCog className="h-4 w-4" aria-hidden="true" />
             {contact.assignedEmployeeName ?? "AI Employee"}
-          </Link>
+          </Link> : <p className="mt-1 text-sm">Unassigned</p>}
           <p className="mt-2 text-xs text-[var(--text-secondary)]">{contact.currentCampaign}</p>
         </div>
 
@@ -60,7 +60,7 @@ export function ContactCard({ contact }: { contact: Contact }) {
         <p className="text-sm text-[var(--text-secondary)]">{contact.recentActivity}</p>
 
         <div className="grid grid-cols-3 gap-2">
-          <Button variant="secondary" size="sm" type="button" aria-label={`Call ${contact.fullName}`}>
+          <Button variant="secondary" size="sm" type="button" disabled title="Phone calling is not connected yet." aria-label={`Call ${contact.fullName}`}>
             <PhoneCall className="h-4 w-4" aria-hidden="true" />
           </Button>
           <Link
@@ -70,7 +70,7 @@ export function ContactCard({ contact }: { contact: Contact }) {
           >
             <MessageSquareText className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <Button variant="secondary" size="sm" type="button" aria-label={`Schedule appointment for ${contact.fullName}`}>
+          <Button variant="secondary" size="sm" type="button" disabled title="Calendar scheduling is not connected yet." aria-label={`Schedule appointment for ${contact.fullName}`}>
             <CalendarPlus className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>

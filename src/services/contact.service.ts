@@ -1,10 +1,11 @@
 import { mockApi } from "@/mocks/mockApi";
 import { campaigns, contacts, employees } from "@/mocks/mockData";
+import { contactDataService } from "./contactData.service";
+import { backendEnabled } from "./apiClient";
 import type {
   Contact,
   ContactDashboard,
   ContactDetail,
-  ContactImportResult,
   ContactSegment,
   ContactTimelineItem,
   LeadScoreCategory,
@@ -254,33 +255,38 @@ const dashboard: ContactDashboard = {
   ]
 };
 
+const data = contactDataService(contactDirectory);
+
 export const contactService = {
-  getContacts: () => mockApi<Contact[]>(() => contactDirectory),
-  getContact: (id: string) =>
-    mockApi<ContactDetail>(() => {
-      const contact = contactDirectory.find((item) => item.id === id);
+  getContacts: data.list,
+  getContact: async (id: string): Promise<ContactDetail> => {
+      const records = await data.list();
+      const contact = records.find((item) => item.id === id);
       if (!contact) throw new Error("Contact was not found.");
-      return buildContactDetail(contact, contactDirectory.findIndex((item) => item.id === id));
-    }),
-  getDashboard: () => mockApi<ContactDashboard>(() => dashboard),
+      const detail = buildContactDetail(contact, records.findIndex((item) => item.id === id));
+      if (backendEnabled || contact.recentActivity === "Manual Entry" || contact.recentActivity === "CSV import") {
+        return { ...detail, language: "English", leadSource: contact.recentActivity ?? "Manual Entry", notes: "", leadScoring: { ...detail.leadScoring, trend: "stable", reason: "Lead score recorded in the contact profile. No automated assessment has been performed." }, communicationHistory: [], campaignHistory: [], timeline: [], appointments: [], policiesPurchased: [] };
+      }
+      return detail;
+    },
+  getDashboard: async (): Promise<ContactDashboard> => {
+    const records = await data.list();
+    return {
+      ...dashboard,
+      totalContacts: records.length,
+      qualifiedLeads: records.filter((contact) => contact.status === "qualified").length,
+      activeCustomers: records.filter((contact) => contact.status === "customer").length,
+      renewalsDue: records.filter((contact) => contact.status === "renewal-due").length,
+      pendingFollowUps: records.filter((contact) => contact.status === "new-lead").length,
+      ...(backendEnabled ? { appointmentsToday: 0, recentlyAdded: 0, campaignCoverage: 0, activeConversations: 0, appointmentsScheduled: 0, recommendations: [], insights: [], recentActivity: [] } : {})
+    };
+  },
   getSegments: () => mockApi<ContactSegment[]>(() => segments),
-  getLeadScoring: () => mockApi<LeadScoreSummary[]>(() => contactDirectory.map((contact, index) => buildLeadScoring(contact, index))),
-  importContacts: (source: string) =>
-    mockApi<ContactImportResult>(() => ({
-      imported: 185,
-      duplicates: 12,
-      validationErrors: 3,
-      source,
-      completedAt: new Date().toISOString()
-    })),
-  createContact: (contact: Contact) => mockApi<Contact>(() => contact),
-  updateContact: (id: string, updates: Partial<Contact>) =>
-    mockApi<Contact>(() => {
-      const contact = contactDirectory.find((item) => item.id === id);
-      if (!contact) throw new Error("Contact was not found.");
-      return { ...contact, ...updates };
-    }),
-  deleteContact: (id: string) => mockApi<{ id: string; deleted: true }>(() => ({ id, deleted: true })),
+  getLeadScoring: async () => (await data.list()).map((contact, index) => buildLeadScoring(contact, index)),
+  importContacts: data.importRecords,
+  createContact: data.create,
+  updateContact: data.update,
+  deleteContact: data.remove,
   createSegment: (segment: Pick<ContactSegment, "name" | "description" | "filters">) =>
     mockApi<ContactSegment>(() => ({
       id: `seg_${segment.name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "_")}`,
@@ -294,6 +300,9 @@ export const contactService = {
       lastUpdated: new Date().toISOString(),
       filters: segment.filters
     })),
-  assignEmployee: (contactIds: string[], employeeId: string) =>
-    mockApi<{ contactIds: string[]; employeeId: string; assigned: true }>(() => ({ contactIds, employeeId, assigned: true }))
+  assignEmployee: async (contactIds: string[], employeeId: string) => {
+    const employee = employees.find((item) => item.id === employeeId);
+    for (const id of contactIds) await data.update(id, { assignedEmployeeId: employeeId, assignedEmployeeName: employee?.name });
+    return { contactIds, employeeId, assigned: true as const };
+  }
 };

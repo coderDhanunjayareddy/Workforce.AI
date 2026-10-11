@@ -8,10 +8,10 @@ export function OrganizationSwitcher() {
   return (
     <Dropdown
       trigger={
-        <Button variant="secondary" className="max-w-[220px] justify-start">
+        <Button variant="secondary" className="max-w-[220px] justify-start px-3 sm:px-4" aria-label={`Organization: ${organization.name}`}>
           <Building2 className="h-4 w-4" />
-          <span className="truncate">{organization.name}</span>
-          <ChevronDown className="ml-auto h-4 w-4" />
+          <span className="hidden truncate sm:inline">{organization.name}</span>
+          <ChevronDown className="ml-auto hidden h-4 w-4 sm:block" />
         </Button>
       }
     >

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Archive, ArrowRight, BriefcaseBusiness, Edit3, Megaphone, PauseCircle, PlayCircle, RefreshCw } from "lucide-react";
+import { Archive, ArrowRight, BriefcaseBusiness, Megaphone, PauseCircle, PlayCircle, RefreshCw } from "lucide-react";
 
 import { HealthRing, StatusBadge } from "@/components/shared";
 import { Avatar, Button, Card, CardContent } from "@/components/ui";
@@ -9,6 +9,7 @@ import { formatRelativeTime } from "@/utils/date";
 import { useState } from "react";
 
 import { getEmployeePerformanceSummary } from "../utils/employeeFilters";
+import { EmployeeEditButton } from "./EmployeeEditButton";
 
 interface EmployeeDirectoryCardProps {
   employee: Employee;
@@ -65,10 +66,7 @@ export function EmployeeDirectoryCard({ employee, onPause, onResume, onArchive }
             <PlayCircle className="h-4 w-4" aria-hidden="true" />
             Preview Voice
           </Button>
-          <Button variant="ghost" size="sm" type="button">
-            <Edit3 className="h-4 w-4" aria-hidden="true" />
-            Edit
-          </Button>
+          <EmployeeEditButton employee={employee} />
           <Button variant="ghost" size="sm" type="button">
             <Megaphone className="h-4 w-4" aria-hidden="true" />
             Assign

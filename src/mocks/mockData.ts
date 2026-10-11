@@ -87,7 +87,7 @@ const daysFromNow = (days: number) => new Date(now + days * 24 * 60 * 60 * 1000)
 const sophiaAsset = employeeAssetService.getHeroEmployee();
 const emmaAsset = employeeAssetService.getCustomerSuccessHeroEmployee();
 const kpiValue = (value: string | undefined, fallback: string) => value ?? fallback;
-const percentValue = (value: string) => Number(value.replace(/[^0-9.]/g, ""));
+const percentValue = (value: string) => Number(value.match(/\d+(?:\.\d+)?/)?.[0] ?? 0);
 const numberValue = (value: string) => Number(value.replace(/[^0-9]/g, ""));
 
 export const knowledge: Knowledge[] = [

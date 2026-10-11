@@ -1,27 +1,32 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { ErrorState, PageHeader, WizardShell } from "@/components/shared";
 import { Button } from "@/components/ui";
-import { useImportContacts } from "@/hooks";
+import { useContacts, useImportContacts } from "@/hooks";
 import type { ContactImportResult } from "@/types";
 
 import { ContactImportSkeleton } from "../components/ContactSkeletons";
 import { ImportStepContent } from "../components/ImportStepContent";
 import { importSteps } from "../constants/contact.constants";
+import { parseContactCsv, validateCsvRows, type CsvMapping, type CsvPreview } from "../utils/contactCsv";
 
 export function ContactImportPage() {
   const importContacts = useImportContacts();
   const [step, setStep] = useState(1);
-  const [source, setSource] = useState("csv");
+  const contactsQuery = useContacts();
+  const [preview, setPreview] = useState<CsvPreview>();
+  const [filename, setFilename] = useState("");
+  const validation = useMemo(() => preview ? validateCsvRows(preview, contactsQuery.data ?? []) : undefined, [preview, contactsQuery.data]);
   const [result, setResult] = useState<ContactImportResult | undefined>();
 
   const completeImport = () => {
-    importContacts.mutate(source, {
+    if (!validation?.contacts.length || contactsQuery.isLoading || contactsQuery.isError) return;
+    importContacts.mutate({ contacts: validation.contacts, validationErrors: validation.errors.length }, {
       onSuccess: (data) => {
-        setResult(data);
+        setResult({ ...data, duplicates: data.duplicates + validation.duplicates });
         setStep(7);
         toast.success("Import Completed.");
       },
@@ -29,13 +34,28 @@ export function ContactImportPage() {
     });
   };
 
+  const chooseFile = async (file: File) => {
+    setPreview(undefined);
+    setFilename("");
+    try {
+      if (file.size > 1_000_000) throw new Error("Choose a CSV smaller than 1 MB.");
+      const parsed = parseContactCsv(await file.text());
+      setPreview(parsed);
+      setFilename(file.name);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "The file could not be read.");
+    }
+  };
+  const mappingComplete = preview && ["fullName", "email", "phone"].every((field) => Boolean(preview.mapping[field as keyof CsvMapping]));
+  const canContinue = step === 1 || (step === 2 && Boolean(preview)) || (step === 3 && mappingComplete) || (step > 3 && Boolean(validation?.contacts.length));
+
   if (importContacts.isPending && step === 1) return <ContactImportSkeleton />;
 
   if (importContacts.isError) {
     return (
       <ErrorState
         title="Import Failed"
-        description="Validation Error. Duplicate Contacts were detected during processing. Retry after reviewing field mapping."
+        description={importContacts.error.message}
         onRetry={() => importContacts.reset()}
       />
     );
@@ -68,9 +88,12 @@ export function ContactImportPage() {
 
           <ImportStepContent
             step={step}
-            source={source}
+            preview={preview}
+            validation={validation}
+            filename={filename}
             result={result}
-            onSourceChange={setSource}
+            onFile={(file) => void chooseFile(file)}
+            onMapping={(field, header) => setPreview((current) => current ? { ...current, mapping: { ...current.mapping, [field]: header } } : current)}
             onComplete={completeImport}
             completing={importContacts.isPending}
           />
@@ -81,7 +104,7 @@ export function ContactImportPage() {
               Previous
             </Button>
             {step < 6 ? (
-              <Button type="button" onClick={() => setStep(step + 1)}>
+              <Button type="button" disabled={!canContinue || contactsQuery.isLoading || contactsQuery.isError} onClick={() => setStep(step + 1)}>
                 Next
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>

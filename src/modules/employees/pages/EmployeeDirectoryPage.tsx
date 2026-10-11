@@ -8,6 +8,7 @@ import { Button, Card, CardContent } from "@/components/ui";
 import { useArchiveEmployee, useEmployees, usePauseEmployee, useResumeEmployee } from "@/hooks";
 import { employeeKeys } from "@/hooks/useEmployees";
 import { employeeService } from "@/services";
+import { backendEnabled } from "@/services/apiClient";
 import type { Employee } from "@/types";
 
 import { EmployeeBulkActions } from "../components/EmployeeBulkActions";
@@ -84,7 +85,7 @@ export function EmployeeDirectoryPage() {
         description="Hire, monitor and manage every AI Employee working across your organization."
         actions={
           <>
-            <Button variant="secondary" type="button" onClick={() => void resetDemo()}>
+            <Button variant="secondary" type="button" disabled={backendEnabled} title={backendEnabled ? "Shared workspace records cannot be reset to sample data." : undefined} onClick={() => void resetDemo()}>
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               Reset Demo Employees
             </Button>

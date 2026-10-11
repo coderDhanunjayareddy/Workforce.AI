@@ -1,15 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Plus, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
 import { EmptyState, ErrorState, PageHeader } from "@/components/shared";
-import { Button, Card, CardContent } from "@/components/ui";
-import { useCampaigns, useContactDashboard, useContacts, useCreateContact, useEmployees, useSegments } from "@/hooks";
-import type { Contact } from "@/types";
+import { Button, Card, CardContent, Modal } from "@/components/ui";
+import { useCampaigns, useContactDashboard, useContacts, useEmployees, useSegments } from "@/hooks";
+import { backendEnabled } from "@/services/apiClient";
 
 import { ContactBulkActions } from "../components/ContactBulkActions";
 import { ContactCard } from "../components/ContactCard";
+import { ContactForm } from "../components/ContactForm";
 import { ContactDirectorySkeleton } from "../components/ContactSkeletons";
 import { ContactStatsBar } from "../components/ContactStatsBar";
 import { ContactTable } from "../components/ContactTable";
@@ -27,7 +27,7 @@ export function ContactsPage() {
   const segmentsQuery = useSegments();
   const employeesQuery = useEmployees();
   const campaignsQuery = useCampaigns();
-  const createContact = useCreateContact();
+  const [adding, setAdding] = useState(false);
   const [filters, setFilters] = useState<ContactFilters>(defaultContactFilters);
   const [view, setView] = useState<ContactViewMode>("grid");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -47,35 +47,6 @@ export function ContactsPage() {
   const updateFilter = <TKey extends keyof ContactFilters>(key: TKey, value: ContactFilters[TKey]) => {
     setPage(1);
     setFilters((current) => ({ ...current, [key]: value }));
-  };
-
-  const addContact = () => {
-    const contact: Contact = {
-      id: `contact_manual_${Date.now()}`,
-      fullName: "Manual Entry Contact",
-      company: "Nova Prospect",
-      email: "manual.entry@nova-prospect.demo",
-      phone: "+91 98765 12999",
-      status: "new-lead",
-      leadScore: 61,
-      assignedEmployeeId: "emp_sophia",
-      assignedEmployeeName: "Sophia",
-      currentCampaign: "Motor Insurance Q3",
-      recentActivity: "Manual Entry",
-      tags: ["manual-entry"],
-      policyType: "Motor Insurance",
-      industry: "Retail",
-      city: "Hyderabad",
-      state: "Telangana",
-      country: "India",
-      lastContact: new Date().toISOString(),
-      policyNumber: "NOVA-20269999"
-    };
-
-    createContact.mutate(contact, {
-      onSuccess: () => toast.success("Contact created for manual review."),
-      onError: () => toast.error("Validation Error. Retry contact creation.")
-    });
   };
 
   if (contactsQuery.isLoading || dashboardQuery.isLoading || segmentsQuery.isLoading || employeesQuery.isLoading || campaignsQuery.isLoading) {
@@ -106,7 +77,7 @@ export function ContactsPage() {
         description="Manage your customer database, organize intelligent segments, and power your AI Workforce."
         actions={
           <>
-            <Button variant="secondary" type="button" onClick={addContact} loading={createContact.isPending}>
+            <Button variant="secondary" type="button" onClick={() => setAdding(true)}>
               <Plus className="h-4 w-4" aria-hidden="true" />
               Add Contact
             </Button>
@@ -119,6 +90,10 @@ export function ContactsPage() {
       />
 
       <ContactStatsBar dashboard={dashboardQuery.data} />
+      <p className="text-sm text-[var(--text-secondary)]">{backendEnabled ? "Contacts are saved to your shared workspace. Other modules still include sample activity." : "Contact changes are saved in this browser. Performance and campaign activity are sample data."}</p>
+      <Modal open={adding} title="Add Contact" onClose={() => setAdding(false)}>
+        {adding ? <ContactForm onComplete={() => setAdding(false)} onCancel={() => setAdding(false)} /> : null}
+      </Modal>
 
       <div className="grid gap-6 2xl:grid-cols-[1.55fr_0.85fr]">
         <div className="space-y-6">
@@ -138,7 +113,7 @@ export function ContactsPage() {
             }}
           />
 
-          <ContactBulkActions count={selectedIds.length} onClear={() => setSelectedIds([])} />
+          <ContactBulkActions contacts={contacts.filter((contact) => selectedIds.includes(contact.id))} onClear={() => setSelectedIds([])} />
 
           {visibleContacts.length === 0 ? (
             <EmptyState

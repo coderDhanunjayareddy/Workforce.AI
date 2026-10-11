@@ -24,6 +24,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   });
 
   const setSession = (nextSession: Session | null) => {
+    if (nextSession) localStorage.setItem(sessionStorageKey, JSON.stringify(nextSession));
+    else localStorage.removeItem(sessionStorageKey);
     setSessionState(nextSession);
   };
 

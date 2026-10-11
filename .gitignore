@@ -16,7 +16,13 @@ pnpm-debug.log*
 .vite/
 .turbo/
 coverage/
+test-results/
 
 .agents/
 
 .vercel
+backend/.venv/
+__pycache__/
+.pytest_cache/
+*.db
+*.db-journal

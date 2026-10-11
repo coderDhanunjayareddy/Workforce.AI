@@ -64,9 +64,9 @@ export function ContactTable({
             <td className="p-3"><Badge tone={scoreTone(contact.leadScore)}>{contact.leadScore}/100</Badge></td>
             <td className="p-3"><Badge tone={statusTone(contact.status)}>{statusLabel(contact.status)}</Badge></td>
             <td className="min-w-40 p-3">
-              <Link to="/app/employees/$employeeId" params={{ employeeId: contact.assignedEmployeeId }} className="font-semibold text-[var(--ai-accent)]">
+              {contact.assignedEmployeeId ? <Link to="/app/employees/$employeeId" params={{ employeeId: contact.assignedEmployeeId }} className="font-semibold text-[var(--ai-accent)]">
                 {contact.assignedEmployeeName}
-              </Link>
+              </Link> : "Unassigned"}
             </td>
             <td className="min-w-44 p-3">
               <Link to="/app/campaigns" className="text-[var(--text-secondary)] hover:text-[var(--ai-accent)]">{contact.currentCampaign}</Link>
@@ -87,7 +87,7 @@ export function ContactTable({
                 <Link to="/app/conversations" className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] hover:bg-[var(--surface-elevated)]" aria-label="Open conversation timeline">
                   <MessageSquareText className="h-4 w-4" aria-hidden="true" />
                 </Link>
-                <Button variant="ghost" size="icon" type="button" aria-label="Schedule appointment">
+                <Button variant="ghost" size="icon" type="button" disabled title="Calendar scheduling is not connected yet." aria-label="Schedule appointment">
                   <CalendarPlus className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>

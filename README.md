@@ -23,7 +23,28 @@ npm run preview
 
 The static build in `dist/` can be hosted on a service that serves `index.html` for application routes. `vercel.json` includes a rewrite for Vercel.
 
-## Version 1 scope
+## Working Contacts and Employee Profiles
+
+Contacts now support editable forms, persistent create/edit/delete, CSV imports
+with field mapping and duplicate detection, selected-contact export, and archive.
+CSV imports accept up to 1,000 rows and files smaller than 1 MB. Employee profiles
+can be edited, and hiring/pause/resume/archive changes persist.
+
+With no `VITE_API_URL`, changes are stored in the current browser and survive
+refreshes. They are not shared with other browsers. With `VITE_API_URL` configured,
+contacts and employees use the FastAPI backend and PostgreSQL for shared storage.
+Backend errors never fall back to browser-only storage.
+
+See [backend setup and deployment](backend/README.md) to connect the existing
+Vercel URL. Pushing this repository only publishes the client changes if Vercel is
+configured to deploy that branch. The hosted backend still requires configuration.
+No Routerplus credits are consumed by this release.
+
+```bash
+npm test
+```
+
+## Sample Experience
 
 - Responsive public pages and a protected sample workspace
 - Sample account creation, onboarding, and password reset screens
@@ -34,6 +55,6 @@ The static build in `dist/` can be hosted on a service that serves `index.html` 
 
 ## Demo boundaries
 
-The workspace is a demonstration. The account and administration screens do not provide production authentication, email delivery, tenant isolation, API keys, billing, or live integrations. Calls, metrics, testimonials, and organization details are fictional. The contact page downloads a demo brief; it does not send a request. Most sample services return fixed data, while employee changes are stored locally in the browser. Do not enter real customer data or use the demo to run operations.
+The workspace is a demonstration. Browser mode uses sample authentication; backend mode uses a private client workspace login. Neither mode is a complete identity platform. Email delivery, billing, and live integrations remain unavailable. Calls, performance metrics, testimonials, and organization details are fictional. Contacts and employee profiles persist in the selected storage mode. The contact page downloads a demo brief; it does not send a request. Use synthetic demonstration data until the remaining access controls are implemented.
 
 Product and architecture references are in `docs/`. The production backend roadmap is in [`docs/20_BACKEND_READY_GUIDE.md`](docs/20_BACKEND_READY_GUIDE.md).

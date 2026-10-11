@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Archive, ArrowLeft, Mail, Megaphone, MoreHorizontal, PauseCircle, PlayCircle, RefreshCw } from "lucide-react";
+import { Archive, ArrowLeft, Mail, Megaphone, PauseCircle, PlayCircle, RefreshCw } from "lucide-react";
 
 import { HealthRing, StatusBadge } from "@/components/shared";
 import { Avatar, Button } from "@/components/ui";
 import type { Employee, EmployeeWorkspaceData } from "@/types";
 import { formatRelativeTime } from "@/utils/date";
+import { EmployeeEditButton } from "../EmployeeEditButton";
 
 export function EmployeeWorkspaceHeader({
   employee,
@@ -65,9 +66,7 @@ export function EmployeeWorkspaceHeader({
               <Megaphone className="h-4 w-4" aria-hidden="true" />
               Assign Campaign
             </Button>
-            <Button variant="ghost" size="icon" type="button" aria-label="More actions">
-              <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
-            </Button>
+            <EmployeeEditButton employee={employee} />
             <Button variant="danger" type="button" onClick={onArchive}>
               <Archive className="h-4 w-4" aria-hidden="true" />
               Archive

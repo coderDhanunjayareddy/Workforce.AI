@@ -71,14 +71,14 @@ export function ContactProfileOverview({ contact }: { contact: ContactDetail }) 
         <Card>
           <CardHeader title="Assigned AI Employee" description="Current owner for next best action." />
           <CardContent>
-            <Link
+            {contact.assignedEmployeeId ? <Link
               to="/app/employees/$employeeId"
               params={{ employeeId: contact.assignedEmployeeId }}
               className="inline-flex items-center gap-3 font-display text-xl font-semibold text-[var(--ai-accent)]"
             >
               <UserRoundCog className="h-5 w-5" aria-hidden="true" />
               {contact.assignedEmployeeName}
-            </Link>
+            </Link> : <p className="text-sm text-[var(--text-secondary)]">Unassigned. Edit this contact to choose an AI Employee.</p>}
             <p className="mt-3 text-sm text-[var(--text-secondary)]">{contact.currentCampaign}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Badge tone={statusTone(contact.status)}>{statusLabel(contact.status)}</Badge>

@@ -1,6 +1,7 @@
 import { mockApi } from "@/mocks/mockApi";
 import { campaigns, conversationRecords, conversations, employeeProfiles, employees, knowledge } from "@/mocks/mockData";
 import { employeeAssetService } from "@/services/employeeAssetService";
+import { apiRequest, backendEnabled } from "./apiClient";
 import type {
   Employee,
   EmployeeConversationItem,
@@ -31,12 +32,28 @@ function loadDemoEmployees(): Employee[] {
 let demoEmployees = loadDemoEmployees();
 
 function saveDemoEmployees(next: Employee[]) {
-  demoEmployees = next;
   try {
     localStorage.setItem(demoEmployeesKey, JSON.stringify(next));
   } catch {
-    // The demo remains usable when browser storage is unavailable.
+    throw new Error("Your browser could not save this employee. Free storage space and try again.");
   }
+  demoEmployees = next;
+}
+
+let initialization: Promise<unknown> | undefined;
+async function initializeEmployees() {
+  if (!backendEnabled) return;
+  initialization ??= apiRequest("/employees/initialize", { method: "POST", body: JSON.stringify({ employees }) }).catch((error: unknown) => {
+    initialization = undefined;
+    throw error;
+  });
+  await initialization;
+}
+
+async function loadEmployee(id: string): Promise<Employee> {
+  if (!backendEnabled) return getEmployeeOrThrow(id);
+  await initializeEmployees();
+  return apiRequest<Employee>(`/employees/${encodeURIComponent(id)}`);
 }
 
 const getEmployeeOrThrow = (id: string) => {
@@ -239,21 +256,23 @@ const getVersions = (): EmployeeVersionItem[] => [
 
 export const employeeService = {
   resetDemoEmployees: () => mockApi<Employee[]>(() => {
+    if (backendEnabled) throw new Error("Reset is only available for browser sample data.");
     saveDemoEmployees([...employees]);
     return demoEmployees;
   }),
-  getEmployees: () => mockApi<Employee[]>(() => demoEmployees),
-  getEmployee: (id: string) =>
-    mockApi<Employee>(() => getEmployeeOrThrow(id)),
-  getWorkspace: (id: string) => mockApi<EmployeeWorkspaceData>(() => getWorkspaceData(getEmployeeOrThrow(id))),
-  getPerformance: (id: string) => mockApi<EmployeePerformance>(() => getPerformance(getEmployeeOrThrow(id))),
-  getHealth: (id: string) => mockApi<EmployeeHealth>(() => getHealth(getEmployeeOrThrow(id))),
-  getTimeline: (id: string) => mockApi<EmployeeTimelineItem[]>(() => getTimeline(getEmployeeOrThrow(id))),
-  getKnowledge: (id: string) => mockApi<EmployeeKnowledgeItem[]>(() => {
-    return getEmployeeKnowledge(getEmployeeOrThrow(id));
-  }),
+  getEmployees: async (): Promise<Employee[]> => {
+    if (!backendEnabled) return mockApi(() => demoEmployees);
+    await initializeEmployees();
+    return apiRequest<Employee[]>("/employees");
+  },
+  getEmployee: loadEmployee,
+  getWorkspace: async (id: string): Promise<EmployeeWorkspaceData> => getWorkspaceData(await loadEmployee(id)),
+  getPerformance: async (id: string): Promise<EmployeePerformance> => getPerformance(await loadEmployee(id)),
+  getHealth: async (id: string): Promise<EmployeeHealth> => getHealth(await loadEmployee(id)),
+  getTimeline: async (id: string): Promise<EmployeeTimelineItem[]> => getTimeline(await loadEmployee(id)),
+  getKnowledge: async (id: string): Promise<EmployeeKnowledgeItem[]> => getEmployeeKnowledge(await loadEmployee(id)),
   getVersions: () => mockApi<EmployeeVersionItem[]>(() => getVersions()),
-  getTraining: (id: string) => mockApi<EmployeeTrainingItem[]>(() => getTraining(getEmployeeOrThrow(id))),
+  getTraining: async (id: string): Promise<EmployeeTrainingItem[]> => getTraining(await loadEmployee(id)),
   getConversations: (id: string) =>
     mockApi<EmployeeConversationItem[]>(() =>
       conversations
@@ -267,23 +286,23 @@ export const employeeService = {
           date: index === 0 ? "Today" : `${index + 1} days ago`
         }))
     ),
-  hireEmployee: (employee: Employee) => mockApi<Employee>(() => {
+  hireEmployee: (employee: Employee) => backendEnabled ? apiRequest<Employee>("/employees", { method: "POST", body: JSON.stringify(employee) }) : mockApi<Employee>(() => {
     saveDemoEmployees([employee, ...demoEmployees]);
     return employee;
   }),
-  updateEmployee: (id: string, updates: Partial<Employee>) =>
-    mockApi<Employee>(() => {
-      const employee = { ...getEmployeeOrThrow(id), ...updates };
+  updateEmployee: async (id: string, updates: Partial<Employee>) => {
+      const employee = { ...await loadEmployee(id), ...updates, id };
+      if (backendEnabled) return apiRequest<Employee>(`/employees/${encodeURIComponent(id)}`, { method: "PUT", body: JSON.stringify(employee) });
       saveDemoEmployees(demoEmployees.map((item) => item.id === id ? employee : item));
       return employee;
-    }),
+    },
   pauseEmployee: (id: string) =>
     employeeService.updateEmployee(id, { status: "paused" }),
   resumeEmployee: (id: string) =>
     employeeService.updateEmployee(id, { status: "active" }),
   archiveEmployee: (id: string) =>
     employeeService.updateEmployee(id, { status: "archived" }),
-  deleteEmployee: (id: string) => mockApi(() => {
+  deleteEmployee: (id: string) => backendEnabled ? apiRequest<{ id: string; deleted: true }>(`/employees/${encodeURIComponent(id)}`, { method: "DELETE" }) : mockApi(() => {
     getEmployeeOrThrow(id);
     saveDemoEmployees(demoEmployees.filter((item) => item.id !== id));
     return { id, deleted: true };

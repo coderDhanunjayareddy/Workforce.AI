@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { employeeService } from "@/services";
 import type { Employee } from "@/types";
+
+const reportSaveError = (error: Error) => toast.error(error.message || "Employee changes could not be saved. Please retry.");
 
 export const employeeKeys = {
   all: ["employees"] as const,
@@ -65,9 +68,11 @@ export function useHireEmployee() {
 
   return useMutation({
     mutationFn: employeeService.hireEmployee,
+    onError: reportSaveError,
     onSuccess: (employee) => {
       queryClient.setQueryData<Employee[]>(employeeKeys.all, (employees = []) => [employee, ...employees]);
       queryClient.setQueryData(employeeKeys.detail(employee.id), employee);
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.detail(employee.id) });
     }
   });
 }
@@ -77,9 +82,11 @@ export function useUpdateEmployee() {
 
   return useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Partial<Employee> }) => employeeService.updateEmployee(id, updates),
+    onError: reportSaveError,
     onSuccess: (employee) => {
       queryClient.setQueryData<Employee[]>(employeeKeys.all, (employees) => updateEmployeeCache(employees, employee));
       queryClient.setQueryData(employeeKeys.detail(employee.id), employee);
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.detail(employee.id) });
     }
   });
 }
@@ -89,9 +96,11 @@ export function usePauseEmployee() {
 
   return useMutation({
     mutationFn: employeeService.pauseEmployee,
+    onError: reportSaveError,
     onSuccess: (employee) => {
       queryClient.setQueryData<Employee[]>(employeeKeys.all, (employees) => updateEmployeeCache(employees, employee));
       queryClient.setQueryData(employeeKeys.detail(employee.id), employee);
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.detail(employee.id) });
     }
   });
 }
@@ -101,9 +110,11 @@ export function useResumeEmployee() {
 
   return useMutation({
     mutationFn: employeeService.resumeEmployee,
+    onError: reportSaveError,
     onSuccess: (employee) => {
       queryClient.setQueryData<Employee[]>(employeeKeys.all, (employees) => updateEmployeeCache(employees, employee));
       queryClient.setQueryData(employeeKeys.detail(employee.id), employee);
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.detail(employee.id) });
     }
   });
 }
@@ -113,9 +124,11 @@ export function useArchiveEmployee() {
 
   return useMutation({
     mutationFn: employeeService.archiveEmployee,
+    onError: reportSaveError,
     onSuccess: (employee) => {
       queryClient.setQueryData<Employee[]>(employeeKeys.all, (employees) => updateEmployeeCache(employees, employee));
       queryClient.setQueryData(employeeKeys.detail(employee.id), employee);
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.detail(employee.id) });
     }
   });
 }
@@ -125,6 +138,7 @@ export function useDeleteEmployee() {
 
   return useMutation({
     mutationFn: employeeService.deleteEmployee,
+    onError: reportSaveError,
     onSuccess: ({ id }) => {
       queryClient.setQueryData<Employee[]>(employeeKeys.all, (employees = []) => employees.filter((employee) => employee.id !== id));
       queryClient.removeQueries({ queryKey: employeeKeys.detail(id) });

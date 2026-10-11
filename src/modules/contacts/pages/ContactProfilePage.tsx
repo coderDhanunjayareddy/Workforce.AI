@@ -1,9 +1,12 @@
-import { Link, useParams } from "@tanstack/react-router";
-import { ArrowLeft, CalendarPlus, MessageSquareText, PhoneCall } from "lucide-react";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { ErrorState, PageHeader } from "@/components/shared";
-import { Avatar, Badge, Button } from "@/components/ui";
-import { useContact } from "@/hooks";
+import { Avatar, Badge, Button, Modal } from "@/components/ui";
+import { useContact, useDeleteContact } from "@/hooks";
+import { ContactForm } from "../components/ContactForm";
 
 import { ContactProfileAssets, ContactProfileHistory, ContactProfileOverview, CustomerTimeline } from "../components/ContactProfileSections";
 import { ContactProfileSkeleton } from "../components/ContactSkeletons";
@@ -13,6 +16,19 @@ export function ContactProfilePage() {
   const { contactId } = useParams({ strict: false });
   const id = contactId ?? "";
   const contactQuery = useContact(id);
+  const navigate = useNavigate();
+  const remove = useDeleteContact();
+  const [editing, setEditing] = useState(false);
+  const deleteContact = async () => {
+    if (!window.confirm("Delete this contact? This cannot be undone.")) return;
+    try {
+      await remove.mutateAsync(id);
+      toast.success("Contact deleted.");
+      await navigate({ to: "/app/contacts" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Contact could not be deleted. Please retry.");
+    }
+  };
 
   if (contactQuery.isLoading) return <ContactProfileSkeleton />;
 
@@ -33,28 +49,27 @@ export function ContactProfilePage() {
       <PageHeader
         eyebrow="Contact Profile"
         title={contact.fullName}
-        description={`${contact.company} connects to ${contact.currentCampaign}, ${contact.assignedEmployeeName}, conversations, appointments and policies.`}
+        description={`${contact.company || "Customer"}. ${contact.assignedEmployeeName ? `Assigned to ${contact.assignedEmployeeName}.` : "No AI Employee assigned yet."}`}
         actions={
           <>
             <Link to="/app/contacts" className="inline-flex h-11 items-center justify-center gap-2 rounded-[12px] border border-[var(--border)] px-4 text-sm font-semibold hover:bg-[var(--surface-elevated)]">
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Contacts
             </Link>
-            <Button variant="secondary" type="button">
-              <PhoneCall className="h-4 w-4" aria-hidden="true" />
-              Call
+            <Button variant="secondary" type="button" onClick={() => setEditing(true)}>
+              <Pencil className="h-4 w-4" aria-hidden="true" />
+              Edit Contact
             </Button>
-            <Link to="/app/conversations" className="inline-flex h-11 items-center justify-center gap-2 rounded-[12px] border border-[var(--border)] px-4 text-sm font-semibold hover:bg-[var(--surface-elevated)]">
-              <MessageSquareText className="h-4 w-4" aria-hidden="true" />
-              Timeline
-            </Link>
-            <Button type="button">
-              <CalendarPlus className="h-4 w-4" aria-hidden="true" />
-              Schedule
+            <Button variant="danger" type="button" loading={remove.isPending} onClick={() => void deleteContact()}>
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+              Delete Contact
             </Button>
           </>
         }
       />
+      <Modal open={editing} title="Edit Contact" onClose={() => setEditing(false)}>
+        {editing ? <ContactForm contact={contact} onComplete={() => setEditing(false)} onCancel={() => setEditing(false)} /> : null}
+      </Modal>
 
       <section className="flex flex-col gap-4 rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
